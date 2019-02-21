@@ -1,0 +1,288 @@
+* Talk
+** Terms
+*** Example
+This is the part of a test where expectations against the subject should be made. It is the block of code using either `it`, `specify` or `scenario`
+
+examples:
+#+BEGIN_SRC ruby
+it 'does things' do
+  expect { some_function }.to do_things
+end
+
+it { is_expected.to_not be_nil }
+
+specify do
+  expect(foo.bar).to be(:bar)
+end
+#+END_SRC
+*** Spec
+This refers to the entireity of a block specifying how an object(or feature) works
+
+examples:
+#+BEGIN_SRC ruby
+describe Foo do
+  # some examples
+end
+
+feature 'Placing an order' do
+end
+#+END_SRC
+*** Hook
+The before/around/after blocks
+
+examples:
+#+BEGIN_SRC ruby
+before(:each) do
+  do_stuff
+end
+
+around(:all) do |example|
+  Timecop.travel(back_to_the_future) do
+    begin
+      example.run
+    rescue
+      run_away
+    ensure
+      mess_with_bif
+    end
+  end
+end
+
+after(:suite) do
+  DatabaseCleaner.clean
+end
+#+END_SRC
+** Rough time calculation
+#+BEGIN_SRC
+GIVEN
+N = number of examples
+SETUP = time required to run the setup for an example
+EXAMPLE = time required to run an example
+
+THEN
+SPEC = N(SETUP + EXAMPLE)
+#+END_SRC
+** Capybara secrets, easter eggs, caveats
+*** Clicking
+Clicking works by picking a spot inside of the bounding box for an element and triggering a click on that pixel.
+
+Because it uses a bounding box, clicking can be affected by moving elements in unexpected ways.
+Ensure you aren't attemping to hit a moving target when clicking.
+
+** Reasons why tests usually fail
+*** Timing issues
+* General
+** DSL
+This section will go over various rspec DSL keywords and describe when/how to use them
+*** describe
+**** What
+This is the DSL keyword to use when changing the subject(what you are describing)
+**** When
+When you are changing what the test is describing.
+**** Why
+Changing the subject changes what is being described.
+**** Example
+***** Class
+#+BEGIN_SRC ruby
+class Foo; end
+
+describe Foo do
+  # subject is implicitly set to described_class.new
+  it { is_expected.to be_a(Foo) }
+end
+#+END_SRC
+***** Method
+#+BEGIN_SRC ruby
+class Foo
+  def bar
+    :baz
+  end
+end
+
+describe Foo do
+  describe '#bar' do
+    subject { described_class.new.bar }
+
+    it { is_expected.to eq(:baz) }
+  end
+end
+#+END_SRC
+***** Action
+
+#+BEGIN_SRC ruby
+describe 'A page', type: :feature do
+  subject { page }
+
+  before do
+    visit a_page
+  end
+
+  describe 'clicking on home' do
+    subject { -> { click_on 'Home' } }
+    it { is_expected.to redirect_to(home_url) } # Custom matcher
+  end
+end
+#+END_SRC
+
+The reason to make the action here the subject is to encapsulate that action as what causes the change.
+This is done by wrapping the action(subject) in a before check and an after check.
+This could be done in the example itself(the it block), however doing that will likely lead to lots of duplication and harder to understand tests.
+With this separation it is easy to tell what is happening in this spec(the subject) and what it does(the expectation).
+
+[[file:spec/features/dashboard/training_box_new_spec.rb::describe%20'the%20page',%20workout_v1:%20:visible,%20workout_v2:%20:hidden,%20weekly_summary:%20:visible%20do][Refactored example]]
+
+Compare to:
+#+BEGIN_SRC ruby
+describe 'A page', type: :feature do
+  subject { page }
+
+  before do
+    visit a_page
+  end
+
+  it 'redirects to home when home link is clicked' do
+    click_on 'Home'
+    expect(page.current_url).to eq(home_url)
+  end
+end
+#+END_SRC
+
+Here we have an example that is supposed to be describing the page, and will pass when the current url is the home url.
+What would happen if the page being described was the home page and the call to `click_on 'Home'` opened a modal displaying an error(non js popup)?
+The test would pass and no one would be any wiser.
+
+If instead we have a matcher like so:
+#+BEGIN_SRC ruby
+RSpec::Matchers.define 'redirect_browser_to' do |expected_url|
+  match do |actual|
+    page.execute_script(%($('body').attr('same_page', true)))
+
+    actual.call
+
+    begin
+      Capybara.using_wait_time(10) do
+        find('body:not([same_page="true"])')
+      end
+    rescue
+      @reason = 'was not redirected'
+      return false
+    end
+
+    # Handle error detection here
+
+    case expected_url
+    when Regexp
+      values_match? expected_url, actual_url
+    when String
+      values_match? expected_url, expected_url.chars.first == '/' ? actual_path : actual_url
+    end
+  end
+
+  supports_block_expectations
+
+  def actual_path
+    page.current_path
+  end
+
+  def actual_url
+    page.current_url
+  end
+
+  def reason
+    @reason ||= "was redirected to #{actual_url}"
+  end
+
+  failure_message do
+    "Expected to be redirected to #{expected_url}, but #{reason}"
+  end
+end
+#+END_SRC
+
+The spec would fail as the browser was not redirected.
+*** feature
+**** What
+This is Capybara's DSL keyword to start describing a feature spec, this should only ever be the root DSL keyword.
+**** See
+[[*describe][describe]]
+*** subject
+**** What
+The DSL keyword to change what [[*it][it]] is.
+**** When
+This should be the next line after a [[*describe][describe]] block
+**** Why
+To be explicit when specifying what the example is testing as well as setup userful aliases/introspection.
+**** Example
+#+BEGIN_SRC ruby
+describe Foo do
+  describe '#bar' do
+    subject { described_class.new.bar }
+
+    it { is_expected.to be(:bar) }
+  end
+end
+#+END_SRC
+*** context
+**** What
+The DSL keyword to use when providing more context to a given example.
+**** Example
+***** Capybara subject
+#+BEGIN_SRC ruby
+feature 'The choice' do
+  describe 'choosing a pill' do
+    subject { click_on the_pill }
+
+    context 'blue pill' do
+      let(:the_pill) { :blue_pill }
+
+      it { is_expected.to redirect_to(:bed) }
+    end
+
+    context 'red pill' do
+      let(:the_pill) { :red_pill }
+
+      it { is_expected.to redirect_to(:wonderland) }
+    end
+  end
+end
+#+END_SRC
+
+
+*** specify
+I have only ever found this to be useful when you want to do a multi line example but are unable to name it something useful. In other words YAGNI.
+*** let
+You need to make variable available outside of a single block? Use this, it's not just style it's consistency
+
+*** before
+**** What
+Any actions needed to be performed before what is directly being tested(e.g. setup, behaviour associated with a context block) should go inside of a before block
+**** When
+When you need to setup the world before making an expectation against it.
+**** Why
+To explicitly separate what is being tested from what needs to happen to make the test pass.
+**** Example
+***** Setup
+#+BEGIN_SRC ruby
+decribe Foo do
+  describe '#bar' do
+    subject { described_class.new.bar }
+
+    context 'when #bar_is_baz?' do
+      expect(subject).to receive(:bar_is_baz?).and_return(true)
+    end
+
+    it { is_expected.to be(:baz) }
+  end
+end
+#+END_SRC
+***** Capybara context
+*** after
+*** around
+*** it
+
+* Standup
+- Yesterday
+- Worked on re-writing training box feature spec
+- RSpec presentation for rails code review
+- Fixed logic around training reminder algorithm
+- Today
+- Attempt to qa lgm retry in staging, wasn't able to sign up yesterday

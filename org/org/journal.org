@@ -1,0 +1,651 @@
+
+* 2018
+** 2018-03 March
+*** 2018-03-14 Wednesday
+**** [2018-03-14 Wed 10:30] - Harassment training                   :TIME:
+**** [2018-03-14 Wed 11:50] - Pair with Cam'Ron                     :TIME:
+All of missing ids belong to Clerk::ExpressChekcout::RemoteCustomer
+**** [2018-03-14 Wed 13:53] - Code review                           :TIME:
+**** [2018-03-14 Wed 15:03] - Went home early to watch cats         :TIME:
+*** 2018-03-16 Friday
+**** [2018-03-16 Fri 09:59] - Duplicate auto renewal charge         :TIME:
+https://www.lumosity.com/admin/users/22962885/service looks like it wasn't renewal?
+**** [2018-03-16 Fri 10:08] - Commented on duplicate auto renewal charge ticket :TIME:
+Small update:
+
+I have been reading through the code that handles this to get more familiar with it. While digging through the code and comparing the users reported above I noticed the following;
+https://www.lumosity.com/admin/users/22962885/service appears to be unrelated to this(two subscriptions at the same time rather than one subscription with two transactions).
+However https://www.lumosity.com/admin/users/17913541/service and https://www.lumosity.com/admin/users/36705561/service both do appear to be this issue.
+I have opened https://lumoslabs.atlassian.net/browse/PLAT-2281 to investigate the user with multiple subs further.
+*** 2018-03-19 Monday
+**** [2018-03-19 Mon 13:05] - Attempted to find in aleph users who were billed twiced :TIME:
+Posted in #analytics
+**** [2018-03-19 Mon 13:06] - Added logging when we bill a user     :TIME:
+**** [2018-03-19 Mon 15:26] - Progress on duplicate renewals        :TIME:
+Investigated this further and was unable to determine WHY we are billing these users twice.
+
+I produced [this query|https://aleph.lumoslabs.com/queries/6821/query_versions/23272?tab=results] with the help of analytics to check for users who had multiple subscription_billing_success events in the same 24 hour period(the only way I was able to accurately identify this population). From the results of that query it appears to still be happening(~14 from 2018-03-19).
+
+I have a PR up with additional logging to attempt to find out WHY we are doing this as well as a PR to attempt to prevent this from happening.
+**** [2018-03-19 Mon 15:34] - Duplicate billings PRS                :TIME:
+https://github.com/lumoslabs/clerk/pull/481
+https://github.com/lumoslabs/clerk/pull/482
+**** [2018-03-19 Mon 15:42] - Started deploy of retriable syncer    :TIME:
+**** [2018-03-19 Mon 16:09] - Deploy started                        :TIME:
+https://samson.lumoslabs.com/projects/lumos_rails/deploys/6493
+**** [2018-03-19 Mon 16:17] - Deploy finished                       :TIME:
+https://samson.lumoslabs.com/projects/lumos_rails/deploys/6493
+**** [2018-03-19 Mon 16:21] - Investigate Calypte rollbar           :TIME:
+https://rollbar.com/lumoslabs/calypte/items/491/
+Could define the clause for empty array, but why is it empty?
+**** [2018-03-19 Mon 16:25] - Eyed lumosity calypte failure         :TIME:
+https://rollbar.com/lumoslabs/Lumosity/items/718946/
+Doesn't seem to line up with anything on calypte's end?
+**** [2018-03-19 Mon 16:41] - Asked PE about calypte health         :TIME:
+https://lumosity.slack.com/archives/C02N1B1C1/p1521502586000108
+**** [2018-03-19 Mon 16:48] - Fixed up suspect amount alerting      :TIME:
+https://github.com/lumoslabs/shop_gem/pull/324
+Cleanuppppp
+*** 2018-03-20 Tuesday
+**** [2018-03-20 Tue 10:35] - Investigate user who purchased a second sub again :TIME:
+Why the fuck is this still happening
+**** [2018-03-20 Tue 12:06] - Merged coach ruby 2.5 into Pols rails 5 :TIME:
+**** [2018-03-20 Tue 12:31] - PRed up logging for retrograder       :TIME:
+This still happens sometimes
+**** [2018-03-20 Tue 12:55] - Update clerk money bump               :TIME:
+**** [2018-03-20 Tue 13:38] - Enqueued for deployment               :TIME:
+https://github.com/lumoslabs/shop_gem/pull/324
+https://github.com/lumoslabs/clerk/pull/471
+
+Slurped https://github.com/lumoslabs/clerk/pull/465
+**** [2018-03-20 Tue 14:34] - Left comments on jays pr              :TIME:
+https://github.com/lumoslabs/clerk/pull/483
+**** [2018-03-20 Tue 16:20] - Finished deploy                       :TIME:
+https://samson.lumoslabs.com/projects/lumos_rails/deploys/6518
+**** [2018-03-20 Tue 16:41] - Looked at suspect amount rollbar items :TIME:
+Looks to not handle USD properly?
+https://rollbar.com/lumoslabs/Lumosity/items/719881/occurrences/39470319385/
+*** 2018-03-21 Wednesday
+**** [2018-03-21 Wed 11:26] - Google sub creator notes              :TIME:
+Google sub creator stores client side value, which is a semi-formatted string but compares against GAPI values
+**** [2018-03-21 Wed 13:28] - Tried to help eleonore with css       :TIME:
+**** [2018-03-21 Wed 15:21] - Finished Code review                  :TIME:
+**** [2018-03-21 Wed 15:31] - Mail fiend copy investigatoin         :TIME:
+Hasn't been updated since 2017-08-28
+#+BEGIN_SRC
+irb(main):012:0> copy.class.translation_class.where(mail_fiend_copy_id: 926)
+=> #<ActiveRecord::Relation [#<MailFiend::Copy::Translation id: 4252, mail_fiend_copy_id: 926, locale: "en", text: "<!--[if !mso]><!-->\r\n  <style type=\"text/css\">\r\n  ...", created_at: "2016-03-30 22:28:15", updated_at: "2017-08-28 21:10:17">]>
+#+END_SRC
+**** [2018-03-21 Wed 16:45] - GoogleSubscriptionCreator#inferred_price changes :TIME:
+inferred_price changes for non supported currencies depending on if you're adjusted prices or not
+*** 2018-03-22 Thursday
+**** [2018-03-22 Thu 08:10] - Fixed specs for google sub creator    :TIME:
+Not sure how old the expectations were, but they were no longer accurate
+**** [2018-03-22 Thu 08:19] - Pushed shit                           :TIME:
+**** [2018-03-22 Thu 10:55] - Travis shit the bed                   :TIME:
+**** [2018-03-22 Thu 13:00] - Cameron explains                      :TIME:
+**** [2018-03-22 Thu 14:00] - One on One                            :TIME:
+**** [2018-03-22 Thu 15:00] - read over apple specs                 :TIME:
+*** 2018-03-23 Friday
+**** [2018-03-23 Fri 08:51] - RSpec testing patterns                :TIME:
+
+@web-eng @platform-eng
+
+Friday morning poll!(Also it's friday morning Pol!)
+
+I'm trying to gauge preference for/familiarity with different RSpec features, starting with behaviour specification.
+
+First off here is some context(and a describe) from a spec which describes how shifting a bike works:
+```
+  describe 'shifting into a higher gear' do
+    context 'when at the highest gear' do
+      include_context 'bike is in the highest gear'
+      # describe me
+    end
+  end
+```
+
+Without knowing the implementation details only that it should disallow shifting, which of the following ways would you write the example:
+
+:one:
+```
+it_behaves_like 'disallows shifting'
+```
+:two:
+```
+include_examples 'disallows shifting'
+```
+:three:
+```
+it { is_expected.to disallow_shifting }
+```
+
+Now let's say you know when this bike isn't able to be shifted any higher it raises a `Bike::HighestGearError`(it's such a fancy bike it raises its own errors), would you choose one of the following methods or stick to your original choice:
+
+:five:
+```
+it 'raises a Bike::HighestGearError' do
+  expect { bike.shift(:up) }.to raise_error(Bike::HighestGearError)
+end
+```
+:six:
+```
+it { is_expected.to raise_error(Bike::HighestGearError) }
+```
+:seven:
+original choice
+
+
+*Final question(bonus points)*:
+
+Do you hate slack polls?
+:thumbsup:
+:thumbsdown:
+**** [2018-03-23 Fri 12:00] - Deployed mysql2 locks                 :TIME:
+https://samson.lumoslabs.com/projects/lumos_rails/deploys/6576
+**** [2018-03-23 Fri 14:00] - Platform retro                        :TIME:
+**** [2018-03-23 Fri 14:39] - Missing google transactions                                      :TIME:
+Clerk::Transaction.where(remote_id: )
+["3391-7902-4402-63487", "3358-9574-9358-77715", "3377-6651-8300-18923", "3361-6752-0975-81038", "3322-7499-3114-49100", "3398-2190-7338-99259", "3396-5423-7780-14468", "3362-5150-3573-65806"]
+["3366-6735-6719-47482", "3384-6093-2004-03893"]
+
+#+BEGIN_SRC
+_sourceCategory=*web AND ("3391-7902-4402-63487" OR "3358-9574-9358-77715" OR "3377-6651-8300-18923" OR "3361-6752-0975-81038" OR "3322-7499-3114-49100" OR "3398-2190-7338-99259" OR "3396-5423-7780-14468" OR "3362-5150-3573-65806")
+#+END_SRC
+
+https://lumoslabs.atlassian.net/browse/PLAT-1851
+**** [2018-03-23 Fri 16:21] - Setup an AA table for cumulative game results? :TIME:
+Maeby?
+*** 2018-03-26 Monday
+**** [2018-03-26 Mon 14:08] - PR'ed up include fit test             :TIME:
+**** [2018-03-26 Mon 12:08] - PR'ed up filterable cumulative game results :TIME:
+**** [2018-03-26 Mon 14:29] - PR'ed fix for FP plan dependent user links :TIME:
+https://lumoslabs.atlassian.net/browse/PLAT-2191
+**** [2018-03-26 Mon 14:41] - Discussed rationale behind ticket     :TIME:
+https://lumoslabs.atlassian.net/browse/PLAT-2171
+
+Maybe we're able to not do anything and just search by remote id?
+**** [2018-03-26 Mon 15:39] - PR'ed up always show user link        :TIME:
+https://github.com/lumoslabs/shop_gem/pull/337
+**** [2018-03-26 Mon 16:24] - Triage email ssl link                 :TIME:
+**** [2018-03-26 Mon 17:41] - Sendgrid wtf bro                      :TIME:
+*** 2018-03-27 Tuesday
+**** [2018-03-27 Tue 12:05] - Follow up on prs                      :TIME:
+https://lumoslabs.atlassian.net/browse/PLAT-2251?filter=-4&jql=project%20%3D%20PLAT%20AND%20status%20%3D%20Ready%20AND%20labels%20%3D%20cs-reported%20AND%20assignee%20in%20(EMPTY)%20ORDER%20BY%20priority%20DESC%2C%20created%20ASC
+
+https://github.com/lumoslabs/lumos_rails/pull/8730
+
+https://github.com/lumoslabs/lumos_rails/pull/8728
+
+https://github.com/lumoslabs/lumos_rails/pull/8735
+
+https://github.com/lumoslabs/shop_gem/pull/336
+
+https://github.com/lumoslabs/shop_gem/pull/338
+
+https://github.com/lumoslabs/shop_gem/pull/339
+
+https://github.com/lumoslabs/shop_gem/pull/340
+
+https://github.com/lumoslabs/clerk/pull/487
+**** [2018-03-27 Tue 14:07] - Start merge party                     :TIME:
+[[https://github.com/lumoslabs/shop_gem/pull/341][Meta Shop PR]]
+**** [2018-03-27 Tue 14:44] - Finished setup for meta branch        :TIME:
+https://github.com/lumoslabs/shop_gem/pull/341
+**** [2018-03-27 Tue 14:45] - Start merge party for LR              :TIME:
+**** [2018-03-27 Tue 15:42] - Merged retrograder logging            :TIME:
+https://github.com/lumoslabs/shop_gem/pull/332
+**** [2018-03-27 Tue 16:07] - Closing tickets                       :TIME:
+https://lumoslabs.atlassian.net/browse/PLAT-2028
+https://lumoslabs.atlassian.net/browse/PLAT-2251
+https://lumoslabs.atlassian.net/browse/PLAT-2152
+https://lumoslabs.atlassian.net/browse/PLAT-2171
+https://lumoslabs.atlassian.net/browse/PLAT-2191
+https://lumoslabs.atlassian.net/browse/PLAT-1774
+*** 2018-03-28 Wednesday
+**** [2018-03-28 Wed 09:03] - Look at retrograder logging           :TIME:
+Looks like they're being ran through it twice?
+[[https://rollbar.com/lumoslabs/Lumosity/items/720293/occurrences/39866050658/][Last occurrence]]
+[[https://rollbar.com/lumoslabs/Lumosity/items/720293/occurrences/39866031045/][First occurrence]]
+**** [2018-03-28 Wed 09:08] - Investigation                         :TIME:
+[[https://rollbar.com/lumoslabs/Lumosity/items/720293/occurrences/39865919406/][Item]]
+
+[[https://www.lumosity.com/admin/users/45730959/service][User]]
+
+Did not reach retrograder statement, threw subscription I HAVE NO IDEA
+
+Does the iOS app just repeatedly send us receipts?
+**** [2018-03-28 Wed 09:39] - Code review talk writeup              :TIME:
+**** [2018-03-28 Wed 11:29] - Deployed suspect transaction alerting fix :TIME:
+https://samson.lumoslabs.com/projects/lumos_rails/deploys/6685
+*** 2018-03-29 Thursday
+**** [2018-03-29 Thu 09:20] - Fix the filter filters                :TIME:
+I hate active admin
+**** [2018-03-29 Thu 10:19] - Google transaction builder            :TIME:
+**** [2018-03-29 Thu 16:19] - trust training                        :I learned not to trust Deepak
+** 2018-04 April
+*** 2018-04-02 Monday
+**** [2018-04-02 Mon 15:00] - Interview with Kara                   :TIME:
+2.7 Senior
+3.4 Engineer
+**** [2018-04-02 Mon 11:00] - Worked on interview problem           :TIME:
+It's good, like real good
+**** [2018-04-02 Mon 13:00] - Practice run of interview problem     :TIME:
+Paired with Pol and did a practice run implementing the interview problem
+*** 2018-04-03 Tuesday
+**** [2018-04-03 Tue 15:37] - Triage "discount" weirdness           :TIME:
+REMOTE ID 820251158237594570
+Litle
+Price 99.95
+Charged $127.92
+
+#+BEGIN_SRC
+ INFO Writing new row from {
+  "payment_system_version"=>"v2",
+  "payment_transaction_id"=>18958374,
+  "created_at"=>Sun, 01 Apr 2018 20:51:29 UTC +00:00,
+  "plan_id"=>46,
+  "subscription_id"=>11435833,
+  "product_or_plan_name"=>"Yearly Family Subscription",
+  "team_plan_size"=>nil,
+  "is_initial_payment"=>true,
+  "user_id"=>94180737,
+  "promotion_id"=>nil,
+  "promotion_codes"=>"GP-20-1D",
+  "capture_attempts"=>nil,
+  "transaction_time"=>Sun, 01 Apr 2018 20:51:29 UTC +00:00,
+  "date_id"=>4109,
+  "settled_at"=>nil,
+  "post_purchase_survey_answer"=>nil,
+  "remote_transaction_id"=>"820251158237594570",
+  "refund_date_id"=>nil,
+  "approved"=>true,
+  "time_id"=>1252,
+  "customer_id"=>9645830,
+  "migrated_to_payment_transaction_id"=>nil,
+  "transaction_type"=>"Clerk::Litle::Transaction",
+  "credit_card"=>"VI",
+  "parent_id"=>nil,
+  "is_refund"=>false,
+  "is_chargeback"=>false,
+  "is_resubscription"=>false,
+  "is_gift"=>false,
+  "is_bogo"=>false,
+  "plan_internal_name"=>"family_yearly_9995",
+  "classification"=>"conversion",
+  "upgraded_to_payment_transaction_id"=>nil,
+  "upgraded_from_payment_transaction_id"=>nil,
+  "payment_length"=>12,
+  "refund_time"=>nil,
+  "ip_address"=>"99.203.4.253",
+  "country_code_of_transaction"=>"US",
+  "ip_state"=>"",
+  "secondary_country_code"=>"US",
+  "local_gross_cents"=>0.12792e5,
+  "local_vat_cents"=>0.0,
+  "local_net_cents"=>0.12792e5,
+  "usd_gross_cents"=>0.12792e5,
+  "usd_vat_cents"=>0.0,
+  "usd_net_cents"=>0.12792e5,
+  "vat_rate"=>0.0,
+  "conversion_rate"=>0.1e1,
+  "usd_fee_cents"=>0.0,
+  "local_fee_cents"=>0.0,
+  "purchase_page_view_id"=>219167805,
+  "payment_number"=>1,
+  "currency"=>"USD",
+  "processed_at"=>nil
+}
+#+END_SRC
+
+First cart-id ~ruNHzAemVWBOo-gs-Zg3gOUaxE3aCcG5oJB5w1p4lgo~
+Second card-id ~h3-cL92Hmx44xfL_WmS0KLJsgJeRpFeJ01Wb1rHiCPQ~
+
+Browser they started purchase for yearly plan:
+~Mozilla/5.0 (Linux; Android 6.0.1; SAMSUNG SM-G900P Build/MMB29M) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/6.4 Chrome/56.0.2924.87 Mobile Safari/537.36~
+Browser they purchased a family plan with:
+~Mozilla/5.0 (Linux; Android 6.0.1; SM-G900P Build/MMB29M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.109 Mobile Safari/537.36~
+
+#+BEGIN_SRC json
+{
+
+    "method":"POST",
+    "path":"/shop/billing",
+    "format":"html",
+    "controller":"Shop::BillingsController",
+    "action":"create",
+    "status":302,
+    "duration":3430.2,
+    "view":0,
+    "db":410.36,
+    "location":"https://www-shop.lumosity.com/shop/thanks/new",
+    "user_id":94180737,
+    "remote_ip":"99.203.4.253",
+    "params":
+    {
+        "utf8":"&#10003;",
+        "authenticity_token":"AyPP944OGbdL5BOmGX1jbEsb51OSnn0cFq6/x3NyKu8smksYgyPSr4KhMjlH/5mmUQWah9NjYVChn/fcSHOSSA==",
+        "cart_id":"h3-cL92Hmx44xfL_WmS0KLJsgJeRpFeJ01Wb1rHiCPQ",
+        "payment_method":"7080",
+        "paypageRegistrationId":"",
+        "bin":"[FILTERED]",
+        "code":"[FILTERED]",
+        "message":"",
+        "responseTime":"",
+        "type":"",
+        "litleTxnId":"",
+        "commit":"Submit"
+    },
+    "timestamp":1522615892000,
+    "stream":"stdout"
+
+}
+#+END_SRC
+*** 2018-04-05 Thursday
+*** 2018-04-09 Monday
+**** [2018-04-09 Mon 15:30] - SRB event back pops                   :TIME:
+[[file:~/dev/lumos_rails/spoofed_events.json::%5B][dump]]
+**** [2018-04-09 Mon 15:43] - Pushing admin cancel srb              :TIME:
+*** 2018-04-10 Tuesday
+**** [2018-04-10 Tue 09:13] - Helped Eleonore look into failed mailing :TIME:
+it gucci....
+
+gang
+**** [2018-04-10 Tue 09:13] - Checked on those events               :TIME:
+They also gucci......
+
+gang
+*** 2018-04-11 Wednesday
+**** [2018-04-11 Wed 09:30] - Fix'd capybara for lumos_utils        :TIME:
+https://github.com/lumoslabs/lumos_utils/pull/245
+*** 2018-04-12 Thursday
+**** [2018-04-12 Thu 10:40] - Fix'd lgm                             :TIME:
+**** [2018-04-12 Thu 13:49] - Helping kevin debug failed android purchases for whitelisted accounts :TIME:
+https://github.com/lumoslabs/clerk/pull/507/
+#+BEGIN_SRC json
+{
+  "autoRenewing":true,
+  "countryCode":"US",
+  "developerPayload":"",
+  "expiryTimeMillis":"1523566771556",
+  "kind":"androidpublisher#subscriptionPurchase",
+  "orderId":"GPA.3352-1941-3999-91266",
+  "paymentState":1,
+  "priceAmountMicros":"11950000",
+  "priceCurrencyCode":"USD",
+  "purchaseType":0,
+  "startTimeMillis":"1523566353043"
+}
+#+END_SRC
+*** 2018-04-13 Friday
+**** [2018-04-13 Fri 09:10] - Deployed pr to allow subs to be created which expire on that day :TIME:
+Since we use dates rather than times we have to allow subs which expire same day for android testing and their test subs expire after ~5minutes
+**** [2018-04-13 Fri 09:26] - Filed ticket to fire cancel_subscription events when we cancel a subscription :TIME:
+https://lumoslabs.atlassian.net/browse/PLAT-2335
+**** [2018-04-13 Fri 15:04] - canceled_susbscription                :TIME:
+https://github.com/lumoslabs/lumos_rails/pull/8855
+https://github.com/lumoslabs/clerk/pull/509
+*** 2018-04-16 Monday
+**** [2018-04-16 Mon 16:14] - Triage                                :TIME:
+https://lumosity.slack.com/archives/C5PFSFGN6/p1523920393000191
+**** [2018-04-16 Mon 18:23] - Handed off ToT mobile webview issue to Amy :TIME:
+**** [2018-04-16 Mon 18:24] - investigated free trial for paid user :TIME:
+https://lumosity.slack.com/files/U02Q5P2JT/FA7PR0FLK/gift_sub_free_trial_offer.mov
+https://lumosity.slack.com/archives/C5PFSFGN6/p1523925985000317
+
+Looks like they were bucketed into ~free_trial_v3_itunes~ the same day they applied their gift card
+**** [2018-04-16 Mon 18:56] - Fix'd free trial being shown to premium users :TIME:
+https://github.com/lumoslabs/lumos_rails/pull/8869
+*** 2018-04-17 Tuesday
+**** [2018-04-17 Tue 08:57] - Amy fix'd stuff           :TIME:BUGSQUASHER:
+https://github.com/lumoslabs/lumos_rails/pull/8870
+**** [2018-04-17 Tue 08:59] - Jay shipped my fix                    :TIME:
+https://github.com/lumoslabs/lumos_rails/pull/8869
+**** [2018-04-17 Tue 14:41] - missing purchase_event_properties_facts :TIME:
+NO LOGS
+
+11423174
+11423252
+11423298
+11423302
+11423360
+11423363
+11423370
+11423435
+11423440
+11423450
+11423471
+11423640
+11423742
+11423773
+
+
+11435195,
+11435223,
+11435227,
+11435255,
+11435258,
+11435264,
+11435294,
+11435317,
+11435331,
+11435343,
+11435370,
+11435375,
+11435405
+
+
+13551564,
+29726544,
+2454090,
+12365358,
+924540,
+83039691,
+73011191,
+65006996,
+45633845,
+66920487,
+70393790,
+92088944,
+83331495
+**** [2018-04-17 Tue 16:22] - Looks like we haven't sent the sub id up since 2016-05? :TIME:
+*** 2018-04-18 Wednesday
+**** [2018-04-18 Wed 08:43] - helping eleonore with emails          :TIME:
+Likely needs twerk
+**** [2018-04-18 Wed 09:15] - Fire purchase event for api purchases :TIME:
+**** [2018-04-18 Wed 13:16] - BillDueSubscriptionsJob               :TIME:
+[[https://github.com/lumoslabs/lumos_rails/pull/8886/files][PR]]
+Paired with Cam'Ron
+**** [2018-04-18 Wed 13:46] - webview of Game Strength Profile for members cross-training between English and non English accounts :TIME:
+[[file:~/dev/lumos_rails/app/views/trainer_app/insights/reports/game_lpi_rankings/_rankings_list.html.haml::=%20row(fluid:%20true,%20html:%20{%20id:%20'ranking-list'%20})%20do][the view]]
+**** [2018-04-18 Wed 15:45] - IE doesn't support document.contains  :TIME:BUGSQUASHER:
+it uses document.body.contains
+**** [2018-04-18 Wed 15:57] - Flappy failure                   :TIME:FLAP:
+  1) the games page search bar for premium user searching for games does not show games that do not match search term
+     Failure/Error: expect(page).to_not have_css("#game_#{games.last.id}")
+       expected not to find css "#game_7320", found 1 match: "SPEED temporibus sed minus 56 name59"
+     # ./spec/features/games/searchbar_spec.rb:60:in `block (4 levels) in <main>'
+     # ./spec/rails_helper.rb:489:in `block (2 levels) in <top (required)>'
+     # ./spec/rails_helper.rb:321:in `block (2 levels) in <top (required)>'
+Finished in 3 minutes 28.5 seconds (files took 28.93 seconds to load)
+47 examples, 1 failure
+Failed examples:
+rspec ./spec/features/games/searchbar_spec.rb:59 # the games page search bar for premium user searching for games does not show games that do not match search term
+Randomized with seed 7031
+*** 2018-04-19 Thursday
+**** [2018-04-19 Thu 08:55] - No method >                           :TIME:BUGSQUASHER:
+https://rollbar.com/lumoslabs/Lumosity/items/711964/?item_page=0&item_count=100&#instances
+*** 2018-04-23 Monday
+**** [2018-04-23 Mon 08:50] - Looked at apple store pricing matrix :TIME:
+looks fine
+**** [2018-04-23 Mon 08:53] - Failing piece of shit                 :TIME:
+#+BEGIN_SRC
+  1) Changing Login Info when the user goes directly to the email notifications edit path when user is in the react experience when using alternative preferences route behaves like has redirect redirects to the new react edit email notifications path
+     Got 0 failures and 2 other errors:
+     Shared Example Group: "has redirect" called from ./spec/features/trainer_app/settings/change_email_notifications_spec.rb:60
+     1.1) Failure/Error: raise Exception.new(errors.join("\n\n")) if errors.present?
+
+          Exception:
+            http://127.0.0.1:42126/graph_api/v3 - Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+          # ./spec/rails_helper.rb:397:in `block (3 levels) in <top (required)>'
+          # ./spec/rails_helper.rb:489:in `block (2 levels) in <top (required)>'
+          # ./spec/rails_helper.rb:321:in `block (2 levels) in <top (required)>'
+     1.2) Failure/Error: ex.run_with_retry retry: 3
+
+          Errno::ENAMETOOLONG:
+            File name too long @ rb_sysopen - /home/travis/build/lumoslabs/lumos_rails/tmp/capybara/changing-login-info-when-the-user-goes-directly-to-the-email-notifications-edit-path-when-user-is-in-the-react-experience-when-using-alternative-preferences-route-behaves-like-has-redirect-redirects-to-the-new-react-edit-email-not_2018-04-20-22-18-52.382.html
+          # ./spec/rails_helper.rb:489:in `block (2 levels) in <top (required)>'
+          # ./spec/rails_helper.rb:321:in `block (2 levels) in <top (required)>'
+Finished in 5 minutes 26 seconds (files took 29.16 seconds to load)
+59 examples, 1 failure, 2 pending
+Failed examples:
+rspec ./spec/features/trainer_app/settings/change_email_notifications_spec.rb[1:3:1:3:1:1] # Changing Login Info when the user goes directly to the email notifications edit path when user is in the react experience when using alternative preferences route behaves like has redirect redirects to the new react edit email notifications path
+#+END_SRC
+**** [2018-04-23 Mon 16:53] - Billing expired in remote google subs breaks things :TIME:
+#+BEGIN_SRC sql
+SELECT count(*), clerk_subscriptions.updated_at
+FROM lumosity.clerk_subscriptions
+JOIN lumosity.clerk_customers on clerk_customers.id = clerk_subscriptions.customer_id
+WHERE clerk_customers.type = 'Clerk::Google::Customer'
+AND clerk_subscriptions.next_billing_date IS NULL
+AND status = 'active'
+GROUP BY 2
+ORDER BY 2
+#+END_SRC
+*** 2018-04-24 Tuesday
+**** [2018-04-24 Tue 11:00] - Fighting in the war room              :TIME:
+Apparently there is no fighting in the war room
+*** 2018-04-27 Friday
+**** [2018-04-27 Fri 15:59] - Killed the travis                     :TIME:
+rubocop -a
+*** 2018-04-30 Monday
+**** [2018-04-30 Mon 09:14] - Seems to not use first time logi      :TIME:
+** 2018-05 May
+*** 2018-05-10 Thursday
+**** [2018-05-10 Thu 13:28] - Paired with Pol on gewgs stuff        :TIME:
+**** [2018-05-10 Thu 13:29] - Engagement survey                     :TIME:
+*** 2018-05-11 Friday
+**** [2018-05-11 Fri 11:36] - clocks                                :TIME:
+they're pretty clocky
+*** 2018-05-15 Tuesday
+**** [2018-05-15 Tue 12:24] - met with Marc and Szabolc             :TIME:
+Google extraneous transactions
+*** 2018-05-17 Thursday
+**** [2018-05-17 Thu 11:50] - Deleted moar baddies                  :TIME:
+#+BEGIN_SRC ruby
+logger = Logger.new('/home/lumoslabs/current/more_extraneous_transactions')
+Clerk::Google::Transaction.where("created_at > '2018-05-01'").find_each.select do |tx| tx.verification_data.blank? &&
+    tx.remote_id != Clerk::Google::Verification.build(tx.plan.internal_name, tx.payment_token, tx.remote_id, tx.subscription)&.result&.order_id
+end.each do |tx|
+  logger.info [tx.id, tx.remote_id, tx.extra]
+  logger.info "Failed to destroy #{tx.id}" unless tx.destroy
+end
+#+END_SRC
+**** [2018-05-17 Thu 11:50] - Ran google sub sync task              :TIME:
+To fix the baddies
+*** 2018-05-18 Friday
+**** [2018-05-18 Fri 15:49] - Google tasks                          :TIME:
+*WANT*
+- weekly sync (all subs)
+- daily due
+- notifications
+*** 2018-05-21 Monday
+**** [2018-05-21 Mon 15:00] - Workstream Team intro meeting         :TIME:
+[[file:projects/ResurrectionWorkstreamTeam.org::*First%20Meeting][First Meeting]]
+*** 2018-05-22 Tuesday
+**** [2018-05-22 Tue 13:27] - BludWerk                              :TIME:
+**** [2018-05-22 Tue 13:48] - Apartment stuffs                      :TIME:
+*** 2018-05-23 Wednesday
+**** [2018-05-23 Wed 16:35] - Paired with pol on clockwork stuff    :TIME:
+**** [2018-05-23 Wed 16:35] - clockwork tasks                       :TIME:
+*** 2018-05-24 Thursday
+**** [2018-05-24 Thu 15:49] - Deployed google tasks                 :TIME:
+**** [2018-05-24 Thu 15:49] - ran sync subscriptions for google     :TIME:
+Gucci
+*** 2018-05-25 Friday
+**** [2018-05-25 Fri 11:57] - Clerk as a service                    :TIME:
+*** 2018-05-29 Tuesday
+**** [2018-05-29 Tue 13:13] - Investigated user with multiple discounts :TIME:
+*** 2018-05-30 Wednesday
+**** [2018-05-30 Wed 15:38] - Google processor logs                 :TIME:
+**** [2018-05-30 Wed 16:20] - PRs                                   :TIME:
+https://github.com/lumoslabs/shop_gem/pull/376
+https://github.com/lumoslabs/clerk/pull/545
+https://github.com/lumoslabs/clerk/pull/549
+https://github.com/lumoslabs/lumos_rails/pull/9146
+**** [2018-05-30 Wed 16:48] - pol deployed my things                :TIME:
+Fix the processor
+**** [2018-05-30 Wed 18:08] - iOS trial left                        :TIME:
+** 2018-06 June
+*** 2018-06-01 Friday
+**** [2018-06-01 Fri 11:07] - Deploy friday                         :TIME:
+https://github.com/lumoslabs/clerk/pull/545 - created_at
+https://github.com/lumoslabs/shop_gem/pull/376 - created_at
+
+https://github.com/lumoslabs/clerk/pull/532 - improvements
+https://github.com/lumoslabs/clerk/pull/549 - trial_time_left
+https://github.com/lumoslabs/lumos_rails/pull/9146 - trial_time_left
+
+Deploy
+*** 2018-06-05 Tuesday
+**** [2018-06-05 Tue 15:24] - Shit broke                            :TIME:
+travis
+quay
+**** [2018-06-05 Tue 16:04] - Merged everything                     :TIME:
+yayayayayay
+*** 2018-06-06 Wednesday
+**** [2018-06-06 Wed 12:02] - sumologic scheduled queries           :TIME:
+dope
+**** [2018-06-06 Wed 16:26] - weird srb applied thing               :TIME:
+https://www.lumosity.com/admin/users/56934126/service
+**** [2018-06-06 Wed 18:25] - subs which haven't done shit          :TIME:
+#+BEGIN_SRC
+[11475959, 11471053, 11471855, 11471920, 11475688, 11476723, 11476784, 11480239, 11482134]
+#+END_SRC
+*** 2018-06-11 Monday
+**** [2018-06-11 Mon 14:44] - trial subs expire this way            :TIME:
+[[file:~/dev/clerk/app/models/clerk/subscription.rb::if%20status%20==%20Status::Active%20&&%20billing_schedule.expired?%20#%20user%20has%20stoppped%20renewal][here]]
+*** 2018-06-12 Tuesday
+**** [2018-06-12 Tue 13:27] - UnlockedContentSet spec               :TIME:
+*** 2018-06-13 Wednesday
+**** [2018-06-13 Wed 13:51] - Pair with cameron on Time             :TIME:
+it sucks
+**** [2018-06-13 Wed 16:57] - Investigated research users who had multiple subs :TIME:
+CAused them to not be able to access crosswords because they had their research role removed
+*** 2018-06-14 Thursday
+**** [2018-06-14 Thu 13:46] - Deployed litle refund mutex           :TIME:
+*** 2018-06-21 Thursday
+**** [2018-06-21 Thu 14:12] - PCI fiasco                            :TIME:
+Not actually Peripheral Component Interconnect, who knew?
+
+#+BEGIN_QUOTE
+Hello,
+
+Our last scan failed for the following vulnerabilities: Non-HttpOnly Session Cookies, Non-Secure Session Cookies. Both of which look like the CVSS score was the only thing to change, I'm assuming even though it didn't pass before it wasn't necessarily a failing check? I've checked the NVD and don't see any new CVEs which would affect the CVSS score of either of those checks. Can we get more information regarding why this check just started failing so we can fix it in the most appropriate manner?
+
+Thank you,
+Alex
+#+END_QUOTE
+*** 2018-06-26 Tuesday
+**** [2018-06-26 Tue 13:55] - Strongly worded email to vantiv people :TIME:
+*** 2018-06-28 Thursday
+**** [2018-06-28 Thu 16:54] - Investigated apple subscriptions with duplicate payment tokens :TIME:
+** 2018-07 July
+*** 2018-07-16 Monday
+*** 2018-07-18 Wednesday
+**** [2018-07-18 Wed 12:17] - Merge party                           :TIME:
+**** [2018-07-18 Wed 13:45] - Investigate shitty android subs       :TIME:
+*** 2018-07-20 Friday
+**** [2018-07-20 Fri 11:25] - Merge these                           :TIME:
+https://github.com/lumoslabs/clerk/pull/566
+https://github.com/lumoslabs/clerk/pull/565
+https://github.com/lumoslabs/clerk/pull/564
+https://github.com/lumoslabs/clerk/pull/563
+https://github.com/lumoslabs/clerk/pull/560
+*** 2018-07-24 Tuesday
+**** [2018-07-24 Tue 13:50] - Clerk Rollbar PR                      :TIME:
+*** 2018-07-31 Tuesday
+** 2018-08 August
+*** 2018-08-02 Thursday
+**** [2018-08-02 Thu 15:17] - Deployed Google amount fixes          :TIME:
+**** [2018-08-02 Thu 15:24] - Investigate duplicate autorenewal charges :TIME:

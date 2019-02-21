@@ -1,0 +1,69 @@
+#+TITLE: Procs, blocks, and Ram Dass
+#+TITLE: Functional programming and happiness
+
+* Motivation
+#+BEGIN_QUOTE
+It is important to expect nothing, to take every experience,
+including the negative ones, as merely steps on the path, and to proceed.
+#+END_QUOTE
+
+* Resources
+** lispyscript
+http://lispyscript.com/
+* Apply
+It's how you got here
+
+#+BEGIN_SRC haskell
+
+#+END_SRC
+* Pattern Matching
+#+BEGIN_SRC haskell
+  fib :: Int -> Int
+
+  fib 0 = 1
+  fib 1 = 1
+  fib n = fib n + fib $ n + 1
+
+  fib 3
+#+END_SRC
+** Like guards but better
+* cons car cdr?
+Construction and destruction of lists(list processor)
+** cons
+CONStruct(the only con in lisps!)
+#+BEGIN_SRC emacs-lisp
+(cons 'head 'tail)
+#+END_SRC
+
+#+RESULTS:
+: (head . tail)
+** car
+Copy Address Register(also Maserati)
+#+BEGIN_SRC emacs-lisp
+(car (cons 'head 'tail))
+#+END_SRC
+
+#+RESULTS:
+: head
+
+** cdr
+Copy Decriment Register(placeholder witty text)
+#+BEGIN_SRC emacs-lisp
+(cdr (cons 'head 'tail))
+#+END_SRC
+
+#+RESULTS:
+: tail
+** cddddr
+Yes this is actually a function
+
+* Each?
+Implement each using cons car cdr
+
+#+BEGIN_SRC emacs-lisp
+  (defun each (fun lst)
+    (when lst
+      (let (element (car lst))
+        (apply fun element)
+        (each fun (cdr lst)))))
+#+END_SRC

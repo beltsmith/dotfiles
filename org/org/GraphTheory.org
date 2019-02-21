@@ -1,0 +1,142 @@
+#+TITLE: Graph Theory(aka how to attrerly sacrifice a goat)
+* Dot Notation
+[[https://www.graphviz.org/doc/info/lang.html][Graphviz documentation]]
+
+** Components
+*** Graph
+Graphs are the simplest structure you can use for a dot file.
+
+They have a name and a block which contains it's nodes, edges, and attrerties.
+
+#+BEGIN_SRC dot :file graph.png
+  graph "My First graph" { }
+#+END_SRC
+
+#+RESULTS:
+[[file:graph.png]]
+
+*** Node
+No it's not a javascript
+
+#+BEGIN_SRC dot :file node.png
+  graph "My First node" {
+    A
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:node.png]]
+
+*** Edge
+Edges connect two nodes of a graph. They can be directed or undirected depending on the type of graph they reside in.
+
+#+BEGIN_SRC dot :file edge.png
+  graph "My First edge" {
+    A -- B
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:edge.png]]
+
+*** Attributes
+Attributes can be applied to components to change their behaviour.
+Their is a metric fuck tonne, don't worry about knowing all of them.
+If you get lost, just search this[[https://www.graphviz.org/doc/info/attrs.html#d:labelloc][ page]].
+
+#+BEGIN_SRC dot :file attr1.png
+  graph "Oh hi Mark" {
+    label="Oh hi Mark"
+    Oh -- hi
+    hi -- Mark
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:attr1.png]]
+
+#+BEGIN_SRC dot :file attr2.png
+  graph "I'm blue da ba dee" {
+    bgcolor=blue;
+    A -- B
+    B -- C
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:attr2.png]]
+
+#+BEGIN_SRC dot :file attr3.png
+  graph "I'm less blue da ba doo" {
+    A -- B
+    B -- C
+    C [fillcolor=blue style=filled]
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:attr3.png]]
+
+*** Subgraphs
+Yo dawg I heard you like graphs so I put a graph in your graph so your nodes connect to nodes.
+
+They serve to separate parts of a graph.
+
+You want a nested graph? Here you go, now get out.
+#+BEGIN_SRC dot :file subgraph1.png
+  graph "I'm a parental" {
+    A -- B
+    subgraph "My First subgraph" {
+      B -- C
+    }
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:subgraph1.png]]
+
+You can also use them to provide a context to set attributes(memberries they're scoped to a block)
+
+#+BEGIN_SRC dot :file subgraph2.png
+  graph "" {
+    A -- B
+    B -- C
+    { rank=same; A B C }
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:subgraph2.png]]
+
+But wait there's more!
+
+They can also be used as sugar to connect a single node to multiple nodes
+
+#+BEGIN_SRC dot :file subgraph3.png
+graph "Mmmmmm carbs" {
+    A -- { B C }
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:subgraph3.png]]
+
+
+It doesn't stop there!
+
+#+BEGIN_SRC dot :file subgraph4.png
+graph "
+#+END_SRC
+
+*** Digraph
+#+BEGIN_SRC dot :file digraph.png
+  digraph "Cycle" {
+    A -> B
+    B -> C
+    C -> A
+    { rank=same; B; C }
+  }
+#+END_SRC
+
+#+RESULTS:
+[[file:digraph.png]]

@@ -1,0 +1,44 @@
+#+TITLE: RubyConf 2017
+
+* Day 1
+** Schedule
+| Talk                                                   | Speaker                       |        Time | Room               | Done |
+|--------------------------------------------------------+-------------------------------+-------------+--------------------+------|
+| Reimagining 2D graphics and game development with Ruby | TOM BLACK                     | 10:40-11:20 | Grand Ballroom AB  | X    |
+| Orbital Rocket Guidance with Ruby                      | NATE BERKOPEC                 | 11:30-12:10 | Grand Ballroom AB  | X    |
+| Lunch                                                  | Food                          | 12:10-13:20 | Grand Ballroom CD  | X    |
+| Live coding music                                      | SAM AARON                     | 13:20-13:50 | Grand Ballroom AB  | X    |
+| Theres Nothing.new under the sun                       | JUSTIN SEARLS, JOSH GREENWOOD | 14:00-14:40 | Salon A            | X    |
+| Rewriting Rack: A functional approach                  | ALEX WHEELER                  | 14:50-15:30 | Salon C            | X    |
+| Afternoon Break                                        |                               | 15:30-16:00 | Chemin Royal Foyer | X    |
+| What if... ?: Ruby 3                                   | Eric Weinstein                | 16:00-16:40 | Salon A            | X    |
+| Keynote: Growing Old                                   | Chad Fowler                   | 16:50-17:40 | Grand Ballroom AB  | X    |
+* Day 2
+** Schedule
+| Talk                                                 | Speaker                    |        Time | Room               | Done |
+|------------------------------------------------------+----------------------------+-------------+--------------------+------|
+| Keynote: The Impermanence of Software                | Andy Croll                 |  9:30-10:20 | Grand Ballroom AB  | X    |
+| Compiling Ruby                                       | Kevin Deisz                | 10:30-11:10 | Salon A            | X    |
+| Types and Ruby Programming Language                  | Soutaro Matsumoto          | 11:20-12:00 | Salon C            | X    |
+| Lunch                                                | Food                       | 12:00-13:10 | Grand Ballroom CD  | X    |
+| Just a Ruby Minute                                   | Andrew Faraday             | 13:20-13:40 | Grand Ballroom AB  | X    |
+| How I learned to Stop Worrying and Love Unit Testing | Valerie Woolard Srinivasan | 13:50-14:30 | Salon A            | X    |
+| Deterministic Solutions to Intermittent Failures     | Tim Mertens                | 14:40-15:20 | Salon A            | X    |
+| Afternoon Break                                      |                            | 15:20-15:50 | Chemin Royal Foyer | X    |
+| High Cost Tests and High Value Tests                 | Noel Rappin                | 15:50-16:30 | Salon A            | X    |
+| How to Load 1M Lines of Ruby in 5S                   | Andrew Metcalf             | 16:40-17:20 | Salon A            | X    |
+| Lightning Talks                                      | Various Artists            |       17:30 | Grand Ballroom AB  |      |
+* Day 3
+** Schedule
+| Talk                                                     | Speaker            |        Time | Room               | Done |
+|----------------------------------------------------------+--------------------+-------------+--------------------+------|
+| Keynote: You're insufficiently Persuasive                | Sandi Metz         |  9:30-10:20 | Grand Ballroom AB  | X    |
+| Building a Compacting GC for MRI                         | Tenderlove         | 10:30-11:10 | Grand Ballroom AB  | X    |
+| Estoteric Obfuscated Artistic Programming in Ruby        | Yusuke Endoh       | 11:20-12:00 | Grand Ballroom AB  | X    |
+| Lunch                                                    | Food               | 12:00-13:10 | Grand Ballroom CD  | X    |
+| Ignite Talks                                             | Various Artists    | 13:20-13:40 | Grand Ballroom AB  | X    |
+| Bugs in SPAAAAAAAACE                                     | Colin Fulton       | 13:50-14:30 | Salon B            | X    |
+| Code Reviews: Honesty, Kindness, Inspiration: Pick Three | Jacob Stoebel      | 14:40-15:20 | Salon C            | X    |
+| Afternoon Break                                          |                    | 15:20-15:40 | Chemin Royal Foyer |      |
+| Fireside Chat - Q&A with  Matz                           | Yukihiro MAtsumoto | 15:40-16:30 | Grand Ballroom AB  |      |
+| Closing Social                                           |                    | 16:30-17:30 | Chemin Royal Foyer |      |

@@ -1,0 +1,116 @@
+Name = "MDErgo1";
+Layout = "Default";
+Base = "Blank";
+Version = "0.1";
+Author = "HaaTa (Jacob Alexander) 2015";
+KLL = "0.3c";
+Date = "2015-09-12";
+Generator = "KIICONF 0.2";
+
+U"ESC" : U"SPACE", U"G", U"S";
+U"5" : U"5";
+U"4" : U"4";
+U"3" : U"3";
+U"2" : U"2";
+U"1" : U"1";
+U"EQUALS" : U"EQUALS";
+
+# Row 2
+U"FUNCTION1" : U"G", U"T";
+U"T" : U"T";
+U"R" : U"R";
+U"E" : U"E";
+U"W" : U"W";
+U"Q" : U"Q";
+U"BACKSLASH" : U"TAB";
+
+U"G" : U"G";
+U"F" : U"F";
+U"D" : U"D";
+U"S" : U"S";
+U"A" : U"A";
+U"TAB" : U"ESCAPE";
+
+# Top left thumb
+U"LCTRL" : U"LCTRL" + U"C", U"S", U"P", U"ENTER";
+U"LALT" : U"SPACE", U"S", U"A", U"P";
+
+U"FUNCTION2" : U"FUN1";
+
+# Row 4
+U"B" : U"B";
+U"V" : U"V";
+U"C" : U"C";
+U"X" : U"X";
+U"Z" : U"Z";
+U"LSHIFT" : U"LSHIFT";
+
+# Left thumb small buttons
+U"HOME" : U"LCK5"; # layerLock(6); # layer 6
+U"END" : U"LCTRL";
+
+# Left thumb long
+U"DELETE" : U"DELETE";
+U"BACKSPACE" : U"BACKSPACE";
+
+# Left bottom
+U"FUNCTION5" : U"LGUI";
+U"FUNCTION4" : U"LALT";
+U"FUNCTION3" : U"BACKSLASH";
+U"BACKTICK" : U"BACKTICK";
+# U"LGUI" : U"SPACE", U"W", U"M";
+U"LGUI" : U"LCTRL";
+
+# Right row 1
+U"FUNCTION6" : U"LCK2";
+U"6" : U"6";
+U"7" : U"7";
+U"8" : U"8";
+U"9" : U"9";
+U"0" : U"0";
+U"MINUS" : U"MINUS";
+
+# Right row 2
+U"LBRACE" : U"EQUALS", U"EQUALS";
+U"Y" : U"Y";
+U"U" : U"U";
+U"I" : U"I";
+U"O" : U"O";
+U"P" : U"P";
+U"RBRACE" : U"LSHIFT" + U"LCTRL";
+
+# Right row 3
+U"H" : U"H";
+U"J" : U"J";
+U"K" : U"K";
+U"L" : U"L";
+U"SEMICOLON" : U"SEMICOLON";
+U"QUOTE" : U"QUOTE";
+
+U"RALT" : '('; # RH thumb top left
+U"RCTRL" : ')'; # RH thumb top right
+
+# Right row 4
+U"FUNCTION7" : U"FUN2";
+U"N" : U"N";
+U"M" : U"M";
+U"COMMA" : U"COMMA";
+U"PERIOD" : U"PERIOD";
+U"SLASH" : U"SLASH";
+U"RSHIFT" : U"RSHIFT";
+
+# Right thumb smalls
+U"PAGEUP" : U"FUN5"; # layerShift(3); # 4th layer
+U"PAGEDOWN" : U"FUN3"; # layerShift(2); # 3rd layer
+
+# Right thumb long
+U"ENTER" : U"ENTER";
+U"SPACE" : U"SPACE";
+
+U"LEFT" : '[';
+U"DOWN" : ']';
+
+U"UP" : U"SPACE", U"LSHIFT" + U"C", U"C";
+U"RIGHT" : U"SPACE", U"F", U"S";
+# U"RGUI" : U"LCTRL" + U"C", U"LCTRL" + U"R";
+U"RGUI" : U"SPACE", U"R", U"L";

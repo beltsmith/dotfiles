@@ -1,0 +1,51 @@
+#+Title: Tony Hawk's Pro Tips
+#+AUTHOR: Mam Bargera
+
+* Environment Variables and you
+Our app has many environment variables that you can modify to suite your needs and which change the server's behaviour to make your life easier.
+
+This section will cover those variables you can set in different environments as well as when it would be helpful to use them.
+** Development
+*** ~DISABLE_DNS_PRECACHE~
+Part of the boot process involves [[https://github.com/lumoslabs/lumos_rails/blob/master/config/initializers/dns_helper.rb][precaching DNS requests]] to addresses we frequently make calls to(e.g. sendgrid, rollbar, paypal).
+
+This doesn't work if you happen to be disconnected from the internet and will cause the server to take a while to boot.
+
+While running a server you can set ~DISABLE_DNS_PRECACHE~ to ~true~ and it will skip the DNS precache stage of the boot.
+*** ~SILENT_BOOT~
+Have you ever noticed the ~app init time: 9001.42 seconds~?
+Annoying right?
+If you don't want rails to tell you how slow it is you can set ~SILENT_BOOT~ to ~true~ and those messages will go away!
+*** ~SKIP_ADMIN~
+Apparently you can skip loading active admin. This might be useful since ActiveAdmin is potato.
+*** ~TRACE_QUERIES~
+Do you stay awake at night wondering what the entire stacktrace was when that ~ActiveRecord~ query was ran?
+Well you're in luck!
+Come on down to ~TRACE_QUERIES~-R-US and you too can have all the data for the low low price of ~TRACE_QUERIES=true~
+
+#+BEGIN_SRC
+[Shard: master]  Clerk::Subscription Load (1.8ms)  SELECT `clerk_subscriptions`.* FROM `clerk_subscriptions` WHERE 1=0 AND `clerk_subscriptions`.`status` IN ('active', 'past_due', 'deferred')  ORDER BY `clerk_subscriptions`.`created_at` ASC
+  Query Trace > /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/subscriber.rb:100:in `finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/log_subscriber.rb:83:in `finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/fanout.rb:102:in `finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/fanout.rb:46:in `block in finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/fanout.rb:46:in `each'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/fanout.rb:46:in `finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/instrumenter.rb:36:in `finish'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/activesupport-4.2.10/lib/active_support/notifications/instrumenter.rb:25:in `instrument'
+     from /Users/agirdler/dev/lumos_rails/vendor/bundle/gems/ar-octopus-0.9.0/lib/octopus/abstract_adapter.rb:13:in `instrument'
+     [......] 252 lines omitted
+     from bin/rails:4:in `<main>'
+#+END_SRC
+
+
+P.T.P.S(Pro tip post script): This is a lot of data, it is recommended to change the settings in [[https://github.com/lumoslabs/lumos_rails/blob/master/config/initializers/query_trace.rb][query_trace.rb]] to suite your needs.
+** Testing
+*** ~HEADFUL~
+Debugging browser tests can be hard without seeing what the test is doing on the page and normally you only get visual feedback after a test has failed.
+
+While running a feature test you can set ~HEADFUL~ to ~true~ and it will cause the browser which is spun up to not be done in headless mode.
+*** ~RSPEC_SEED~
+This does the same thing as setting ~--seed~ when running rspec but as an environment variable.
+
+This is useful for debugging CI tests failures locally, you can rerun the tests in the exact order that caused the failure.

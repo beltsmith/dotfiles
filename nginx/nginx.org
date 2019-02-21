@@ -1,0 +1,93 @@
+#+TITLE: nginx sonder config
+
+* Description
+This is a org file which (eventually) can be tangled to produce appropriate scripts to setup a reverse proxy nginx server for local Sonder development.
+
+* Variables
+
+** IPs
+*** local loopback
+FQDN which only resolves to you local machine
+#+begin_src :noweb-ref lo
+127.0.0.1
+#+end_src
+
+#+begin_src :noweb-ref lo6
+::1
+#+end_src
+*** local FQDN
+FQDN which only resolves to you local machine
+#+begin_src :noweb-ref fqdn
+127.0.1.1
+#+end_src
+*** local loopback
+** host names
+#+begin_src
+
+#+end_src
+Host names for various Sonder services
+*** tlds
+#+begin_src emacs-lisp :noweb-ref tlds
+  (setq tlds '("dev" "local" "test"))
+#+end_src
+*** subdomains
+#+begin_src emacs-lisp :noweb-ref subdomains
+(setq subdomains '("www" nil "admin"))
+#+end_src
+*** domains
+#+begin_src emacs-lisp :noweb yes :export yes
+  <<tlds>>
+  <<subdomains>>
+  (defun domainify (tld)
+    (concat "sonder." tld))
+  (defun subdomainify (subdomain domain)
+    (if (eq subdomain nil)
+        domain ;; handles no subdomain
+      (concat subdomain "." domain)))
+
+  (defun subdomains-for (domain)
+    (mapcar '(lambda (sd) (subdomainify sd domain)) subdomains))
+
+  (mapcan 'subdomains-for
+          (mapcar 'domainify tlds))
+  #+end_src
+
+  #+RESULTS:
+  | www.sonder.dev | sonder.dev | admin.sonder.dev | www.sonder.local | sonder.local | admin.sonder.local | www.sonder.test | sonder.test | admin.sonder.test |
+
+*** flatbook
+#+begin_src :noweb-ref flatbook_hosts
+www.sonder.dev sonder.dev admin.sonder.dev www.sonder.local sonder.local admin.sonder.local
+#+end_src
+* Hosts
+#+begin_src
+
+#+end_src
+
+* servers
+#+begin_src nginx :noweb-ref http-listen
+  listen <<httpport>>;
+  listen <<ip6addr>><<httpport>>;
+#+end_src
+#+begin_src nginx :noweb-ref https-listen
+  listen <<httpsport>>;
+  listen <<ip6addr>><<httpsport>>;
+#+end_src
+#+begin_src nginx :noweb-ref https-ssl
+  ssl_certificate ssl/server.crt;
+  ssl_certificate_key ssl/server.key;
+#+end_src
+#+begin_src nginx :noweb-ref ssl-proxy-headers
+  proxy_set_header Host $http_host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Client-Verify SUCCESS;
+  proxy_set_header X-Client-DN $ssl_client_s_dn;
+  proxy_set_header X-SSL-Subject $ssl_client_s_dn;
+  proxy_set_header X-SSL-Issuer $ssl_client_i_dn;
+#+end_src
+** flatbook
+#+begin_src nginx
+  server {
+  }
+#+end_src

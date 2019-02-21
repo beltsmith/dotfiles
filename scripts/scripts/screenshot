@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+cmd="shutter --no_session --exit_after_capture"
+selection="--selection"
+window="--window"
+screen="--screen"
+action=$1
+
+case $action in
+    selection)
+        $cmd $selection
+        ;;
+    window)
+        $cmd $window
+        ;;
+    screen)
+        $cmd $screen
+        ;;
+esac

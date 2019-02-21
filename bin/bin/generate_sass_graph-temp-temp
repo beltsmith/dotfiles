@@ -1,0 +1,255 @@
+#!/usr/bin/env ruby
+
+require 'awesome_print'
+require 'json'
+
+module SassDependencyLogger
+  def log(msg)
+    puts(msg) if should_log?
+  end
+
+  private
+
+  def log_found_import(import_name, source_file, import)
+    log %(Import of #{import_name} in #{source_file} matched as #{import})
+  end
+
+  protected
+
+  def should_log?
+    true
+  end
+end
+
+module SassDependencyWriter
+  private
+
+  def write_attributes
+    attributes_to_write.each { |atr| write_attribute_json(atr) }
+  end
+
+  def write_attribute_json(attribute_name)
+    write_json_to_file("#{attribute_name}.json", public_send(attribute_name))
+  end
+
+  def write_dag(edges)
+    File.open('sass_dependencies.dot', 'w') do |f|
+      f << "digraph SassDeps { \n"
+
+      f << edges.join("\n")
+
+      f << "\n}"
+    end
+  end
+
+  def write_json_to_file(file_name, data)
+    File.open(file_name.to_s, 'w') { |f| f << data }
+  end
+
+  protected
+
+  def attributes_to_write
+    []
+  end
+end
+
+# Graphs dependencies of sass files
+class SassDependencyGrapher
+  include SassDependencyLogger
+  include ::SassDependencyWriter
+
+  attr_accessor :import_counts,
+                :imported_by,
+                :imports,
+                :edges
+
+  attr_reader :import_traversals,
+              :import_file_name,
+              :sass_files_file_name
+
+  def initialize
+    self.import_counts = Hash.new(0)
+    self.imported_by = Hash.new { |h, k| h[k] = [] }
+    self.imports = Hash.new { |h, k| h[k] = {} }
+    self.edges = []
+    ensure_files
+  end
+
+  def run
+    each_source_import_tuple do |source_file, import_name, import|
+      import_counts[import] += 1
+      imported_by[import] << source_file
+      imports[source_file][import_name] = import
+
+      edges << %(  "#{source_file}" -> "#{import}")
+    end
+
+    write_dag(edges)
+    write_attributes
+  end
+
+  def import_traversals
+    @import_traversals ||= Hash[parse_dependencies(master_sass_files)]
+  end
+
+  def import_file_name
+    @import_file_name ||= 'sass_imports'
+  end
+
+  def sass_files_file_name
+    @sass_files_file_name ||= 'sass_files'
+  end
+
+  protected
+
+  def parse_dependencies(source_files)
+    source_files.map do |source_name, (_import_name, _import_file)|
+      [source_name, traverse_deps(source_name)]
+    end
+  end
+
+  def master_sass_files
+    imports.select do |source_name, _imported_files|
+      source_name =~ /(main|application)\.(scss|sass|css)/
+    end
+  end
+
+  def attributes_to_write
+    %i[import_counts imported_by imports import_traversals]
+  end
+
+  def import_file_for_import_name(import_name, source_file)
+    do_import_file_for_import_name(import_name, source_file) || "#{import_name}.sass"
+  end
+
+  def resolve_file(resolved_relative, resolved_partial, import_name)
+    find_sass_file_for(resolved_relative) || find_sass_file_for(resolved_partial) || find_sass_file_for(import_name)
+  end
+
+  def path_for(source)
+    source.split('/')[0..-2]
+  end
+
+  def directory_for(source)
+    path_for(source).join('/')
+  end
+
+  def directory_up_for(source)
+    path_for(source)[0..-2].join('/')
+  end
+
+  def do_import_file_for_import_name(import_name, source_file)
+    partial_name = "_#{import_name.split('/').last}"
+
+    puts "import_paths: #{path_for(import_name).ai}"
+
+    root_dir =
+      case directory_for(import_name)
+      when '..' # updir
+        log 'STRAT: directory up for souce file'
+        directory_up_for(source_file)
+      when nil, '' # relative
+        log 'STRAT: directory for souce file'
+        directory_for(source_file)
+      else # qualified
+        log 'STRAT: directory for import name'
+        directory_for(import_name)
+      end
+
+    log "ROOT: #{root_dir}"
+
+    # remove duplicate paths from import name
+
+    resolved_partial = [root_dir, partial_name].uniq.compact.join('/')
+    resolved_relative = [root_dir, import_name].uniq.compact.join('/')
+
+    log "attempting to resolve file for import of #{import_name} in #{source_file}"
+    log "Resolved partial: #{resolved_partial}"
+    log "Resolved relative: #{resolved_relative}"
+
+    resolve_file(resolved_relative, resolved_partial, import_name)
+  end
+
+  def find_sass_file_for(file_name)
+    sass_files.find { |f_name| f_name =~ /#{file_name}\.sass/ }
+  end
+
+  def parse_import_name(source_import)
+    source_import.split(' ').last.gsub(/['";]/, '')
+  end
+
+  def parse_line(line)
+    source_file, source_import = line.split(':')
+
+    import_name = parse_import_name(source_import)
+
+    import = import_file_for_import_name(import_name, source_file)
+    puts "Import of #{import_name} in #{source_file} resolved to #{import}"
+
+    [source_file, import_name, import]
+  end
+
+  def each_source_import_tuple
+    open_import_map do |f|
+      f.each_line do |line|
+        yield parse_line(line)
+      end
+    end
+  end
+
+  def traverse_deps(source_name)
+    return source_name if imports[source_name].any?
+
+    import_map = imports[source_name].map do |_import_name, import_file|
+      traverse_deps(import_file)
+    end
+
+    Hash[source_name, import_map]
+  end
+
+  def sass_files
+    @sass_files ||= File.read(sass_files_file_name).split("\n")
+  end
+
+  private
+
+  def open_import_map
+    File.open(import_file_name, 'r') { |f| yield f }
+  end
+
+  def ensure_files
+    ensure_import_list
+    ensure_file_list
+  end
+
+  def ensure_import_list
+    generate_import_list unless File.exist?(import_file_name)
+  end
+
+  def dir_glob
+    '{app,lib,vendor}'
+  end
+
+  def generate_import_list_command
+    `rg "^\s*@import" -g "#{dir_glob}/**/*.{sass,sass.erb}"`
+  end
+
+  def generate_import_list
+    File.open(import_file_name, 'w') { |f| f << generate_import_list_command }
+  end
+
+  def ensure_file_list
+    generate_file_list unless File.exist?(sass_files_file_name)
+  end
+
+  def generate_file_list_command
+    `find #{dir_glob} -type f -name "*.sass" -o -name "*.sass.erb"`
+  end
+
+  def generate_file_list
+    File.open(sass_files_file_name, 'w') { |f| f << generate_file_list_command }
+  end
+end
+
+# Entrypoint
+SassDependencyGrapher.new.run

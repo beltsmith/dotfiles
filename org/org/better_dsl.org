@@ -1,0 +1,10 @@
+* KLL Better dsl
+** Ideas
+- Functional pattern matching
+#+BEGIN_SRC
+'q' :
+  once  => 'q'
+  twice => 'q'
+  hold  => U"LCTRL"
+  layer(1) => U"RCTRL"
+#+END_SRC

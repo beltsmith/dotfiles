@@ -1,0 +1,36 @@
+#!/bin/bash
+
+cmd="wicd-cli -y -c -n "
+cmds=""
+i=0
+networks=$(wicd-cli --wireless -l)
+
+background="#525252"
+foreground="#1e2320"
+XPOS="1375"
+HEIGHT="21"
+FONT="-*-termsyn-*-*-13-*-*-*-*-*-*-*-*-*"
+PIPE="/tmp/dwifipipe"
+
+#mkfifo "$PIPE"
+> "$PIPE"
+
+echo "Networks" > "$PIPE"
+
+while read -r line; do
+  if [ "$i" -gt 0 ]; then
+    id=$(echo $line | cut -d ' ' -f 1)
+    name=$(echo $line | cut -d ' ' -f 4-)
+    echo "^ca(1, $cmd $id)$name^ca()" >> "$PIPE"
+    if [ "$i" -gt 4 ]; then
+      break
+    fi
+  fi
+  i=$((i+1))
+done <<< "$networks"
+
+cat $PIPE
+
+dzen2 -p -h "$HEIGHT" -x "$XPOS" -fn "$FONT" -bg "$background" -w 200 -l 5 -m -e 'button1=exit;entertitle=uncollapse;leaveslave=collapse' < $PIPE &
+
+rm -rf "$PIPE"

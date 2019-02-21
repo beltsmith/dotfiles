@@ -1,0 +1,101 @@
+
+* Methaphor
+#+BEGIN_QUOTE
+Have you ever read someone's ruby code where they use a for loop to iterate over an array?
+
+That's how I feel when I see people misuse RSpec.
+#+END_QUOTE
+* Behaviour
+Behaviour being tested
+#+BEGIN_SRC ruby
+  describe 'shifting into a higher gear' do
+    context 'when at the highest gear' do
+      include_context 'bike is in the highest gear'
+      # describe me
+    end
+  end
+#+END_SRC
+** it_behaves_like
+#+BEGIN_SRC ruby
+it_behaves_like 'disallows shifting'
+#+END_SRC
+** include_examples
+#+BEGIN_SRC ruby
+include_examples 'disallows shifting'
+#+END_SRC
+** matcher
+#+BEGIN_SRC ruby
+it { is_expected.to disallow_shifting }
+#+END_SRC
+** What if?
+#+BEGIN_SRC
+it { is_expected.to raise_error(Bike::HighestGearError) }
+#+END_SRC
+* compound contexts?
+#+BEGIN_SRC
+  describe 'shifting into a higher gear' do
+    context 'when at the highest gear' do
+      include_context 'bike is in the highest gear'
+      # describe me disallowing shifting
+
+      context 'and the derailure is set too high' do
+        # describe me falling off
+      end
+    end
+  end
+#+END_SRC
+* src
+#+BEGIN_SRC markdown
+@web-eng @platform-eng
+
+Friday morning poll!(Also it's friday morning Pol!)
+
+I'm trying to gauge preference for/familiarity with different RSpec features, starting with behaviour specification.
+
+First off here is some context(and a describe) from a spec which describes how shifting a bike works:
+```
+  describe 'shifting into a higher gear' do
+    context 'when at the highest gear' do
+      include_context 'bike is in the highest gear'
+      # describe me
+    end
+  end
+```
+
+Without knowing the implementation details only that it should disallow shifting, which of the following ways would you write the example:
+
+:one:
+```
+it_behaves_like 'disallows shifting'
+```
+:two:
+```
+include_examples 'disallows shifting'
+```
+:three:
+```
+it { is_expected.to disallow_shifting }
+```
+
+Now let's say you know when this bike isn't able to be shifted any higher it raises a `Bike::HighestGearError`(it's such a fancy bike it raises its own errors), would you choose one of the following methods or stick to your original choice:
+
+:five:
+```
+it 'raises a Bike::HighestGearError' do
+  expect { bike.shift(:up) }.to raise_error(Bike::HighestGearError)
+end
+```
+:six:
+```
+it { is_expected.to raise_error(Bike::HighestGearError) }
+```
+:seven:
+original choice
+
+
+*Final question(bonus points)*:
+
+Do you hate slack polls?
+:thumbsup:
+:thumbsdown:
+#+END_SRC

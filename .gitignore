@@ -1,0 +1,10 @@
+/xmonad/.xmonad/xmonad-x86_64-linux
+/xmonad/.xmonad/xmonad-contrib-git/
+/xmonad/.xmonad/xmonad-git/
+/xmonad/.xmonad/xmonad-log-git/
+/xmonad/.xmonad/haskell-dbus/
+/xmonad/.xmonad/.stack-work/
+/xmonad/.xmonad/xmonad.errors
+/xmonad/.xmonad/xmonad.hi
+/xmonad/.xmonad/xmonad.o
+/vim/.config/**/*/bundle/

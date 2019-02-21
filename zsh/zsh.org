@@ -1,0 +1,636 @@
+#+TITLE: ZSH Dotfiles
+
+* Notes
+How fucking dope would it be if I hashed the noweb references so that I could reload only changed parts?
+It would be dope except on linux it's like a second load for zsh
+
+* .zshrc
+Evals go after everything
+#+BEGIN_SRC sh :tangle .zshrc :shebang #!/usr/bin/env zsh :noweb yes
+  # This is my zshrc
+  export MY_ZSH=$HOME/.zsh
+  ###############################################
+  ################# Variables  ##################
+  ###############################################
+  <<variables>>
+  ###############################################
+  #################  Aliases   ##################
+  ###############################################
+  <<aliases>>
+  ###############################################
+  ################# Functions  ##################
+  ###############################################
+  <<functions>>
+  ###############################################
+  ################# Completion ##################
+  ###############################################
+  <<completion>>
+  ###############################################
+  #################   Tools    ##################
+  ###############################################
+  <<tools>>
+  ###############################################
+  #################    SSH     ##################
+  ###############################################
+  <<ssh>>
+  ###############################################
+  #################    Misc    ##################
+  ###############################################
+  <<misc>>
+  ###############################################
+  #################   Plugins  ##################
+  ###############################################
+  <<plugins>>
+  ###############################################
+  #################    Evals   ##################
+  ###############################################
+  <<evals>>
+#+END_SRC
+** Variables
+:PROPERTIES:
+:header-args: :noweb-ref variables
+:END:
+Export usefull variables so that I can type less.
+First configuration as these are used extensively below.
+
+*** Wordchars
+treat directory separator as a delimeter
+#+BEGIN_SRC shell
+export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+#+END_SRC
+*** Powerline
+Does anyone still use this? I don't
+#+BEGIN_SRC shell :noweb-ref no
+  export POWERLINE_HIDE_HOST_NAME=true
+  export POWERLINE_HIDE_USER_NAME=true
+#+END_SRC
+*** BSPWM
+B(est|inary) Space Partitioning Window Manager.
+:'(
+#+BEGIN_SRC shell :noweb-ref no
+export PANEL_FIFO="/tmp/bspwm-panel-fifo"
+#+END_SRC
+*** NVIM
+This was to enable true colours for nvim's tui(terminal user interface)
+#+BEGIN_SRC shell :noweb-ref no
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
+#+END_SRC
+*** Editor
+Lol
+
+#+BEGIN_SRC shell
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='emacsclient -c'
+else # lol
+    export EDITOR='vim'
+fi
+#+END_SRC
+*** PATH
+Yo dawg I heard you like binaries
+
+#+BEGIN_SRC shell
+  append_path() {
+    export PATH="$PATH:$1"
+  }
+
+  prepend_path() {
+    export PATH="$1:$PATH"
+  }
+#+END_SRC
+**** Rbenv
+Make sure we have access to rbenv's bin stubs, also yes better than rvm.
+
+#+BEGIN_SRC shell
+prepend_path "$HOME/.rbenv/bin"
+#+END_SRC
+**** Rust
+Check cargo for binaries
+#+BEGIN_SRC shell
+prepend_path "$HOME/.cargo/bin"
+#+END_SRC
+**** Golang
+Setup GOPATH and add bin folder to my PATH
+
+#+BEGIN_SRC shell
+export GOPATH="$HOME/go"
+append_path "$GOPATH/bin"
+#+END_SRC
+**** User binaries
+Add two user binary folders to PATH, append so folders don't override system bins
+#+BEGIN_SRC shell
+    append_path "$HOME/bin"
+    append_path "$HOME/scripts"
+    append_path "/usr/local/bin"
+    append_path "$HOME/.local/bin"
+#+END_SRC
+**** Disabled
+:PROPERTIES:
+:header-args: :noweb-ref no
+:END:
+
+#+BEGIN_SRC shell
+export PATH="$PATH:$HOME/gits/git-radar:/usr/local/heroku/bin"
+#+END_SRC
+
+***** Perl
+I'm pretty sure this was just for ls++, let's not tangle this for now.
+#+BEGIN_SRC shell
+export PATH="$HOME/perl5/bin${PATH+:}${PATH}"
+export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
+export PERL_MB_OPT="--install_base \"$HOME/perl5\""
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
+#+END_SRC
+***** Man
+Add arch manuals to path
+
+#+BEGIN_SRC shell
+export MANPATH="/usr/local/man:$MANPATH"
+#+END_SRC
+***** KDE
+Have KDE use awesome as it's window manager, no KDE no tangle
+
+#+BEGIN_SRC shell
+export KDEWM="awesome"
+#+END_SRC
+*** Java
+Fuck you java
+#+BEGIN_SRC shell
+export _JAVA_AWT_WM_NONREPARENTING=1
+#+END_SRC
+*** Gemfury
+#+BEGIN_SRC shell
+export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
+#+END_SRC
+** Evals
+:PROPERTIES:
+:header-args: :noweb-ref evals
+:END:
+*queue Kenny Loggins' Danger Zone*
+#+BEGIN_SRC shell
+  eval "$(hub alias -s)"
+
+  eval "$(fasd --init auto)"
+
+  eval "$(rbenv init -)"
+#+END_SRC
+** Completion
+:PROPERTIES:
+:header-args: :noweb-ref completion
+:END:
+#+begin_src shell
+  autoload -Uz compinit
+  compinit
+#+end_src
+** Tools
+:PROPERTIES:
+:header-args: :noweb-ref tools
+:END:
+*** asdf
+#+BEGIN_SRC shell
+  . $HOME/.asdf/asdf.sh
+  . $HOME/.asdf/completions/asdf.bash
+#+END_SRC
+** Aliases
+:PROPERTIES:
+:header-args: :noweb-ref aliases
+:END:
+I'm super bad at both typing and spelling so this helps me suck less.
+
+*** LS
+I like pretty colours, pretty girls like trap music.
+#+BEGIN_SRC shell
+  alias l="exa -lgh"
+  # alias ls='exa' # for compatibility with fzf
+  alias la='l -a'
+#+END_SRC
+*** Editors
+Honestly these are just silly now that I use emacs
+#+BEGIN_SRC shell
+  alias edit=$EDITOR
+  # alias vim='nvim'
+  # alias emacs='emacs'
+  alias spacemacs='emacs'
+#+END_SRC
+*** Edits
+Slightly useful but honestly I just use recentf in emacs to find these.
+#+BEGIN_SRC shell
+alias vimrc='edit ~/.config/nvim/init.vim'
+alias zshrc='edit ~/.zshrc'
+alias zshv='edit ~/.zsh_vars'
+#+END_SRC
+*** OS Specific
+**** Archlinux
+#+BEGIN_SRC shell
+  alias ya='yaourt'
+  alias pacsearch='pacaur -Ss'
+  alias pacins='pacaur -S'
+  alias pacin='pacaur -U'
+  alias pacupd='pacaur -Syyu'
+  alias pacdb='sudo pacman -Syy'
+  alias npm='sudo npm'
+
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+
+  alias xboxc='sudo xboxdrv --mimic-xpad --detach-kernel-driver --silent'
+  alias steam_wine='WINEDEBUG=-all wine ~/.wine/drive_c/Program\ Files/Steam/Steam.exe -no-dwrite >/dev/null 2>&1 &'
+  alias bt='bluetoothctl'
+#+END_SRC
+*** LumosLabs
+#+BEGIN_SRC shell
+  alias mem="memory"
+  alias ms="memory show"
+  alias menv="memory env dump"
+#+END_SRC
+*** CD .......
+#+BEGIN_SRC shell
+alias ..="\cd .."
+alias ...="\cd ../.."
+alias ....="\cd ../../.."
+alias .....="\cd ../../../.."
+alias ......="\cd ../../../../.."
+
+#+END_SRC
+*** KC
+#+BEGIN_SRC shell
+  alias kc="kubectl"
+#+END_SRC
+*** Unaliases
+#+begin_src shell
+  # unalias rg # Fuck off rails generate, who the hell uses you
+#+end_src
+** Functions
+:PROPERTIES:
+:header-args: :noweb-ref functions
+:END:
+
+Here are the custom functions I use in zsh, a lot of them I don't use anymore.
+*** reload
+#+begin_src shell
+reload() {
+  source ~/.zshrc
+}
+#+end_src
+*** Loadit
+Super simple loading function that doesn't fail(it's a feature!)
+#+BEGIN_SRC shell
+loadit() {
+    [[ -a $1 ]] && source $1
+}
+#+END_SRC
+*** up
+#+BEGIN_SRC shell
+up() { for i in $(seq $1); do cd ..; done; }
+#+END_SRC)
+*** Ruby
+#+BEGIN_SRC shell
+
+  gi() {
+      gem install $@
+      rbenv rehash
+  }
+
+#+END_SRC
+
+*** Utility
+Various utility functions
+
+**** ts
+Send a command to tmux, this was mainly use dby my vim configuration.
+Since I am using emacs I no longer need this command and as such is not tangled.
+#+BEGIN_SRC shell :noweb-ref no
+ts() {
+    local args=$@
+    tmux send-keys -t right "$args" C-m
+}
+#+END_SRC
+
+**** slowly
+Run a command with slow network
+#+BEGIN_SRC shell
+slowly() { trickle -u 1024 -d 1024 $@ }
+#+END_SRC
+
+**** cdl
+cd and ls
+#+BEGIN_SRC shell
+cdl () { cd "$@" && ls; }
+#+END_SRC
+
+**** y2j
+#+BEGIN_SRC shell
+y2j() {
+    if [[ $# -gt 1 ]]; then
+        ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))' < $1 > $2
+    else
+        ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))' < $1
+    fi
+}
+
+#+END_SRC
+**** Mackup
+#+BEGIN_SRC shell
+mackup() {
+  local folder=$1
+  local log=$(mktemp /tmp/transfer.log.XXXXX)
+  local destination='backup'
+  rsync -avzm --stats --safe-links --ignore-existing --dry-run --human-readable "$folder" "$destination" > "$log"
+  cat $log | parallel --will-cite -j 5 rsync -avzm --relative --stats --safe-links --ignore-existing --human-readable {} "$destination" > result.log
+}
+#+END_SRC
+**** MT
+eMpTys a file
+#+BEGIN_SRC shell
+mt() {
+  echo '' > $1
+}
+#+END_SRC
+**** rbit
+RBenv Install This
+#+BEGIN_SRC shell
+  rbit() {
+    local rbv='.ruby-version'
+    [[ -a $rbv ]] && rbenv install $(< $rbv)
+  }
+#+END_SRC
+**** reflect
+#+BEGIN_SRC shell
+  reflect() {
+    sudo reflector --protocol https --latest 30 --number 20 --sort rate --save /etc/pacman.d/mirrorlist
+  }
+#+END_SRC
+*** Wine
+wine helper functions, I'm not using wine anymore so I don't tangle this block
+#+BEGIN_SRC shell :noweb-ref no
+prefix() {
+    export WINEARCH=win32
+    export WINEPREFIX="$HOME/.local/share/wineprefixes/$1"
+}
+
+goc() {
+    cd $WINEPREFIX/drive_c
+}
+#+END_SRC
+
+*** Multiple command runners
+Collection of functions I wrote that allows the same command to be ran multiple
+times either stopping on failure or continuing
+
+Short circuit commands exiting after first non 0 return code.
+#+BEGIN_SRC shell
+multi_rspec() {
+    for i in $(seq $1) ;
+      do bundle exec rspec spec ; [[ ! $? = 0 ]] && break ;
+    done
+}
+
+multi() {
+    for i in $(seq $1) ;
+      do ${*:2} ; [[ ! $? = 0 ]] && break ;
+    done
+}
+#+END_SRC
+
+Brute force commands continuing even after failure.
+#+BEGIN_SRC shell
+multi_ne() {
+    for i in $(seq $1) ;
+      do ${*:2} ;
+    done
+}
+
+multi_async() {
+    for i in $(seq $1) ; do JOB=$i ${*:2} & ; done
+}
+
+multi_curl() { for i in $(seq $1) ; do ${*:2} -h >> logs.out & ; done }
+#+END_SRC
+*** Blog
+I used to have a blog but I don't anymore so let's just not tanlge these
+
+#+BEGIN_SRC shell :noweb-ref no
+export BLOG_SERVER="104.236.8.146"
+
+jnew() {
+    local title=$1
+    local date=$(date +%Y-%m-%d)
+    local time=$(date +%T)
+    local post="$date-$title.md"
+
+    echo "---\nlayout: post\ntitle: $title\ndate: $date $time\n---" > _posts/$post
+    vim _posts/$post
+}
+
+update_blog() {
+    ssh $BLOG_SERVER 'cd /home/alex/alexgirdler.github.io/ && git pull'
+}
+
+#+END_SRC
+
+*** Configuration matrix
+More or less a comprehensive list of config files I've worked with for linux.
+Use emacs so no need for this because recentf
+#+BEGIN_SRC shell :noweb-ref no
+conf() {
+	  case $1 in
+        awesome)    emacsclient -c ~/.config/awesome/rc.lua ;;
+        herbst)     emacsclient -c ~/.config/herbstluftwm/autostart ;;
+        xmonad)     emacsclient -c ~/.xmonad/xmonad.hs ;;
+        bspwm)      emacsclient -c ~/.config/bspwm/bspwmrc ;;
+        sxhkd)      emacsclient -c ~/.config/sxhkd/sxhkdrc ;;
+        conky)      emacsclient -c ~/.xmonad/.conky_dzen ;;
+        menu)       emacsclient -c ~/scripts/menu ;;
+        mpd)        emacsclient -c ~/.mpdconf ;;
+        mutt)       emacsclient -c ~/.mutt/acct/agirdler ;;
+        ncmpcpp)    emacsclient -c ~/.ncmpcpp/config ;;
+        pacman)     emacsclient -c /etc/pacman.conf ;;
+        ranger)     emacsclient -c ~/.config/ranger/rc.conf ;;
+        rifle)      emacsclient -c ~/.config/ranger/rifle.conf ;;
+        termite)    emacsclient -c ~/.config/termite/config ;;
+        tmux)       emacsclient -c ~/.tmux.conf ;;
+        xinit)      emacsclient -c ~/.xinitrc ;;
+        xresources)	emacsclient -c ~/.Xresources && xrdb ~/.Xresources ;;
+        zsh)        emacsclient -c ~/.zshrc && source ~/.zshrc ;;
+		    hosts)		  sudoedit /etc/hosts ;;
+		    vhosts)		  sudoedit /etc/httpd/conf/extra/httpd-vhosts.conf ;;
+		    httpd)		  sudoedit /etc/httpd/conf/httpd.conf ;;
+		    *)			    echo "Unknown application: $1" ;;
+	  esac
+}
+#+END_SRC
+*** Code Climate
+Utility function to run the code climate docker container on the current project.
+Again no tanglerino because no code climaterino.
+#+BEGIN_SRC shell :noweb-ref no
+codeclimate() {
+    docker run \
+           --interactive --tty --rm \
+           --env CODECLIMATE_CODE="$PWD" \
+           --volume "$PWD":/code \
+           --volume /var/run/docker.sock:/var/run/docker.sock \
+           --volume /tmp/cc:/tmp/cc \
+           codeclimate/codeclimate $@
+}
+#+END_SRC
+*** TravisCI
+**** pull_build_logs
+#+BEGIN_SRC shell
+  function mount_build() {
+    local build_number="$1"
+  }
+#+END_SRC
+** Plugin manager
+:PROPERTIES:
+:header-args: :noweb-ref plugins
+:END:
+
+I currently use zplug to manage my zsh plugins
+
+*** Initialization
+I set the `ZPLUG' shell variable to the location where zplug is installed
+#+BEGIN_SRC shell
+export ZPLUG=/usr/share/zsh/scripts/zplug
+#+END_SRC
+
+In order to load zplug you need to source the `init.zsh' file in the
+installation directory.
+#+BEGIN_SRC shell
+source $ZPLUG/init.zsh
+#+END_SRC
+
+*** Plugins
+The syntax zplug uses to manage a plugin is as follows:
+
+#+BEGIN_SRC shell :noweb-ref no
+zplug "plugin/name", option:value
+#+END_SRC
+
+**** Enabled plugins
+***** Github plugins
+Plugins loaded from github, since github is the default origin(`from' option) I do not include it.
+#+BEGIN_SRC shell
+  zplug "zsh-users/zsh-history-substring-search"
+  zplug "zsh-users/zsh-completions" # do-everything argument completions
+  zplug 'zsh-users/zsh-syntax-highlighting', defer:3
+  zplug "mafredri/zsh-async"
+  zplug "sindresorhus/pure", use:pure.zsh, as:theme
+
+  zplug "b4b4r07/enhancd", use:init.sh
+  zplug "junegunn/fzf", as:command, use:"bin/fzf-tmux"
+  zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
+#+END_SRC
+
+***** oh-my-zsh plugins
+These are loaded from the oh-my-zsh library
+#+BEGIN_SRC shell
+  zplug "plugins/heroku", from:oh-my-zsh
+  zplug "plugins/kubectl", from:oh-my-zsh
+  zplug "plugins/git", from:oh-my-zsh
+  zplug "plugins/sudo", from:oh-my-zsh
+  zplug "plugins/bundler", from:oh-my-zsh
+  # zplug "plugins/rake-fast", from:oh-my-zsh
+  zplug "plugins/rbenv", from:oh-my-zsh
+  zplug "plugins/colorize", from:oh-my-zsh # Plugin for highlighting file content
+  # zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
+#+END_SRC
+
+**** Disabled plugins
+These plugins are not tangled to any file and therefore not managed by zplug.
+Reasons for disabling range from performance to being un-needed.
+
+#+BEGIN_SRC shell
+  # zplug "hchbaw/auto-fu.zsh"
+
+  # zplug "plugins/rails", from:oh-my-zsh
+
+  # zplug "lib/completion", from:oh-my-zsh
+#+END_SRC
+**** zplug internals
+Have zplug manage itself
+#+BEGIN_SRC shell
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+#+END_SRC
+
+Install plugins if there are plugins that have not been installed
+#+BEGIN_SRC shell
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+#+END_SRC
+
+Finally have zplug load everything
+#+BEGIN_SRC shell
+zplug load
+#+END_SRC
+** SSH setup
+:PROPERTIES:
+:header-args: :noweb-ref ssh
+:END:
+Honestly I've had this for so long I don't know where it came from but it
+basically handles making sure I have a ssh agent setup and the correct settings
+sourced.
+
+#+BEGIN_SRC shell
+export SSH_ENV="$HOME/.ssh/environment"
+
+start_agent() {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
+#+END_SRC
+
+** Misc(aka hella dope shit)
+:PROPERTIES:
+:header-args: :noweb-ref misc
+:END:
+*** Termite set directory
+#+BEGIN_SRC shell
+if [[ $TERM == xterm-termite ]]; then
+    . /etc/profile.d/vte.sh
+    __vte_osc7
+fi
+#+END_SRC
+*** Bindings
+These are hella dope
+#+BEGIN_SRC shell
+  bindkey -e
+  bindkey "\e." insert-last-word
+
+  bindkey "^[[A" history-beginning-search-backward
+  bindkey "^[[B" history-beginning-search-forward
+
+  bindkey "^[[1;3C" forward-word
+  bindkey "^[[1;3D" backward-word
+
+  bindkey "\e[3~" delete-char
+#+END_SRC
+*** setops
+Enable hella dope shit
+#+BEGIN_SRC shell
+setopt autopushd
+#+END_SRC
+*** load FZF
+#+BEGIN_SRC shell
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#+END_SRC
+** Compde

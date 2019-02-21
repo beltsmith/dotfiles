@@ -1,0 +1,303 @@
+#+TITLE: Make CI Great Again
+
+* Abstract
+Evaluate continuous integration platforms to find the best one for our needs.
+Aside from evaluating our current solution, each platform will be docker centric meaning everything from buildling the container to running tests will be done inside of docker.
+* [[Http://travis-ci.com][Travis CI]]
+This is what we currently use, it's slow and has lots of network issues from our experience.
+** VM
+*** Pros
+**** Cost
+We are currently using it so we don't need to do anything more
+*** Cons
+**** Network instability
+Network calls frequently fail causing the build to fail, this is unacceptable
+**** Slow
+It has to boot an entire VM AND install packages each time
+**** Price?
+From what I hear we pay much more for this than we get out of it.
+**** Slowish support?
+Took 3 days from first contact regarding network issues.
+**** Logs aren't kept
+Links to S3 use expiry tokens so they go stale, and when you rebuild you lose the ability to link to logs.
+*** Pricing
+Current cost, probably too much for what we get out of it.
+*** Estimated Cost
+0(unless you want to wait for the build to finish)
+*** Timings
+**** Clock
+0:22:07
+
+Effectively our slowest node plus ~5% for waiting
+**** Total
+6:00:29
+***** Sample
+ |   |   | Min |  S | Total |
+ |---+---+-----+----+-------|
+ |   |   |   6 |  5 |   365 |
+ |   |   |   3 | 36 |   216 |
+ |   |   |   4 |  7 |   247 |
+ |   |   |   3 |  7 |   187 |
+ |   |   |   2 |  2 |   122 |
+ |   |   |   7 | 13 |   433 |
+ |   |   |  13 | 19 |   799 |
+ |   |   |   9 | 19 |   559 |
+ |   |   |  10 | 39 |   639 |
+ |   |   |  11 | 55 |   715 |
+ |   |   |  12 | 18 |   738 |
+ |   |   |  10 | 58 |   658 |
+ |   |   |  16 | 54 |  1014 |
+ |   |   |  12 |  3 |   723 |
+ |   |   |  13 | 22 |   802 |
+ |   |   |   9 | 37 |   577 |
+ |   |   |  17 |    |  1020 |
+ |   |   |  13 | 14 |   794 |
+ |   |   |  18 | 54 |  1134 |
+ |   |   |  20 |    |  1200 |
+ |   |   |  11 | 10 |   670 |
+ |   |   |  20 | 46 |  1246 |
+ |   |   |  16 | 28 |   988 |
+ |   |   |  21 | 15 |  1275 |
+ |   |   |  15 | 34 |   934 |
+ |   |   |  17 | 15 |  1035 |
+ |   |   |  13 | 13 |   793 |
+ |   |   |  11 | 27 |   687 |
+ |   |   |  13 | 59 |   839 |
+ |   |   |   3 | 40 |   220 |
+ |---+---+-----+----+-------|
+ |   | 6 |   0 | 29 | 21629 |
+ | ^ | h |   m |  s |     x |
+ #+TBLFM: $5=$3*60+$4::$h='(/ $x 60 60);N::$m='(mod (/ $x 60) 60);N::$s='(mod $x 60);N::$x=vsum(@1..@-1);N
+**** Test nodes
+26
+**** Per node average
+***** Including build nodes
+#+BEGIN_SRC emacs-lisp
+(let ((time 21629)
+      (nodes 30.0))
+  (/ time nodes 60.0))
+#+END_SRC
+
+12.016
+***** Excluding build nodes
+#+BEGIN_SRC emacs-lisp
+(let ((time 20857)
+      (nodes 26.0))
+  (/ time nodes 60.0))
+#+END_SRC
+
+13.37
+****** Sample
+ |   |   | Min |  S | Total |
+ |---+---+-----+----+-------|
+ |   |   |   6 |  5 |   365 |
+ |   |   |   7 | 13 |   433 |
+ |   |   |  13 | 19 |   799 |
+ |   |   |   9 | 19 |   559 |
+ |   |   |  10 | 39 |   639 |
+ |   |   |  11 | 55 |   715 |
+ |   |   |  12 | 18 |   738 |
+ |   |   |  10 | 58 |   658 |
+ |   |   |  16 | 54 |  1014 |
+ |   |   |  12 |  3 |   723 |
+ |   |   |  13 | 22 |   802 |
+ |   |   |   9 | 37 |   577 |
+ |   |   |  17 |    |  1020 |
+ |   |   |  13 | 14 |   794 |
+ |   |   |  18 | 54 |  1134 |
+ |   |   |  20 |    |  1200 |
+ |   |   |  11 | 10 |   670 |
+ |   |   |  20 | 46 |  1246 |
+ |   |   |  16 | 28 |   988 |
+ |   |   |  21 | 15 |  1275 |
+ |   |   |  15 | 34 |   934 |
+ |   |   |  17 | 15 |  1035 |
+ |   |   |  13 | 13 |   793 |
+ |   |   |  11 | 27 |   687 |
+ |   |   |  13 | 59 |   839 |
+ |   |   |   3 | 40 |   220 |
+ |---+---+-----+----+-------|
+ |   | 5 |  47 | 37 | 20857 |
+ | ^ | h |   m |  s |     x |
+ #+TBLFM: $5=$3*60+$4::$x=vsum(@1..@-1);N::$h='(/ $x 60 60);N::$m='(mod (/ $x 60) 60);N::$s='(mod $x 60);N
+**** Setup
+#+BEGIN_SRC emacs-lisp
+(let* ((git-checkout 4)
+       (rvm-setup 23)
+       (build-setup 80.86)
+       (test-setup 93)
+       (test-nodes 25)
+       (build-nodes 5)
+       (setup-per-build-node (+ git-checkout rvm-setup build-setup))
+       (setup-per-test-node (+ git-checkout rvm-setup test-setup))
+       (setup-for-test (* test-nodes setup-per-test-node))
+       (setup-for-build (* build-nodes setup-per-build-node))
+       (total-setup (+ setup-for-build setup-for-test)))
+  (format "%d:%2d:%2d total, %d seconds, %ds per node" (/ total-setup 60 60) (mod (/ total-setup 60 ) 60) (mod total-setup 60) total-setup (/ total-setup 30)))
+#+END_SRC
+
+0:58:59 total, 3539 seconds, 117s per node
+
+~ 1/6 of our build time is setup
+
+** Docker
+Same provider as current just different execution environment
+*** Pros
+**** Uses our docker image to run tests
+Reproducible environment
+**** Cost
+It's /mostly/ complete, needs final touches to be ready
+*** Cons
+**** It's still on travis
+#+BEGIN_SRC OPINION
+I mean this is an actual con to me; IMO the service isn't reliable, the interface isn't great, and the food is terrible
+#+END_SRC
+**** Network instability
+Assuming this is inherited from being on travis.
+Network calls frequently fail causing the build to fail
+#+BEGIN_SRC OPINION
+this is unacceptable
+#+END_SRC
+**** Price?
+From what I hear we pay much more for this than we get out of it.
+*** Pricing
+Yes
+*** Estimated Cost
+| Task                                         | Cost(days) |
+|----------------------------------------------+------------|
+| Rewrite lumos_rails to use container backend |         10 |
+|----------------------------------------------+------------|
+| Total                                        |         10 |
+| ^                                            |          x |
+#+TBLFM: $x=vsum(@1..@-1);N
+
+* Drone
+** Pros
+*** Self hosted/OSS
+- Control scaling
+*** Quick StackOverflow response
+~ 24 hour response by a developer. [[https://stackoverflow.com/questions/tagged/drone.io][SO Tag]]
+** Cons
+*** Self hosted
+- One more thing for production engineering to manage(see what I did there?)
+*** Documentation is lacking
+With it currently being a fast moving product the documentation for everytng is pretty much in flight and either outdated/not yet documented
+*** No professional support
+They use SO for their support so they don't have dedicated agents
+** Pricing
+*** Base
+[[http://docs.drone.io/installation/][Open Source]]
+*** Hosting
+AWS?
+** Estimated Cost
+| Task                          | Cost(days) |
+|-------------------------------+----------------|
+| Setup drone server/monitoring |              5 |
+| lumos_rails parity            |              7 |
+| extra features/optimization   |              3 |
+|-------------------------------+----------------|
+|                               |             15 |
+| ^                             |              x |
+#+TBLFM: $x=vsum(@1..@-1);N
+
+* Gitlab
+** Pros
+*** It's pretty
+Notice there aren't any opinion tags?
+*** Integrated Docker registry
+One less service we need to talk to
+*** Open source/Hosted
+We can start on a hosted plan and if we need to, host it ourselves.
+*** 4 Hour support/24 hour emergency support
+$200 a year(Enterprise Edition Premium plan)
+
+** Cons
+*** /Should/ move lumos_rails repository to gitlab
+Ideally for the fastest build we shoud use gitlab as the repo host if we are also using them as the CI
+** Pricing
+*** Hosted
+So [[https://about.gitlab.com/products/][it's free]] although we would likely benefit from an actual [[https://about.gitlab.com/products/][enterprise plan]](main thing is 4 hour support)
+Was able to run 2 builds in parallel for b(e)acon on a free plan
+*** Self Hosted
+AWS
+
+** Estimated Cost
+| Task                                                   | Cost(days) |
+|--------------------------------------------------------+------------|
+| Moving Lumos Rails repo to Gitlab                      |          2 |
+| Migrate application integrations/Implement in pipeline |          3 |
+| lumos_rails CI parity                                  |          7 |
+| Extra features                                         |          3 |
+|--------------------------------------------------------+------------|
+|                                                        |         15 |
+| ^                                                      |          x |
+#+TBLFM: $x=vsum(@1..@-1);N
+
+
+* Circle CI
+** Pros
+*** Active community forums
+[[https://discuss.circleci.com/][Forums]] moderated by CircleCI with news, requests, bug reports, and guides.
+*** Premium support
+New feature for premium customers still in beta, [[https://circleci.com/support/premium-support/][support]] for SLA and priority notifications.
+*** Built in support for JUnit style XML test reporting
+Rather than needing to read build output it aggregates the tests ran after each build.
+** Cons
+*** Likely to be the most expensive
+At $50 a container CircleCI will likely be the most expensive
+*** Icon is meh
+
+** Pricing
+$50 per container after the first. In my exprience the containers are more powerful than what travis is using
+and I have been able to run 8 concurrent (feature)tests on a single node, given this we may be able to +ab+ use the game mechanics.
+** Estimated Cost
+| Task                     | Cost(days) |
+|--------------------------+------------|
+| Setup CI for parity      |          7 |
+| Configure extra features |          3 |
+|--------------------------+------------|
+|                          |         10 |
+| ^                        |          x |
+#+TBLFM: $x=vsum(@1..@-1);N
+** Notes
+*** DIND support
+[[https://circleci.com/docs/2.0/building-docker-images/][Remote docker]]
+
+* Conclusion
+** Long term
+*** Ranking
+1. Gitlab
+2. CircleCI
+3. Drone(potentially move up as t->\inf)
+4. Travis
+*** Rationale
+Gitlab would provide the most benefit but has the most change/work involved for developers.
+CircleCI will likely be the most feature filled CI(not accounting for non CI aspects of Gitlab), however still requires integrations.
+Drone is somewhat lackluster now.
+We're already on Travis.
+** Short term
+*** Ranking
+1. CircleCI
+2. Gitlab
+3. Drone(potentially move up as t->\inf)
+4. Travis
+*** Rationale
+CircleCI should be the quickest to get to parity
+Gitlab should be nearly as fast to get to parity as CircleCI, however it requires additional change for developers
+Drone is still pretty lackluster.
+It hasn't gotten any better.
+** And then there were two
+CircleCI v.s. Gitlab
+
+If we want to completely change stuff around(or allow us to change it in the future) we should consider going with Gitlab.
+However if we only want to replace the current CI solution with as little crossover we should consider CircleCI.
+
+* Sonic CI
+This is my own brainchild. Mainly for the logo and tagline.
+** Logo
+Sonic|ci
+     ^ That's a mirror
+** Tagline
+Gotta build fast
+** Pricing
+Essentially invaluable, will probably IPO within the first year for 1.21 B

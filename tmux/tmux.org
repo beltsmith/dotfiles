@@ -1,0 +1,237 @@
+#+TITLE: TMUX Config
+
+* Tangled
+#+begin_src conf :noweb yes :tangle .tmux.conf
+  <<prefix>>
+  <<shell>>
+  <<settings>>
+  <<bindings>>
+  <<plugins>>
+  <<status-line>>
+  # Don't fuck with this, srsly
+  <<plugin-init>>
+#+end_src
+
+* Prefix
+:PROPERTIES:
+:header-args: :noweb-ref prefix
+:END:
+I think the default binding of C-b is kind of terrible.
+Let's remove it.
+#+BEGIN_SRC conf
+unbind C-b
+#+END_SRC
+
+I much prefer to use M-a. (that's emacspeak for alt-a)
+#+BEGIN_SRC conf
+set-option -g prefix M-a
+bind-key M-a send-prefix
+#+END_SRC
+
+* Shell
+:PROPERTIES:
+:header-args: :noweb-ref shell
+:END:
+I use zsh as my default shell and as such I set tmux up to behave accordingly.
+#+BEGIN_SRC conf
+set -g default-command /bin/zsh
+set -g default-shell /bin/zsh
+#+END_SRC
+
+* Settings
+:PROPERTIES:
+:header-args: :noweb-ref settings
+:END:
+** Panes
+#+begin_src conf
+  setw -g automatic-rename on
+  set-option -g set-titles on
+  set-option -g set-titles-string 'tmux: #W'
+#+end_src
+
+** History
+Set a longer history limit
+#+BEGIN_SRC conf
+set -g history-limit 100000
+#+END_SRC
+** Interaction
+0 is wayyy to far away so make the starting index 1
+#+BEGIN_SRC conf
+  set -g base-index 1
+#+END_SRC
+Allow use of the mouse
+#+BEGIN_SRC conf
+  set-option -g mouse on
+#+END_SRC
+This does something
+#+BEGIN_SRC conf
+  setw -g monitor-activity on
+#+END_SRC
+Removes delay for escape key
+#+begin_src conf
+
+set -sg escape-time 0
+#+end_src
+** TERM
+#+begin_src conf
+set -g default-terminal "screen-256color"
+set-option -ga terminal-overrides ',xterm*:Tc'
+#+end_src
+
+* Bindings
+:PROPERTIES:
+:header-args: :noweb-ref bindings
+:END:
+I have accrued lots of custom keybinds for tmux over the years.
+I'm going to attempt to separate them into sensible groups.
+** Copy Paste
+*** Emacs
+Requires prefix key before the command key
+Copy tmux paste buffer to CLIPBOARD
+Copy CLIPBOARD to tmux paste buffer and paste tmux paste buffer
+#+BEGIN_SRC conf
+  bind C-c run "tmux show-buffer | xsel -i -b"
+  bind C-v run "tmux set-buffer -- \"$(xsel -o -b)\"; tmux paste-buffer"
+#+END_SRC
+*** VI
+#+BEGIN_SRC conf
+  unbind p
+  bind p paste-buffer
+#+END_SRC
+** Panes/Windows
+*** Open
+#+BEGIN_SRC conf
+  bind-key c new-window -c "#{pane_current_path}"
+  bind-key h split-window -h -c "#{pane_current_path}"
+  bind-key v split-window -v -c "#{pane_current_path}"
+#+END_SRC
+*** Resize
+#+BEGIN_SRC conf
+  bind-key J resize-pane -D 5
+  bind-key K resize-pane -U 5
+  bind-key H resize-pane -L 5
+  bind-key L resize-pane -R 5
+
+  bind-key M-j resize-pane -D
+  bind-key M-k resize-pane -U
+  bind-key M-h resize-pane -L
+  bind-key M-l resize-pane -R
+#+END_SRC
+*** Selection
+**** With prefix
+#+BEGIN_SRC conf
+  #bind h select-pane -L
+  bind j select-pane -D
+  bind k select-pane -U
+  bind l select-pane -R
+#+END_SRC
+**** Without prefix
+#+begin_src conf
+bind -n M-h select-pane -L
+bind -n M-j select-pane -D
+bind -n M-k select-pane -U
+bind -n M-l select-pane -R
+#+end_src
+*** Window switching
+Shift arrow to switch windows
+#+begin_src conf
+bind -n S-Left  previous-window
+bind -n S-Right next-window
+#+end_src
+** Config
+#+BEGIN_SRC conf
+  bind r source-file ~/.tmux.conf \; display-message "Config reloaded..."
+#+END_SRC
+** VI
+I love VI modal editing so I try to use there wherever possible
+*** Setting
+#+BEGIN_SRC conf
+  setw -g mode-keys vi
+
+#+END_SRC
+*** Selection mode
+This adds a "selection" mode (it's just tmux copy mode) bound to the s key
+which behaves akin to visual mode in VI
+#+BEGIN_SRC conf
+  bind s copy-mode
+  bind-key -Tcopy-mode-vi 'v' send -X begin-selection
+  bind-key -Tcopy-mode-vi 'y' send -X copy-selection
+#+END_SRC
+** Utilities
+*** Capture pane contents
+#+begin_src conf
+  bind-key C capture-pane -eJ \; save-buffer ~/tmux.hardcopy \; delete-buffer
+#+end_src
+*** Join/send pane
+#+begin_src conf
+  bind-key ] command-prompt -p "join pane from:"  "join-pane -s '%%'"
+  bind-key [ command-prompt -p "send pane to:"  "join-pane -t '%%'"
+#+end_src
+* Status Line
+:PROPERTIES:
+:header-args: :noweb-ref status-line
+:END:
+Lets do some lines bruh
+#+begin_src conf
+set -g status-justify left
+set -g status-bg black
+set -g status-fg colour12
+set -g status-interval 2
+#+end_src
+Send me some messages boo
+#+begin_src conf
+set -g message-fg black
+set -g message-bg yellow
+set -g message-command-fg blue
+set -g message-command-bg black
+#+end_src
+** Disgusting fucking bull shit which looks nice on the right
+#+begin_src conf
+setw -g window-status-format " #F#I:#W#F "
+setw -g window-status-current-format " #F#I:#W#F "
+setw -g window-status-format "#[fg=magenta]#[bg=black] #I #[bg=cyan]#[fg=colour0] #W "
+setw -g window-status-current-format "#[bg=brightmagenta]#[fg=colour8] #I #[fg=colour8]#[bg=colour14] #W "
+setw -g window-status-current-bg colour0
+setw -g window-status-current-fg colour11
+setw -g window-status-current-attr dim
+setw -g window-status-bg green
+setw -g window-status-fg black
+setw -g window-status-attr reverse
+#+end_src
+** Clean left side
+#+begin_src conf
+set -g status-left ''
+#+end_src
+** Clock
+#+begin_src conf
+set-window-option -g clock-mode-style 24
+#+end_src
+
+* Plugins
+:PROPERTIES:
+:header-args: :noweb-ref plugs
+:END:
+I got the plug, he coming thru in a minute.
+#+BEGIN_SRC conf
+  set -g @plugin 'tmux-plugins/tpm'
+  set -g @plugin 'tmux-plugins/tmux-sidebar'
+  set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+  # set -g @plugin 'tmux-plugins/tmux-pain-control'
+  # set -g @plugin 'tmux-plugins/tmux-battery'
+  set -g @plugin 'tmux-plugins/tmux-resurrect'
+  set -g @plugin 'tmux-plugins/tmux-continuum'
+  set -g @plugin 'tmux-plugins/tmux-copycat'
+  set -g @plugin 'tmux-plugins/tmux-logging'
+
+  set -g @plugin 'nhdaly/tmux-scroll-copy-mode'
+#+END_SRC
+
+Set continuum to restore my session
+#+begin_src conf
+set -g @continuum-restore 'on'
+#+end_src
+
+Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+#+BEGIN_SRC conf :noweb-ref plugin-init
+  run '~/.tmux/plugins/tpm/tpm'
+#+END_SRC

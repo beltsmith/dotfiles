@@ -1,0 +1,14 @@
+#!/bin/bash
+#input="$(xsel -o | $HOME/.bin/dmenu -p "Bestand zoeken:" )"
+#if [ "$input" != '' ]; then
+#    result="$(echo "$input" | locate -e -r "$input" | $HOME/.bin/dmenu -p "Zoekresultaat:" )"
+#    xdg-open "$result"
+#fi
+if [ -f $HOME/.dmenurc ]; then
+	. $HOME/.dmenurc
+else
+	DMENU='dmenu -i'
+fi
+
+find ~/ | sed 's/ /\\ /g' | sort -f | $DMENU -l 10 -w 600 | xargs exo-open
+

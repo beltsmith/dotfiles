@@ -1,0 +1,46 @@
+#!/bin/bash
+
+case $1 in
+  up)
+    xbacklight + 5
+  ;;
+  down)
+    xbacklight - 5
+  ;;
+  *)
+  ;;
+esac
+brightnessPercent=$(xbacklight -get)
+brightnessPercent=${brightnessPercent%.*}
+
+brightness="["
+
+i="0"
+
+while [ $i -lt 10 ]
+do
+  if [ "$brightnessPercent" -gt "$((($i * 10) + 5))" ] 
+  then
+    brightness+="#"
+  else
+    brightness+=" "
+  fi
+  i=$[i+1]
+done
+
+brightness+="]"
+replace=""
+
+#id=$(cat ~/.backlight_id)
+
+#if [ -n $id ]
+#then
+  #replace="replaces_id = $id"
+#fi
+
+
+#id=$(echo "return naughty.notify({ title = \"Backlight\", text = \"$brightness\", $replace}).id"| awesome-client)
+echo "naughty.notify({ title = \"    Backlight\", text = \"$brightnessPercent% $brightness\", replaces_id = 0, font = \"termsyn 20\",  margin = \"10\" })"| awesome-client
+#id=${id:9}
+#echo $id > ~/.backlight_id
+

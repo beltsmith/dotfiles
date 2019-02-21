@@ -1,0 +1,18 @@
+#+TITLE: Backup plan
+
+* Scripts
+** backup
+#+BEGIN_SRC shell-script
+  #!/usr/bin/bash
+  folders=()
+
+#+END_SRC
+* Cron
+** cron
+** anacron
+*** Tasks
+
+* Main site
+:LOCATION: CA
+* Offsite
+:LOCATION: KY

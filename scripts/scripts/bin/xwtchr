@@ -1,0 +1,42 @@
+#!/usr/bin/sh
+# This script acts as a daemon around a process to handle resolution changes triggered by PRLCC
+
+PROCESS_CMD=$1; shift
+PROCESS_ARGS=$@
+PROCESS_LOG=${PROCESS_LOG:-$HOME/$PROCESS_CMD.log}
+
+start_process() {
+    if [ -n ${PROCESS_PID+x} ];
+    then
+        process $PROCESS_ARGS > $PROCESS_LOG &
+        PROCESS_PID=$!
+    fi
+}
+
+kill_process() {
+    if [ -n ${PROCESS_PID+x} ];
+    then
+        kill -9 $PROCESS_PID
+        unset PROCESS_PID
+    fi
+}
+
+restart_process() {
+    kill_process && start_process
+}
+
+monitor_process() {
+    tail -Fn0 /var/log/Xorg.0.log | \
+        while read line ; do
+            echo "$line" | grep -q "PRLVIDEO: Set Virtual Head"
+            if [ $? = 0 ]
+            then
+                restart_process
+            fi
+        done
+}
+
+start_process
+monitor_process
+
+trap 'echo trapped' TERM

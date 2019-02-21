@@ -1,0 +1,61 @@
+#! /bin/bash
+
+source $(dirname $0)/config
+
+while read -r line ; do
+    case $line in
+        S*)
+          sys_infos="^fg($COLOR_STATUS)${PADDING}${line#?}${PADDING}^fg()"
+            ;;
+        T*)
+            title=" ${line#?}"
+            ;;
+        W*)
+            wm_infos=""
+            IFS=':'
+            set -- ${line#?}
+            while [ $# -gt 0 ] ; do
+                item=$1
+                case $item in
+                    [OFUofu]*)
+                        name=${item#?}
+                        case $item in
+
+                        [OFU]*)
+                          # active desktop
+                          BG=$COLOR_ACTIVE
+                          ;;
+                        o*)
+                          # inactive but occupied desktop
+                          BG=$COLOR_OCCUPIED
+                          ;;
+                        f*)
+                          # inactive desktop
+                          BG=$COLOR_FREE
+                          ;;
+                        u*)
+                          # urgent desktop
+                          BG=$COLOR_URGENT
+                            ;;
+                        esac
+                        wm_infos="${wm_infos}^fg(${FG})^bg(${BG})^ca(1, bspc desktop -f ${name})^ca(2, bspc window -d ${name})${PADDING}${name:2}${PADDING}^ca()^ca()"
+                        ;;
+                    L*)
+                        # layout
+#                        layout=$(printf "%s" "${name}" | sed 's/\(.\).*/\U\1/')
+                        ;;
+                esac
+                shift
+            done
+            ;;
+    esac
+    set -- $(printf '%s\0%s\0%s' "$wm_infos" "$title" "$sys_infos" | sed 's/\^[a-z]\+([^)]*)//g' | xargs -0 txtw -f "$font_family" -s "$font_size")
+    left_width=$(echo $@ | cut -d ' ' -f 1)
+    center_width=$(echo $@ | cut -d ' ' -f 2)
+    right_width=$(echo $@ | cut -d ' ' -f 3)
+    left_indent=0
+    right_indent=$((screen_width - right_width))
+    center_indent=$(((screen_width - center_width)/2))
+    #printf "%s\n" "$title$wm_infos$sys_infos"
+    printf "%s\n" "^pa($center_indent)$title^pa($left_indent)$wm_infos^pa($right_indent)$sys_infos"
+  done

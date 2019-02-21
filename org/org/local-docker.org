@@ -1,0 +1,64 @@
+* Preface
+** TL;DR How do I use this?
+Run the following command from the root of your lumos rails repo.
+#+BEGIN_SRC shell
+docker-compose up
+#+END_SRC
+
+After the server boots you will have access to it via http://localhost:3000
+** What is this?
+A development server running locally inside of a docker container.
+** Why should this exist?
+To provide developers with a contained and fully managed way to run a local development server.
+** Why is this useful?
+Allows full isolation of dependencies to ease issues around debugging and hopefully prevent "It works on my machine" while also
+providing a single command to start up a lumos rails instance.
+** Okay great so when can I use this?
+Now?(maybe)
+* Requirements
+- Docker(Docker for Mac if you are using Mac OS)
+- github.com/lumoslabs/lumos_rails
+- time(some parts are slow right now)
+* Caveats(AKA the FS is slow)
+** File system access is slow
+*** Why?
+FS is mounted via a volume which on Mac OS is unfortunately slow.
+*** What does this mean?
+Compiling assets and loading the application take slightly longer(for me it adds ~5-10s to the load time but YMMV).
+*** Are there any work arounds?
+Not really for Mac OS as of currently.
+** Tests load slow
+*** Why?
+See above notes re: FS access is slow
+*** What does this mean?
+When running tests locally there may be a delay in loading test files
+*** Are there any work arounds?
+run test fewer times?
+We are using a cached FS driver for resque and test containers that should help reduce some of the load time for those containers.
+** Browser specs don't run
+*** Why(short)?
+Currently there is no way to run chrome-driver from our docker image.
+*** Why(long)?
+Currently we aren't installing chrome-driver nor are we setting up a virtual display for which it to attach to in the Dockerfile.
+*** What does this mean?
+If you attempt to run any feature spec it will fail(or your money back).
+*** Are there any work arounds
+If we instead use a development/test specific Dockerfile we can install chrome-driver and do the required setup to run browser specs
+** docker-compose up is slow
+*** Why?
+FS access is slow
+*** What does this mean?
+You should probably attempt to run it less(i.e. keep it alive longer)
+*** Are there any work arounds
+Use Linux?
+
+* What could possibly make this better?
+Glad you asked, here is a list:
+- Wrappers to make running commands easier
+- Non OS X native volume mounting
+** What commands need a wrapper?
+Wow you're on fire with these questions, have another list!
+1. rake db:test:prepare
+2. rake db:migrate -> any environment
+3. rake proxy?
+4. rails console -> any environment

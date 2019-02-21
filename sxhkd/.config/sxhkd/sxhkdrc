@@ -1,0 +1,14 @@
+{e,i}
+  xdotool click {1,1}
+
+{q,p}
+  xdotool click {3,3}
+
+{w,r}
+  xdotool mousemove_relative -- 0 {90,-90}
+
+{u,o}
+  xdotool mousemove_relative -- 0 {-50,50}
+
+x
+  pkill -f sxhkd

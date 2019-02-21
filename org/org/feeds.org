@@ -1,0 +1,11 @@
+* Blogs                                                              :elfeed:
+** Emacs                                                             :emacs:
+*** http://www.terminally-incoherent.com/blog/feed/
+*** http://nullprogram.com/feed/
+*** entry-title: \(emacs\|org-mode\)
+*** http://planet.emacsen.org/atom.xml
+*** entry-title: \(sachachau:\)                                 :sachachua:
+** Ruby                                                               :ruby:
+*** http://tenderlovemaking.com/atom.xml
+** Images
+*** http://www.nasa.gov/rss/lg_image_of_the_day.rss                  :nasa:

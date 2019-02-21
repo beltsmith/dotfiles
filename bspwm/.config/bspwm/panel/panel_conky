@@ -1,0 +1,16 @@
+short_units yes
+background no
+out_to_console yes
+out_to_x no
+# Update interval in seconds
+update_interval 3
+update_interval_on_battery 5
+
+TEXT
+S\
+${execi 1 ./panel_temperature} \
+${wireless_essid wlp2s0} \
+%{F\#FFAECF94 A:dvol --temp:}Vol%{F-} ${execi 1 ./panel_vol}%{A} \
+%{F\#FFAECF94}Mem%{F-} ${mem} \
+%{F\#FFAECF94}%{A:bat_note:}Bat%{F-} ${battery_percent}%{A} | \
+${time %a %d %H:%M} %{-u}

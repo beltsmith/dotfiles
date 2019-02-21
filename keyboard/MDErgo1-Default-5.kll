@@ -1,0 +1,21 @@
+# This is a Gaming compat layer so I can stop fucking rebinding keys
+Name = "MDErgo1";
+Layout = "Default";
+Base = "Blank";
+Version = "0.1";
+Author = "HaaTa (Jacob Alexander) 2015";
+KLL = "0.3c";
+Date = "2015-09-12";
+Generator = "KIICONF 0.2";
+
+U"BACKSPACE" : U"LSHIFT";
+U"LSHIFT" : U"SPACE";
+U"SPACE" : U"BACKSPACE";
+U"TAB" : U"LSHIFT";
+U"ESCAPE" : U"U";
+U"EQUALS": U"ESCAPE";
+
+U"HOME" : U"LCK5";
+
+# Thumb smalls
+U"END" : U"LCK7";

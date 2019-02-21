@@ -1,0 +1,14 @@
+Name = "MDErgo1";
+Layout = "Default";
+Base = "Blank";
+Version = "0.1";
+Author = "HaaTa (Jacob Alexander) 2015";
+KLL = "0.3c";
+Date = "2015-09-12";
+Generator = "KIICONF 0.2";
+# Layer 4
+
+U"FUNCTION6" : U"LCK4";
+
+U"BACKSPACE" : U"SPACE";
+U"SPACE" : U"BACKSPACE";

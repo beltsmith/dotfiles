@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+colorpicker --one-shot --short | xsel -i -b

@@ -1,0 +1,13 @@
+#+TITLE: Doot Doot I'm the dootfiles
+
+* Management
+I use [[https://www.gnu.org/software/stow/][stow]] to manage linking my dotfiles. This allows for me to isolate specific configurations by type rather than destination folder.
+I also occasionally use it to A/B test configurations by simply unstowing one and stowing the other.
+
+* Emacs
+This is 90% of my life now(and currenty using [[https://github.com/syl20bnr/spacemacs][spacemacs]] as the framework). To use, run the following commands:
+
+#+begin_src shell
+  stow emacs
+  git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+#+end_src

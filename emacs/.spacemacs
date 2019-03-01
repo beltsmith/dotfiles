@@ -120,11 +120,7 @@ This function should only modify configuration layer settings."
           '(("irc.freenode.net"
              :port "6697"
              :ssl t
-             :nick "xerif")
-            ("irc.gitter.im"
-             :port "6697"
-             :ssl t
-             :nick "agirdler-lumoslabs")))
+             :nick "xerif")))
      (spacemacs-layouts :variables
                         perspective-enable-persp-projectile t)
      syntax-checking

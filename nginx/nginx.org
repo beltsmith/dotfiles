@@ -32,28 +32,27 @@ Host names for various Sonder services
 #+end_src
 *** subdomains
 #+begin_src emacs-lisp :noweb-ref subdomains
-(setq subdomains '("www" nil "admin"))
+(setq subdomains '("www" nil "admin" "pricing"))
 #+end_src
 *** domains
 #+begin_src emacs-lisp :noweb yes :export yes
-  <<tlds>>
-  <<subdomains>>
-  (defun domainify (tld)
-    (concat "sonder." tld))
-  (defun subdomainify (subdomain domain)
-    (if (eq subdomain nil)
-        domain ;; handles no subdomain
-      (concat subdomain "." domain)))
+<<tlds>>
+<<subdomains>>
+(defun domainify (tld)
+  (concat "sonder." tld))
+(defun subdomainify (subdomain domain)
+  (if (eq subdomain nil)
+      domain ;; handles no subdomain
+    (concat subdomain "." domain)))
 
-  (defun subdomains-for (domain)
-    (mapcar '(lambda (sd) (subdomainify sd domain)) subdomains))
+(defun subdomains-for (domain)
+  (mapcar '(lambda (sd) (subdomainify sd domain)) subdomains))
 
-  (mapcan 'subdomains-for
-          (mapcar 'domainify tlds))
+(string-join (mapcan 'subdomains-for (mapcar 'domainify tlds)) " " )
   #+end_src
 
   #+RESULTS:
-  | www.sonder.dev | sonder.dev | admin.sonder.dev | www.sonder.local | sonder.local | admin.sonder.local | www.sonder.test | sonder.test | admin.sonder.test |
+  : www.sonder.dev sonder.dev admin.sonder.dev pricing.sonder.dev www.sonder.local sonder.local admin.sonder.local pricing.sonder.local www.sonder.test sonder.test admin.sonder.test pricing.sonder.test
 
 *** flatbook
 #+begin_src :noweb-ref flatbook_hosts
@@ -91,3 +90,38 @@ www.sonder.dev sonder.dev admin.sonder.dev www.sonder.local sonder.local admin.s
   server {
   }
 #+end_src
+* nginx config
+#+BEGIN_SRC conf
+#user html;
+worker_processes  1;
+
+error_log  logs/error.log;
+error_log  logs/error.log  notice;
+error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+    include sites-enabled/*;
+}
+#+END_SRC

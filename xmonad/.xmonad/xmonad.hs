@@ -47,6 +47,15 @@ myBrowser            = "firefox"
 myEditor :: [Char]
 myEditor             = "emacs"
 
+-- Brightness
+brightnessCommand :: [Char]
+brightnessCommand =  "/home/beltsmith/scripts/brightness_change "
+
+data Direction = Up | Down
+monBrightnessChange :: Direction -> [Char]
+monBrightnessChange Up = brightnessCommand ++ "up"
+monBrightnessChange Down = brightnessCommand ++ "down"
+
 -- Colours
 winBlack   :: [Char]
 slateGrey  :: [Char]
@@ -238,7 +247,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- rofi launch
     , ((modm,               xK_space ), spawn $ rofi "run")
     , ((modm,               xK_w     ), spawn $ rofi "window")
-    , ((modm .|. shiftMask, xK_w     ), spawn $ rofiRun "~/.screenlayout/$(ls ~/.screenlayout | " ++ rofiCmd ++ ")")
+    , ((modm .|. shiftMask, xK_w     ), spawn $ "/home/beltsmith/.screenlayout/$(ls /home/beltsmith/.screenlayout | " ++ rofiCmd ++ ")")
     -- , ((mod4Mask,           xK_e     ), spawn $ rofi "run")
     -- rofi switch
     -- Resize viewed windows to the correct size
@@ -313,6 +322,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. ctrlMask,              xK_n     ), sendMessage SelectNode)
     , ((modm .|. shiftMask,             xK_n     ), sendMessage MoveNode)
     ]
+
+    ++
+-- <XF86MonBrightnessUp>
+-- <XF86MonBrightnessDown>
+    [ (, spawn brightnessUp)]
 
     ++
 

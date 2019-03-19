@@ -100,7 +100,7 @@ Yo dawg I heard you like binaries
 **** Rbenv
 Make sure we have access to rbenv's bin stubs, also yes better than rvm.
 
-#+BEGIN_SRC shell
+#+BEGIN_SRC shell :tangle no
 prepend_path "$HOME/.rbenv/bin"
 #+END_SRC
 **** Rust
@@ -171,8 +171,9 @@ export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
   eval "$(hub alias -s)"
 
   eval "$(fasd --init auto)"
+  eval "$(fasd --init auto)"
 
-  eval "$(rbenv init -)"
+  # eval "$(rbenv init -)"
 #+END_SRC
 ** Completion
 :PROPERTIES:
@@ -222,11 +223,12 @@ alias zshv='edit ~/.zsh_vars'
 *** OS Specific
 **** Archlinux
 #+BEGIN_SRC shell
+  alias paccmd='trizen'
   alias ya='yaourt'
-  alias pacsearch='pacaur -Ss'
-  alias pacins='pacaur -S'
-  alias pacin='pacaur -U'
-  alias pacupd='pacaur -Syyu'
+  alias pacsearch='paccmd -Ss'
+  alias pacins='paccmd -S'
+  alias pacin='paccmd -U'
+  alias pacupd='paccmd -Syyu'
   alias pacdb='sudo pacman -Syy'
   alias npm='sudo npm'
 
@@ -237,6 +239,9 @@ alias zshv='edit ~/.zsh_vars'
   alias steam_wine='WINEDEBUG=-all wine ~/.wine/drive_c/Program\ Files/Steam/Steam.exe -no-dwrite >/dev/null 2>&1 &'
   alias bt='bluetoothctl'
 #+END_SRC
+
+#+RESULTS:
+
 *** LumosLabs
 #+BEGIN_SRC shell
   alias mem="memory"
@@ -530,7 +535,7 @@ These are loaded from the oh-my-zsh library
   zplug "plugins/sudo", from:oh-my-zsh
   zplug "plugins/bundler", from:oh-my-zsh
   # zplug "plugins/rake-fast", from:oh-my-zsh
-  zplug "plugins/rbenv", from:oh-my-zsh
+  # zplug "plugins/rbenv", from:oh-my-zsh
   zplug "plugins/colorize", from:oh-my-zsh # Plugin for highlighting file content
   # zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 #+END_SRC

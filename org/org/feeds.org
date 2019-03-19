@@ -2,6 +2,7 @@
 ** Emacs                                                             :emacs:
 *** http://www.terminally-incoherent.com/blog/feed/
 *** http://nullprogram.com/feed/
+*** http://ergoemacs.org/emacs/blog.xml
 *** entry-title: \(emacs\|org-mode\)
 *** http://planet.emacsen.org/atom.xml
 *** entry-title: \(sachachau:\)                                 :sachachua:

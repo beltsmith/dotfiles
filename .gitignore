@@ -8,3 +8,4 @@
 /xmonad/.xmonad/xmonad.hi
 /xmonad/.xmonad/xmonad.o
 /vim/.config/**/*/bundle/
+doomemacs/.doom.d/config.el

@@ -11,6 +11,7 @@ import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ResizableTile
+import           Graphics.X11.ExtraTypes.XF86
 
 import qualified Codec.Binary.UTF8.String as UTF8
 import           Data.List
@@ -55,6 +56,9 @@ data Direction = Up | Down
 monBrightnessChange :: Direction -> [Char]
 monBrightnessChange Up = brightnessCommand ++ "up"
 monBrightnessChange Down = brightnessCommand ++ "down"
+
+scrot :: [Char]
+scrot = "shutter -s"
 
 -- Colours
 winBlack   :: [Char]
@@ -103,6 +107,7 @@ myManageHook = composeAll . concat $
     , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
     , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
+    , [ re                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
     ]
@@ -212,6 +217,12 @@ rofiRun cmd = "rofi -dmenu " ++ cmd ++ rofiConfig
 rofiCmd :: String
 rofiCmd = rofiRun ""
 
+switchMonitor :: [Char]
+switchMonitor = "/home/beltsmith/.screenlayout/$(ls /home/beltsmith/.screenlayout | " ++ rofiCmd ++ ")"
+
+switchWifi :: [Char]
+switchWifi = "netctl switch-to $(netctl list | " ++ rofiCmd ++ " | cut -f 2-3 -d '')"
+
 -- Utility functions
 
 shOr :: String -> String -> String
@@ -247,7 +258,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- rofi launch
     , ((modm,               xK_space ), spawn $ rofi "run")
     , ((modm,               xK_w     ), spawn $ rofi "window")
-    , ((modm .|. shiftMask, xK_w     ), spawn $ "/home/beltsmith/.screenlayout/$(ls /home/beltsmith/.screenlayout | " ++ rofiCmd ++ ")")
+    , ((0, xF86XK_Display            ), spawn $ switchMonitor)
+    , ((0, xF86XK_Tools              ), spawn $ switchWifi)
     -- , ((mod4Mask,           xK_e     ), spawn $ rofi "run")
     -- rofi switch
     -- Resize viewed windows to the correct size
@@ -308,6 +320,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     ++
 
+    -- BSP keybinds
+
     [ ((modm .|. altMask,               xK_l     ), sendMessage $ ExpandTowards R)
     , ((modm .|. altMask,               xK_h     ), sendMessage $ ExpandTowards L)
     , ((modm .|. altMask,               xK_j     ), sendMessage $ ExpandTowards D)
@@ -326,7 +340,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
 -- <XF86MonBrightnessUp>
 -- <XF86MonBrightnessDown>
-    [ (, spawn brightnessUp)]
+    [ ((0, xF86XK_MonBrightnessUp  ), spawn $ monBrightnessChange Up)
+    , ((0, xF86XK_MonBrightnessDown), spawn $ monBrightnessChange Down)
+    , ((0, xK_Print                ), spawn scrot)
+    ]
 
     ++
 

@@ -76,6 +76,16 @@ Fuck it I'll do it myself
 (evil-define-key 'normal 'global
   "[ " 'evil-unimpaired-insert-space-above
   "] " 'evil-unimpaired-insert-space-below)
+
+(evil-define-key 'normal 'global
+  (kbd "M-j") 'move-line-down
+  (kbd "M-k") 'move-line-up)
+
+(evil-define-key 'normal 'org-mode
+  (kbd "M-j") 'org-metadown
+  (kbd "M-k") 'org-metaup
+  (kbd "M-h") 'org-metaleft
+  (kbd "M-l") 'org-metaright)
 #+END_SRC
 * Base emacs configs
 :PROPERTIES:
@@ -94,7 +104,7 @@ Config settings which affect base emacs
   "Relative number lines for program modes"
   (setq display-line-numbers 'relative))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
-(setq doom-font (font-spec :family "FuraMono NF" :size 12))
+(setq doom-font (font-spec :family "FuraMono NF" :size 14))
 #+END_SRC
 ** js
 #+BEGIN_SRC emacs-lisp
@@ -115,12 +125,11 @@ commands for some reason, this prevents it.
 Like me it runs shit
 #+BEGIN_SRC emacs-lisp :noweb yes
 (after! prodigy
-  :config (progn
-<<prodigy-apps>>
-<<prodigy-keys>>
-            ))
+  <<prodigy-apps>>
+  )
 
-#+END_SRC
+<<prodigy-keys>>
+    #+END_SRC
 *** apps
 :PROPERTIES:
 :header-args: :noweb-ref prodigy-apps
@@ -128,7 +137,7 @@ Like me it runs shit
 #+BEGIN_SRC emacs-lisp
 (prodigy-define-tag     :name 'pricing-app)
 ;; Ruby versions
-(prodigy-define-tag     :name 'rbenv :init (lambda () (rbenv-use-corresponding)))
+(prodigy-define-tag     :name 'rbenv :init (lambda () (global-rbenv-mode) (rbenv-use-corresponding)))
 ;; Python
 (prodigy-define-tag     :name 'python :stop-signal 'sigkill)
 ;; Prefix Commands
@@ -159,6 +168,7 @@ Like me it runs shit
 (prodigy-define-tag     :name 'make-flask :tags '(make flask server))
 (prodigy-define-tag     :name 'make-yarn  :args '("yarn")   :tags '(make yarn))
 (prodigy-define-tag     :name 'runit-flask :args '("backend") :tags '(runit flask))
+(prodigy-define-tag     :name 'runit-yarn :args '("frontend") :tags '(runit flask))
 ;; bin stubs
 (prodigy-define-tag     :name 'runit      :command "./runit")
 (prodigy-define-tag     :name 'bin-rails  :command "./bin/rails"  :tags '(rails server))
@@ -169,18 +179,25 @@ Like me it runs shit
 (prodigy-define-tag     :name 'flatbook :cwd "~/dev/flatbook"       :path '("~/dev/listings")       :url "admin.sonder.local"   :tags '(rbenv))
 (prodigy-define-tag     :name 'pricing  :cwd "~/dev/sonder_pricing" :path '("~/dev/sonder_pricing") :url "pricing.sonder.local" :tags '(python))
 (prodigy-define-tag     :name 'ds-api   :cwd "~/dev/ds_api_server"  :path '("~/dev/ds_api_server")  :url "dsapi.sonder.local"   :tags '(python))
+(prodigy-define-tag     :name 'pricing-stack)
 ;; services
 ;; redis handled by systemctl for now
 (prodigy-define-service :name "Listings Rails server" :tags '(listings bin-rails server))
 (prodigy-define-service :name "Listings resque"       :tags '(listings resque))
 (prodigy-define-service :name "Listings sidekiq"      :tags '(listings sidekiq))
-(prodigy-define-service :name "Flatbook Rails server" :tags '(flatbook bin-rails))
+(prodigy-define-service :name "Flatbook Rails server" :tags '(flatbook bin-rails pricing-stack))
 (prodigy-define-service :name "Flatbook resque"       :tags '(flatbook resque))
-(prodigy-define-service :name "Pricing flask"         :tags '(pricing runit-flask pricing-app))
-(prodigy-define-service :name "Pricing webpack"       :tags '(pricing make-yarn pricing-app))
-(prodigy-define-service :name "DS API server"         :tags '(ds-api runit flask pricing-app))
+(prodigy-define-service :name "Pricing flask"         :tags '(pricing runit-flask pricing-app pricing-stack))
+(prodigy-define-service :name "Pricing webpack"       :tags '(pricing make-yarn pricing-app pricing-stack))
+(prodigy-define-service :name "DS API server"         :tags '(ds-api runit flask pricing-stack))
 #+END_SRC
+
 *** keys
 #+BEGIN_SRC emacs-lisp :noweb-ref prodigy-keys
 (evil-define-key 'normal 'global " ap" 'prodigy)
+#+END_SRC
+** popups
+#+BEGIN_SRC emacs-lisp :noweb-yes
+(set-popup-rules!
+  '(("*SQL*" :ignore t)))
 #+END_SRC

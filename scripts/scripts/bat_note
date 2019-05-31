@@ -11,6 +11,6 @@ YPOS="21"          # vertical positioning
 HEIGHT="35"         # window height
 WIDTH="180"         # window width
 #ICON=~/.xmonad/dzen2/spkr_01.xbm
-FONT="-*-gohufont-*-*-*-*-14-*-*-*-*-*-*-*"
+DISPLAY=:0
 
-echo $(acpi -V | head -n 1 | cut -d ',' -f 3) | dzen2 -p 3 -tw $WIDTH -h $HEIGHT -x $XPOS -y $YPOS -fn $FONT -bg $background -fg $foreground
+notify-send $(acpi -V | head -n 1 | cut -d ',' -f 2-3)

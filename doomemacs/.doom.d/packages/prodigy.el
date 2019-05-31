@@ -1,87 +1,10 @@
-;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
-(defun my-prog-mode-hook ()
-  "Relative number lines for program modes"
-  (setq display-line-numbers 'relative))
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
-(setq doom-font (font-spec :family "FuraMono NF" :size 12))
-(setq js-indent-level 2)
-(remove-hook 'window-size-change-functions #'+doom-dashboard|resize)
-(evil-define-key 'normal 'global
-  [(control return)] 'evil-ex
-  (kbd "C-;")        'counsel-M-x
-  (kbd "C-SPC")      'counsel-projectile
-  "zD"               'vimish-fold-delete-all
-  ;; "zc"            'vimish-fold
-  ;; "zf"            'vimish-fold-toggle
-  ;; "zo"            'vimish-fold-unfold
-  ;; "zd"            'vimish-fold-delete
-  ;; "zO"            'vimish-fold-unfold-all
-  (kbd "H-i")        'evil-jump-forward
-  ;; (kbd "M-j")        'move-text-down
-  ;; (kbd "M-k")        'move-text-up
-      ;; [escape]           'spacemacs/evil-search-clear-highlight
-  "gt"               'evil-jump-to-tag
-  (kbd "C-e")        'end-of-line ;; make end-of-line work in insert
-  (kbd "C-a")        'beginning-of-line ;; make beginning-of-line work in insert
-  (kbd "C-c s p")    'ripgrep-regexp
-  "\/"               'swiper
-  " sap"             'counsel-projectile-rg
-  (kbd "C-'") 'toggle-quotes
-  " Cl"               'org-capture-goto-last-stored
-  (kbd "M-y") 'counsel-yank-pop)
+;;; ~/dotfiles/doomemacs/.doom.d/packages/prodigy.el -*- lexical-binding: t; -*-
 
-(evil-define-key 'insert 'global
-  (kbd "s-i")        'yas-insert-snippet
-  (kbd "C-v")        'yank
-  (kbd "C-S-l")      'sp-slurp-hybrid-sexp
-  (kbd "C-l")        'hippie-expand
-  (kbd "C-'")        'toggle-quotes)
+(package! prodigy)
 
-(evil-define-key 'visual 'global
-  ",er" 'eval-region
-  [(control return)] 'evil-ex
-  (kbd "RET")        'align-regexp
-  ;; "\/"               'spacemacs/swiper-region-or-symbol
-  (kbd "C-g") 'evil-normal-stateq)
+(evil-define-key 'normal 'global " ap" 'prodigy)
 
-(evil-define-key 'motion 'global
-  [(control return)] 'evil-ex
-  (kbd "C-g") 'evil-normal-state)
-
-(global-set-key [escape] 'evil-exit-emacs-state)
-
-(add-to-list 'write-file-functions 'delete-trailing-whitespace)
-
-;; Sudo shit
-(defadvice ido-find-file (after find-file-sudo activate)
-  "Find file as root if necessary."
-  (unless (and buffer-file-name
-               (file-writable-p buffer-file-name))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-(evil-define-key 'insert org-mode-map [(meta control return)] 'org-insert-subheading)
-(defun evil-unimpaired-insert-space-above (count)
-  (interactive "p")
-  (dotimes (_ count) (save-excursion (evil-insert-newline-above))))
-
-(defun evil-unimpaired-insert-space-below (count)
-  (interactive "p")
-  (dotimes (_ count) (save-excursion (evil-insert-newline-below))))
-
-(evil-define-key 'normal 'global
-  "[ " 'evil-unimpaired-insert-space-above
-  "] " 'evil-unimpaired-insert-space-below)
-
-(evil-define-key 'normal 'global
-  (kbd "M-j") 'move-line-down
-  (kbd "M-k") 'move-line-up)
-
-(evil-define-key 'normal 'org-mode
-  (kbd "M-j") 'org-metadown
-  (kbd "M-k") 'org-metaup
-  (kbd "M-h") 'org-metaleft
-  (kbd "M-l") 'org-metaright)
-(after! (prodigy rbenv)
+(after! prodigy
   (prodigy-define-tag     :name 'pricing-app)
   ;; Ruby versions
   (prodigy-define-tag     :name 'rbenv :init (lambda () (global-rbenv-mode) (rbenv-use-corresponding)))
@@ -136,9 +59,6 @@
   (prodigy-define-service :name "Flatbook resque"       :tags '(flatbook resque))
   (prodigy-define-service :name "Pricing flask"         :tags '(pricing runit-flask pricing-app pricing-stack))
   (prodigy-define-service :name "Pricing webpack"       :tags '(pricing make-yarn pricing-app pricing-stack))
-  (prodigy-define-service :name "DS API server"         :tags '(ds-api runit flask pricing-stack))
-  (evil-define-key 'normal 'global " ap" 'prodigy))
+  (prodigy-define-service :name "DS API server"         :tags '(ds-api runit flask pricing-stack)))
 
-(set-popup-rules!
-  '(("*SQL*" :ignore t)))
-TargetCalendar
+(provide 'packages/prodigy)

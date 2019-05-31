@@ -205,6 +205,12 @@ I like pretty colours, pretty girls like trap music.
   # alias ls='exa' # for compatibility with fzf
   alias la='l -a'
 #+END_SRC
+*** netctl
+#+BEGIN_SRC shell
+alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
+alias nsw="sudo netctl switch-to"
+alias ncl="netctl list"
+#+END_SRC
 *** Editors
 Honestly these are just silly now that I use emacs
 #+BEGIN_SRC shell

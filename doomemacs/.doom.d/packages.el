@@ -7,3 +7,4 @@
 (package! elfeed-org)
 (package! browse-at-remote)
 (package! carbon-now-sh)
+(package! rbenv)

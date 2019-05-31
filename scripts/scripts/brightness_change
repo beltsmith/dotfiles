@@ -19,7 +19,7 @@ i="0"
 
 while [ $i -lt 10 ]
 do
-  if [ "$brightnessPercent" -gt "$((($i * 10) + 5))" ] 
+  if [ "$brightnessPercent" -gt "$((($i * 10) + 5))" ]
   then
     brightness+="#"
   else
@@ -40,7 +40,7 @@ replace=""
 
 
 #id=$(echo "return naughty.notify({ title = \"Backlight\", text = \"$brightness\", $replace}).id"| awesome-client)
-echo "naughty.notify({ title = \"    Backlight\", text = \"$brightnessPercent% $brightness\", replaces_id = 0, font = \"termsyn 20\",  margin = \"10\" })"| awesome-client
+# echo "naughty.notify({ title = \"    Backlight\", text = \"$brightnessPercent% $brightness\", replaces_id = 0, font = \"termsyn 20\",  margin = \"10\" })"| awesome-client
 #id=${id:9}
 #echo $id > ~/.backlight_id
 

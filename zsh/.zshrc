@@ -33,6 +33,9 @@
     alias l="exa -lgh"
     # alias ls='exa' # for compatibility with fzf
     alias la='l -a'
+  alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
+  alias nsw="sudo netctl switch-to"
+  alias ncl="netctl list"
     alias edit=$EDITOR
     # alias vim='nvim'
     # alias emacs='emacs'
@@ -154,7 +157,7 @@
       echo succeeded
       chmod 600 "${SSH_ENV}"
       . "${SSH_ENV}" > /dev/null
-      /usr/bin/ssh-add ~/.ssh/id_*[^.pub];
+      /usr/bin/ssh-add;
   }
   
   # Source SSH settings, if applicable

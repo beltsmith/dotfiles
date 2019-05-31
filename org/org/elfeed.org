@@ -10,3 +10,7 @@
 *** http://tenderlovemaking.com/atom.xml
 ** Images
 *** http://www.nasa.gov/rss/lg_image_of_the_day.rss                  :nasa:
+
+* Notifications :elfeed:
+** Status :status:
+*** https://status.circleci.com/history.rss

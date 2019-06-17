@@ -13,3 +13,4 @@
 (load "init/app")
 (load "init/collab")
 (load "init/config")
+(load "init/term")

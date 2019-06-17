@@ -2,29 +2,30 @@
 (defun my-prog-mode-hook ()
   "Relative number lines for program modes"
   (setq display-line-numbers 'relative))
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
-(setq doom-font (font-spec :family "FuraMono NF" :size 12))
+(setq display-line-numbers 'relative)
+(add-hook 'prog-mode-hook #'my-prog-mode-hook)
+(setq doom-font (font-spec :family "FuraMono NF" :size 14))
 (setq js-indent-level 2)
 (remove-hook 'window-size-change-functions #'+doom-dashboard|resize)
 (evil-define-key 'normal 'global
   [(control return)] 'evil-ex
   (kbd "C-;")        'counsel-M-x
   (kbd "C-SPC")      'counsel-projectile
-  "zD"               'vimish-fold-delete-all
   ;; "zc"            'vimish-fold
   ;; "zf"            'vimish-fold-toggle
   ;; "zo"            'vimish-fold-unfold
   ;; "zd"            'vimish-fold-delete
+  "zD"            'vimish-fold-delete-all
   ;; "zO"            'vimish-fold-unfold-all
   (kbd "H-i")        'evil-jump-forward
   ;; (kbd "M-j")        'move-text-down
-  ;; (kbd "M-k")        'move-text-up
-      ;; [escape]           'spacemacs/evil-search-clear-highlight
+  ;; (kbd "M-k")        'move-text-up ;; [escape]           'spacemacs/evil-search-clear-highlight
   "gt"               'evil-jump-to-tag
   (kbd "C-e")        'end-of-line ;; make end-of-line work in insert
   (kbd "C-a")        'beginning-of-line ;; make beginning-of-line work in insert
   (kbd "C-c s p")    'ripgrep-regexp
   "\/"               'swiper
+  ;; "J"                'evil-join-one-space
   " sap"             'counsel-projectile-rg
   (kbd "C-'") 'toggle-quotes
   " Cl"               'org-capture-goto-last-stored
@@ -81,7 +82,7 @@
   (kbd "M-k") 'org-metaup
   (kbd "M-h") 'org-metaleft
   (kbd "M-l") 'org-metaright)
-(after! (prodigy rbenv)
+(after! prodigy
   (prodigy-define-tag     :name 'pricing-app)
   ;; Ruby versions
   (prodigy-define-tag     :name 'rbenv :init (lambda () (global-rbenv-mode) (rbenv-use-corresponding)))
@@ -137,8 +138,10 @@
   (prodigy-define-service :name "Pricing flask"         :tags '(pricing runit-flask pricing-app pricing-stack))
   (prodigy-define-service :name "Pricing webpack"       :tags '(pricing make-yarn pricing-app pricing-stack))
   (prodigy-define-service :name "DS API server"         :tags '(ds-api runit flask pricing-stack))
-  (evil-define-key 'normal 'global " ap" 'prodigy))
+  )
 
+(evil-define-key 'normal 'global " ap" 'prodigy)
 (set-popup-rules!
   '(("*SQL*" :ignore t)))
-TargetCalendar
+(add-hook 'js-mode-hook 'prettier-js-mode)
+(load-theme 'gruvbox-dark-medium t)

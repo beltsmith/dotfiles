@@ -8,3 +8,7 @@
 (package! browse-at-remote)
 (package! carbon-now-sh)
 (package! rbenv)
+(package! gruvbox-theme)
+(package! prettier-js)
+(package! eredis)
+(package! rjsx-mode :recipe (:repo "bzalasky/rjsx-mode" :branch "issue-104" :fetcher github))

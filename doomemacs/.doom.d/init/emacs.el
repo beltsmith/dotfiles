@@ -7,7 +7,6 @@
                ;;+icons          ; colorful icons for dired-mode
                ))
 (doom! :emacs electric)          ; smarter, keyword-based electric-indent
-(doom! :emacs eshell)            ; a consistent, cross-platform shell (WIP)
 (doom! :emacs imenu)             ; an imenu sidebar and searchable code index
 (doom! :emacs vc)                ; version-control and Emacs, sitting in a tree
 

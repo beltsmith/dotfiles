@@ -85,7 +85,7 @@ red        = "#fb4934" -- not red? nope it's red
 
 myLayoutHook = smartBorders $ avoidStruts $ full $ tiled ||| Mirror tiled ||| emptyBSP
   where
-     full    = mkToggle (NOBORDERS ?? FULL ?? EOT)
+     full    = mkToggle $ NOBORDERS ?? FULL ?? EOT
      -- default tiling algorithm partitions the screen into two panes
      tiled   = ResizableTall nmaster delta ratio []
      -- The default number of windows in the master pane

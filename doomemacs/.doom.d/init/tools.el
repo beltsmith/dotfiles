@@ -20,9 +20,8 @@
                +docsets))        ; ...or in Dash docsets locally
 (doom! :tools magit)             ; a git porcelain for Emacs
 (doom! :tools make)              ; run make tasks from Emacs
-(doom! :tools password-store)    ; password manager for nerds
+(doom! :tools store)    ; password manager for nerds
 (doom! :tools pdf)               ; pdf enhancements
 (doom! :tools prodigy)           ; FIXME managing external services & code builders
 (doom! :tools lsp)
-
 (provide 'init/tools)

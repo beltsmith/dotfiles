@@ -103,7 +103,8 @@ Config settings which affect base emacs
 (defun my-prog-mode-hook ()
   "Relative number lines for program modes"
   (setq display-line-numbers 'relative))
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
+(setq display-line-numbers 'relative)
+(add-hook 'prog-mode-hook #'my-prog-mode-hook)
 (setq doom-font (font-spec :family "FuraMono NF" :size 14))
 #+END_SRC
 ** js
@@ -119,7 +120,7 @@ commands for some reason, this prevents it.
 #+END_SRC
 * Package Configs
 :PROPERTIES:
-:header-args: :noweb-ref package-config
+:header-args: :noweb-ref package-config :tangle no
 :END:
 ** prodigy
 Like me it runs shit
@@ -197,7 +198,16 @@ Like me it runs shit
 (evil-define-key 'normal 'global " ap" 'prodigy)
 #+END_SRC
 ** popups
-#+BEGIN_SRC emacs-lisp :noweb-yes
+#+BEGIN_SRC emacs-lisp :noweb yes
 (set-popup-rules!
   '(("*SQL*" :ignore t)))
+#+END_SRC
+** prettier
+#+BEGIN_SRC emacs-lisp :noweb yes
+(after! prettier-js (add-hook 'js-mode-hook 'prettier-js-mode))
+#+END_SRC
+** gruvbox
+#+BEGIN_SRC emacs-lisp :noweb yes
+(after! gruvbox (load-theme 'gruvbox-dark-medium t))
+
 #+END_SRC

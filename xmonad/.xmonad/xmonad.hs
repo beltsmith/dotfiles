@@ -58,7 +58,7 @@ monBrightnessChange Up = brightnessCommand ++ "up"
 monBrightnessChange Down = brightnessCommand ++ "down"
 
 scrot :: [Char]
-scrot = "shutter -s"
+scrot = "flameshot gui"
 
 -- Colours
 winBlack   :: [Char]
@@ -107,7 +107,6 @@ myManageHook = composeAll . concat $
     , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
     , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
-    , [ re                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
     ]

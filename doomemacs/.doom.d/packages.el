@@ -12,3 +12,4 @@
 (package! prettier-js)
 (package! eredis)
 (package! rjsx-mode :recipe (:repo "bzalasky/rjsx-mode" :branch "issue-104" :fetcher github))
+(package! docker-compose-mode)

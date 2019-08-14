@@ -20,7 +20,6 @@ FQDN which only resolves to you local machine
 #+begin_src :noweb-ref fqdn
 127.0.1.1
 #+end_src
-*** local loopback
 ** host names
 #+begin_src
 
@@ -28,7 +27,7 @@ FQDN which only resolves to you local machine
 Host names for various Sonder services
 *** tlds
 #+begin_src emacs-lisp :noweb-ref tlds
-  (setq tlds '("dev" "local" "test"))
+(setq tlds '("dev" "local" "test"))
 #+end_src
 *** subdomains
 #+begin_src emacs-lisp :noweb-ref subdomains
@@ -38,12 +37,12 @@ Host names for various Sonder services
 #+begin_src emacs-lisp :noweb yes :export yes
 <<tlds>>
 <<subdomains>>
-(defun domainify (tld)
-  (concat "sonder." tld))
+
 (defun subdomainify (subdomain domain)
-  (if (eq subdomain nil)
-      domain ;; handles no subdomain
-    (concat subdomain "." domain)))
+  (s-join "." (-flatten (list subdomain domain))))
+
+(defun domainify (tld)
+  (subdomainify "sonder" tld))
 
 (defun subdomains-for (domain)
   (mapcar '(lambda (sd) (subdomainify sd domain)) subdomains))
@@ -53,6 +52,7 @@ Host names for various Sonder services
 
   #+RESULTS:
   : www.sonder.dev sonder.dev admin.sonder.dev pricing.sonder.dev www.sonder.local sonder.local admin.sonder.local pricing.sonder.local www.sonder.test sonder.test admin.sonder.test pricing.sonder.test
+
 
 *** flatbook
 #+begin_src :noweb-ref flatbook_hosts
@@ -64,19 +64,19 @@ www.sonder.dev sonder.dev admin.sonder.dev www.sonder.local sonder.local admin.s
 #+end_src
 
 * servers
-#+begin_src nginx :noweb-ref http-listen
+#+begin_src conf :noweb-ref http-listen
   listen <<httpport>>;
   listen <<ip6addr>><<httpport>>;
 #+end_src
-#+begin_src nginx :noweb-ref https-listen
+#+begin_src conf :noweb-ref https-listen
   listen <<httpsport>>;
   listen <<ip6addr>><<httpsport>>;
 #+end_src
-#+begin_src nginx :noweb-ref https-ssl
+#+begin_src conf :noweb-ref https-ssl
   ssl_certificate ssl/server.crt;
   ssl_certificate_key ssl/server.key;
 #+end_src
-#+begin_src nginx :noweb-ref ssl-proxy-headers
+#+begin_src conf :noweb-ref ssl-proxy-headers
   proxy_set_header Host $http_host;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -86,9 +86,15 @@ www.sonder.dev sonder.dev admin.sonder.dev www.sonder.local sonder.local admin.s
   proxy_set_header X-SSL-Issuer $ssl_client_i_dn;
 #+end_src
 ** flatbook
-#+begin_src nginx
-  server {
-  }
+#+begin_src conf :noweb yes
+server {
+    <<http-listen>>
+    <<https-listen>>
+
+    location / {
+        <<ssl-proxy-headers>>
+    }
+}
 #+end_src
 * nginx config
 #+BEGIN_SRC conf

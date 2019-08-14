@@ -50,7 +50,6 @@
     alias pacin='paccmd -U'
     alias pacupd='paccmd -Syyu'
     alias pacdb='sudo pacman -Syy'
-    alias npm='sudo npm'
   
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
@@ -111,6 +110,9 @@
     reflect() {
       sudo reflector --protocol https --latest 30 --number 20 --sort rate --save /etc/pacman.d/mirrorlist
     }
+  as-circle() {
+      CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD) CIRCLE_SHA1=$(git rev-parse --short HEAD) "$@"
+  }
   multi_rspec() {
       for i in $(seq $1) ;
         do bundle exec rspec spec ; [[ ! $? = 0 ]] && break ;

@@ -58,12 +58,6 @@ treat directory separator as a delimeter
 #+BEGIN_SRC shell
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 #+END_SRC
-*** Powerline
-Does anyone still use this? I don't
-#+BEGIN_SRC shell :noweb-ref no
-  export POWERLINE_HIDE_HOST_NAME=true
-  export POWERLINE_HIDE_USER_NAME=true
-#+END_SRC
 *** BSPWM
 B(est|inary) Space Partitioning Window Manager.
 :'(
@@ -236,7 +230,6 @@ alias zshv='edit ~/.zsh_vars'
   alias pacin='paccmd -U'
   alias pacupd='paccmd -Syyu'
   alias pacdb='sudo pacman -Syy'
-  alias npm='sudo npm'
 
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
@@ -370,6 +363,12 @@ RBenv Install This
   reflect() {
     sudo reflector --protocol https --latest 30 --number 20 --sort rate --save /etc/pacman.d/mirrorlist
   }
+#+END_SRC
+**** as-circle
+#+BEGIN_SRC shell
+as-circle() {
+    CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD) CIRCLE_SHA1=$(git rev-parse --short HEAD) "$@"
+}
 #+END_SRC
 *** Wine
 wine helper functions, I'm not using wine anymore so I don't tangle this block

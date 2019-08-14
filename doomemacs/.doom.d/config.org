@@ -118,6 +118,10 @@ commands for some reason, this prevents it.
 #+BEGIN_SRC emacs-lisp
 (remove-hook 'window-size-change-functions #'+doom-dashboard|resize)
 #+END_SRC
+** org mode
+#+BEGIN_SRC emacs-lisp
+(setq org-log-into-drawer t)
+#+END_SRC
 * Package Configs
 :PROPERTIES:
 :header-args: :noweb-ref package-config :tangle no

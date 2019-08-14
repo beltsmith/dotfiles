@@ -44,7 +44,7 @@ myNormalBorderColor  = powderBlue
 myFocusedBorderColor :: [Char]
 myFocusedBorderColor = vaporPink
 myBrowser :: [Char]
-myBrowser            = "firefox"
+myBrowser            = "firefox-nightly"
 myEditor :: [Char]
 myEditor             = "emacs"
 
@@ -59,6 +59,9 @@ monBrightnessChange Down = brightnessCommand ++ "down"
 
 scrot :: [Char]
 scrot = "flameshot gui"
+
+passSelect :: [Char]
+passSelect = "dmenu-lpass-nu"
 
 -- Colours
 winBlack   :: [Char]
@@ -109,6 +112,7 @@ myManageHook = composeAll . concat $
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
+    , [ role =? "toolbox"                           --> doF W.swapDown]
     ]
     where
         role           = stringProperty "WM_WINDOW_ROLE"
@@ -242,6 +246,7 @@ myRecompileCmd = "(xmonad --recompile && xmonad --restart && notify-send 'reload
 
 -- I stole these from xmonad
 
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. ctrlMask,  xK_Return), spawn $ XMonad.terminal conf)
@@ -257,6 +262,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- rofi launch
     , ((modm,               xK_space ), spawn $ rofi "run")
     , ((modm,               xK_w     ), spawn $ rofi "window")
+    , ((modm,               xK_p     ), spawn $ passSelect)
     , ((0, xF86XK_Display            ), spawn $ switchMonitor)
     , ((0, xF86XK_Tools              ), spawn $ switchWifi)
     -- , ((mod4Mask,           xK_e     ), spawn $ rofi "run")

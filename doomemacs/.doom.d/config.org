@@ -77,19 +77,53 @@ Fuck it I'll do it myself
   "[ " 'evil-unimpaired-insert-space-above
   "] " 'evil-unimpaired-insert-space-below)
 
+(defmacro save-column (&rest body)
+  `(let ((column (current-column)))
+     (unwind-protect
+         (progn ,@body)
+       (move-to-column column))))
+(put 'save-column 'lisp-indent-function 0)
+
+(defun move-line-up ()
+  (interactive)
+  (save-column
+   (transpose-lines 1)
+   (forward-line -2)))
+
+(defun move-line-down ()
+  (interactive)
+  (save-column
+   (forward-line 1)
+   (transpose-lines 1)
+   (forward-line -1)))
+
 (evil-define-key 'normal 'global
   (kbd "M-j") 'move-line-down
   (kbd "M-k") 'move-line-up)
 
-(evil-define-key 'normal 'org-mode
+(evil-define-key 'normal org-mode-map
   (kbd "M-j") 'org-metadown
   (kbd "M-k") 'org-metaup
   (kbd "M-h") 'org-metaleft
   (kbd "M-l") 'org-metaright)
+
+(evil-define-key 'normal 'global
+  (kbd "M-C-y") 'browse-at-remote
+  (kbd "M-Y") 'browse-at-remote-kill)
+#+END_SRC
+** ruby
+#+BEGIN_SRC emacs-lisp
+(evil-define-key 'normal ruby-mode-map
+  "gt" 'robe-jump)
+(evil-define-key 'normal enh-ruby-mode-map
+  "gt" 'robe-jump)
+(defun my-ruby-mode-hook ()
+  (setq flycheck-command-wrapper-function (lambda (command) (append '("bundle" "exec") command))))
+(add-hook 'ruby-mode-hook #'my-ruby-mode-hook)
 #+END_SRC
 * Base emacs configs
 :PROPERTIES:
-:header-args: :noweb-ref base-config
+:header-args: :noweb-ref base-config :tangle no
 :END:
 Config settings which affect base emacs
 #+BEGIN_SRC emacs-lisp :tangle config.el :noweb yes :noweb-ref no
@@ -105,7 +139,6 @@ Config settings which affect base emacs
   (setq display-line-numbers 'relative))
 (setq display-line-numbers 'relative)
 (add-hook 'prog-mode-hook #'my-prog-mode-hook)
-(setq doom-font (font-spec :family "FuraMono NF" :size 14))
 #+END_SRC
 ** js
 #+BEGIN_SRC emacs-lisp
@@ -122,6 +155,19 @@ commands for some reason, this prevents it.
 #+BEGIN_SRC emacs-lisp
 (setq org-log-into-drawer t)
 #+END_SRC
+** doom settings
+#+BEGIN_SRC emacs-lisp
+(setq doom-font (font-spec :family "FuraMono NF" :size 14)
+      doom-theme 'doom-gruvbox)
+#+END_SRC
+** calendar
+#+BEGIN_SRC emacs-lisp
+(defun org-insert-today ()
+  (interactive)
+  (org-insert-time-stamp (current-time)))
+(evil-define-key '(normal insert) org-mode-map
+  (kbd "C-c t") 'org-insert-today)
+#+END_SRC
 * Package Configs
 :PROPERTIES:
 :header-args: :noweb-ref package-config :tangle no
@@ -137,7 +183,7 @@ Like me it runs shit
     #+END_SRC
 *** apps
 :PROPERTIES:
-:header-args: :noweb-ref prodigy-apps
+:header-args: :noweb-ref prodigy-apps :tangle no
 :END:
 #+BEGIN_SRC emacs-lisp
 (prodigy-define-tag     :name 'pricing-app)
@@ -202,16 +248,11 @@ Like me it runs shit
 (evil-define-key 'normal 'global " ap" 'prodigy)
 #+END_SRC
 ** popups
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle no
 (set-popup-rules!
   '(("*SQL*" :ignore t)))
 #+END_SRC
 ** prettier
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle no
 (after! prettier-js (add-hook 'js-mode-hook 'prettier-js-mode))
-#+END_SRC
-** gruvbox
-#+BEGIN_SRC emacs-lisp :noweb yes
-(after! gruvbox (load-theme 'gruvbox-dark-medium t))
-
 #+END_SRC

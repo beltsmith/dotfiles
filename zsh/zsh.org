@@ -112,10 +112,10 @@ append_path "$GOPATH/bin"
 **** User binaries
 Add two user binary folders to PATH, append so folders don't override system bins
 #+BEGIN_SRC shell
-    append_path "$HOME/bin"
-    append_path "$HOME/scripts"
-    append_path "/usr/local/bin"
-    append_path "$HOME/.local/bin"
+append_path "$HOME/bin"
+append_path "$HOME/scripts"
+append_path "/usr/local/bin"
+append_path "$HOME/.local/bin"
 #+END_SRC
 **** Disabled
 :PROPERTIES:
@@ -162,12 +162,11 @@ export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
 :END:
 *queue Kenny Loggins' Danger Zone*
 #+BEGIN_SRC shell
-  eval "$(hub alias -s)"
+eval "$(hub alias -s)"
 
-  eval "$(fasd --init auto)"
-  eval "$(fasd --init auto)"
-
-  # eval "$(rbenv init -)"
+eval "$(fasd --init auto)"
+eval "$(pyenv init -)"
+# eval "$(rbenv init -)"
 #+END_SRC
 ** Completion
 :PROPERTIES:
@@ -201,9 +200,9 @@ I like pretty colours, pretty girls like trap music.
 #+END_SRC
 *** netctl
 #+BEGIN_SRC shell
-alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
+#alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
 alias nsw="sudo netctl switch-to"
-alias ncl="netctl list"
+#alias ncl="netctl list"
 #+END_SRC
 *** Editors
 Honestly these are just silly now that I use emacs
@@ -489,6 +488,12 @@ codeclimate() {
   function mount_build() {
     local build_number="$1"
   }
+#+END_SRC
+*** heroku psql
+#+BEGIN_SRC shell
+function hsql() {
+    psql `heroku config -a $1 | grep 'MASTER_DATA' | cut -f 2-100 -d ':'`
+}
 #+END_SRC
 ** Plugin manager
 :PROPERTIES:

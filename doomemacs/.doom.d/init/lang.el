@@ -40,10 +40,7 @@
 (doom! :lang markdown)          ; writing docs for people to ignore
 (doom! :lang nix)               ; I hereby declare "nix geht mehr!"
 (doom! :lang (org              ; organize your plain life in plain text
-              +attach          ; custom attachment system
-              +babel           ; running code in org
-              +capture         ; org-capture in and outside of Emacs
-              +export          ; Exporting org to whatever you want
+	      +gnuplot
               +present))        ; Emacs for presentations
 (doom! :lang plantuml)          ; diagrams for confusing people more
 (doom! :lang racket)            ; a DSL for DSLs

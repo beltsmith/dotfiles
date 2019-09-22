@@ -21,10 +21,10 @@
   prepend_path "$HOME/.cargo/bin"
   export GOPATH="$HOME/go"
   append_path "$GOPATH/bin"
-      append_path "$HOME/bin"
-      append_path "$HOME/scripts"
-      append_path "/usr/local/bin"
-      append_path "$HOME/.local/bin"
+  append_path "$HOME/bin"
+  append_path "$HOME/scripts"
+  append_path "/usr/local/bin"
+  append_path "$HOME/.local/bin"
   export _JAVA_AWT_WM_NONREPARENTING=1
   export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
   ###############################################
@@ -33,9 +33,9 @@
     alias l="exa -lgh"
     # alias ls='exa' # for compatibility with fzf
     alias la='l -a'
-  alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
+  #alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
   alias nsw="sudo netctl switch-to"
-  alias ncl="netctl list"
+  #alias ncl="netctl list"
     alias edit=$EDITOR
     # alias vim='nvim'
     # alias emacs='emacs'
@@ -138,6 +138,9 @@
     function mount_build() {
       local build_number="$1"
     }
+  function hsql() {
+      psql `heroku config -a $1 | grep 'MASTER_DATA' | cut -f 2-100 -d ':'`
+  }
   ###############################################
   ################# Completion ##################
   ###############################################
@@ -231,9 +234,8 @@
   ###############################################
   #################    Evals   ##################
   ###############################################
-    eval "$(hub alias -s)"
+  eval "$(hub alias -s)"
   
-    eval "$(fasd --init auto)"
-    eval "$(fasd --init auto)"
-  
-    # eval "$(rbenv init -)"
+  eval "$(fasd --init auto)"
+  eval "$(pyenv init -)"
+  # eval "$(rbenv init -)"

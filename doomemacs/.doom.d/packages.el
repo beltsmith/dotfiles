@@ -14,15 +14,4 @@
 (package! docker-compose-mode)
 (package! pkgbuild-mode)
 (package! rufo)
-;;(package! general)
-
-(package! slack)
-(after! slack
-  (progn
-    (setq slack-client-id "eb2e20e8-1567192935.406"
-          slack-buffer-emojify t
-          slack-prefer-current-team t)
-    (slack-register-team)
-    ))
-
 (package! dumb-jump)

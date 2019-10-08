@@ -14,13 +14,6 @@
   (org-insert-time-stamp (current-time)))
 (evil-define-key '(normal insert) org-mode-map
   (kbd "C-c t") 'org-insert-today)
-(defun rename-this-file ()
-  (interactive)
-  (let ((new-file-name (read-file-name "Rename to: ")))
-    (rename-file (buffer-file-name (current-buffer)) new-file-name)
-    (kill-buffer (current-buffer))
-    (find-file new-file-name)))
-
 (evil-define-key 'normal 'global
   [(control return)] 'evil-ex
   (kbd "C-;")        'counsel-M-x
@@ -169,10 +162,10 @@
   (prodigy-define-tag     :name 'bin-rake   :command "./bin/rake")
   (prodigy-define-tag     :name 'bin-bundle :command "./bin/bundle")
   ;; environments
-  (prodigy-define-tag     :name 'listings :cwd "~/dev/listings"       :path '("~/dev/flatbook")       :url "listings.sonder.local" :tags '(rbenv))
-  (prodigy-define-tag     :name 'flatbook :cwd "~/dev/flatbook"       :path '("~/dev/listings")       :url "admin.sonder.local"    :tags '(rbenv))
-  (prodigy-define-tag     :name 'pricing  :cwd "~/dev/sonder_pricing" :path '("~/dev/sonder_pricing") :url "pricing.sonder.local"  :tags '(python))
-  (prodigy-define-tag     :name 'ds-api   :cwd "~/dev/ds_api_server"  :path '("~/dev/ds_api_server")  :url "dsapi.sonder.local"    :tags '(python))
+  (prodigy-define-tag     :name 'listings :cwd "~/dev/listings"       :path '("~/dev/flatbook")       :url "www.sonder.local"     :tags '(rbenv))
+  (prodigy-define-tag     :name 'flatbook :cwd "~/dev/flatbook"       :path '("~/dev/listings")       :url "admin.sonder.local"   :tags '(rbenv))
+  (prodigy-define-tag     :name 'pricing  :cwd "~/dev/sonder_pricing" :path '("~/dev/sonder_pricing") :url "pricing.sonder.local" :tags '(python))
+  (prodigy-define-tag     :name 'ds-api   :cwd "~/dev/ds_api_server"  :path '("~/dev/ds_api_server")  :url "dsapi.sonder.local"   :tags '(python))
   (prodigy-define-tag     :name 'pricing-stack)
   ;; services
   ;; redis handled by systemctl for now

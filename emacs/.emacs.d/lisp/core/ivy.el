@@ -10,7 +10,9 @@
           (swiper-isearch . ivy--regex-plus)
           ;; Ignore order for non-fuzzy searches by default
           (t . ivy--regex-ignore-order)))
-  (general-emacs-define-key ivy-minibuffer-map "C-l" #'ivy-alt-done)
+  (general-emacs-define-key ivy-minibuffer-map
+    "C-l" #'ivy-alt-done
+    "<C-return>" #'ivy-immediate-done)
   :config
   (setq ivy-height 15
         ivy-wrap t
@@ -37,7 +39,7 @@
   :after (ivy hydra)
   :commands (ivy-dispatching-done-hydra ivy--matcher-desc ivy-hydra/body)
   :init
-  (define-key ivy-minibuffer-map
+  (general-define-key ivy-minibuffer-map
     "C-o" #'ivy-dispatching-done-hydra
     "M-o" #'hydra-ivy/body)
   :config
@@ -74,8 +76,6 @@
   (setq prescient-save-file (concat my-cache-dir "prescient-save.el"))
   (prescient-persist-mode +1))
 
-
-
 ;; Lifted from doom
 (use-package! all-the-icons-ivy
   :after ivy
@@ -85,5 +85,8 @@
   (setq all-the-icons-ivy-buffer-commands nil)
 
   (all-the-icons-ivy-setup))
+
+(use-package! avy
+  :config (global-set-key (kbd "C-:") 'avy-goto-char))
 
 (provide 'init-ivy)

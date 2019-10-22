@@ -26,5 +26,5 @@
      ,@plist))
 
 
-(provide 'init-preamble)
+(provide 'preamble)
 ;;; init-preamble.el ends here

@@ -1,5 +1,6 @@
 ;;; keys.el --- ~/.emacs.d/init.el -*- lexical-binding: t; -*-
 ;;; Commentary:
+;;; This file sets up keybinds for core Emacs functionality.
 ;;; Code:
 (use-package! which-key
   :defer 1
@@ -42,7 +43,6 @@
   "C-S-j"  #'scroll-up-command
   "C-S-k"  #'scroll-down-command)
 
-
 (general-define-key :kepmaps read-expression-map
   "C-j" 'next-line-or-history-element
   "C-k" 'previous-line-or-history-element)
@@ -50,5 +50,8 @@
 (general-translate-key nil 'normal
   "SPC w" "C-w")
 
-(provide 'init-keys)
+(general-define-key )
+
+(require 'init-finders)
+(provide 'keys)
 ;;; keys.el ends here

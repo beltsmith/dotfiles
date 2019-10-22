@@ -1,17 +1,24 @@
 import           XMonad
 import           XMonad.Config.Desktop
-import           XMonad.Hooks.DynamicLog hiding (wrap)
+import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers hiding (CW)
 import           XMonad.Hooks.SetWMName
+import           XMonad.Util.SpawnOnce (spawnOnce)
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ResizableTile
 import           Graphics.X11.ExtraTypes.XF86
+
+import Data.List (sortBy)
+import Data.Function (on)
+import Control.Monad (forM_, join)
+import XMonad.Util.Run (safeSpawn)
+import XMonad.Util.NamedWindows (getName)
 
 import qualified Codec.Binary.UTF8.String as UTF8
 import           Data.List
@@ -49,13 +56,13 @@ myEditor :: [Char]
 myEditor             = "emacs"
 
 -- Brightness
-brightnessCommand :: [Char]
-brightnessCommand =  "/home/beltsmith/scripts/brightness_change "
+brightnessCommand :: [Char] -> [Char]
+brightnessCommand command = "/home/beltsmith/scripts/brightness_change " ++ command
 
 data Direction = Up | Down
 monBrightnessChange :: Direction -> [Char]
-monBrightnessChange Up = brightnessCommand ++ "up"
-monBrightnessChange Down = brightnessCommand ++ "down"
+monBrightnessChange Up = brightnessCommand "up"
+monBrightnessChange Down = brightnessCommand "down"
 
 scrot :: [Char]
 scrot = "flameshot gui"
@@ -125,6 +132,27 @@ myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 dbusInterface :: [Char]
 dbusInterface = "org.xmonad.Log"
 
+myStartupHook = do
+  spawnOnce "polybar main &"
+  spawnOnce "compton &"
+  setWMName "LG3D"
+
+
+eventLogHook = do
+  winset <- gets windowset
+  title <- maybe (return "") (fmap show . getName) . W.peek $ winset
+  let currWs = W.currentTag winset
+  let wss = map W.tag $ W.workspaces winset
+  let wsStr = join $ map (fmt currWs) $ sort' wss
+
+  io $ appendFile "/tmp/.xmonad-title-log" (title ++ "\n")
+  io $ appendFile "/tmp/.xmonad-workspace-log" (wsStr ++ "\n")
+
+  where fmt currWs ws
+          | currWs == ws = wrap "%{F#0a81f5}" "%{F-}" $ wrap "[" "]" ws
+          | otherwise    = " " ++ ws ++ " "
+        sort' = sortBy (compare `on` (!! 0))
+
 -- Main xmonad
 main :: IO ()
 main = do
@@ -132,6 +160,9 @@ main = do
   -- Request access to the DBus name
   D.requestName dbus (D.busName_ dbusInterface)
       [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
+  forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> do
+    safeSpawn "mkfifo" ["/tmp/" ++ file]
 
   xmonad $ docks desktopConfig
     { terminal           = myTerminal
@@ -141,15 +172,16 @@ main = do
     , focusedBorderColor = myFocusedBorderColor
     , workspaces         = myWorkspaces
     , keys               = myKeys
-    , logHook            = dynamicLogWithPP (myLogHook dbus) <+> logHook desktopConfig
-    , manageHook         = myManageHook -- <+> myFloatErHook
+    -- , logHook            = dynamicLogWithPP (myLogHook dbus) <+> logHook desktopConfig
+    , logHook            = eventLogHook
+    , manageHook         = myManageHook <+> myFloaterHook
     , layoutHook         = myLayoutHook
     , handleEventHook    = myEventHook
-    , startupHook        = setWMName "LG3D"
+    , startupHook        = myStartupHook
     }
 
-wrap :: String -> String -> String -> String
-wrap h t b = h ++ b ++ t
+-- wrap :: String -> String -> String -> String
+-- wrap h t b = h ++ b ++ t
 
 colourWrapper :: String -> String -> String -> String
 colourWrapper kind colour = wrap startTag endTag

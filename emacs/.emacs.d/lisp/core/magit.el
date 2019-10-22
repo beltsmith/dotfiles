@@ -40,7 +40,6 @@
   :hook (magit-mode . turn-on-magit-gitflow))
 
 (use-package! evil-magit
-  :after '(magit evil)
   :init
   (setq evil-magit-state 'normal
 	evil-magit-use-z-for-folds t)
@@ -55,7 +54,8 @@
 				 magit-stash-mode-map
 				 magit-revision-mode-map
 				 magit-diff-mode-map)
-		      [tab] #'magit-section-toggle))
+		      [tab] #'magit-section-toggle)
+  (evil-magit-init))
 
 ;; (use-package! git-rebase
 ;;   :after evil-magit
@@ -66,5 +66,8 @@
 ;;   (evil-define-key* evil-magit-state git-rebase-mode-map
 ;; 		    "gj" #'git-rebase-move-line-down
 ;; 		    "gk" #'git-rebase-move-line-up))
+
+(general-def :states 'normal :prefix "SPC"
+  "g g" 'magit)
 
 (provide 'init-magit)

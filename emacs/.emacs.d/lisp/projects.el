@@ -18,7 +18,7 @@ Emacs.")
   :after ivy
   :init
   (setq projectile-cache-file (concat my-cache-dir "projectile.cache")
-        projectile-enable-caching doom-interactive-mode
+        projectile-enable-caching t
         projectile-known-projects-file (concat my-cache-dir "projectile.projects")
         projectile-require-project-root t
         projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS")
@@ -40,7 +40,7 @@ Emacs.")
 
   ;; a more generic project root file
   (push ".project" projectile-project-root-files-bottom-up)
-  (push (abbreviate-file-name doom-local-dir) projectile-globally-ignored-directories)
+  (push (abbreviate-file-name my-local-dir) projectile-globally-ignored-directories)
 
   ;; Disable commands that won't work, as is, and that Doom already provides a
   ;; better alternative for.
@@ -75,20 +75,7 @@ c) are not valid projectile projects."
                  do (remhash proot projectile-projects-cache)
                  and do (remhash proot projectile-projects-cache-time)
                  and do (remhash proot projectile-project-type-cache))
-        (projectile-serialize-cache))))
-
-  ;; It breaks projectile's project root resolution if HOME is a project (e.g.
-  ;; it's a git repo). In that case, we disable bottom-up root searching to
-  ;; prevent issues. This makes project resolution a little slower and less
-  ;; accurate in some cases.
-  (let ((default-directory "~"))
-    (when (cl-find-if #'projectile-file-exists-p
-                      projectile-project-root-files-bottom-up)
-      (message "HOME appears to be a project. Disabling bottom-up root search.")
-      (setq projectile-project-root-files
-            (append projectile-project-root-files-bottom-up
-                    projectile-project-root-files)
-            projectile-project-root-files-bottom-up nil))))
+        (projectile-serialize-cache)))))
 
 (use-package! counsel-projectile
   :after (evil ivy)
@@ -98,4 +85,4 @@ c) are not valid projectile projects."
     " sap"          'counsel-projectile-rg
     (kbd "SPC SPC") 'projectile-find-file))
 
-(provide 'init-projects)
+(provide 'projects)

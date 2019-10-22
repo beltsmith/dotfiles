@@ -90,7 +90,9 @@
   (evil-define-key 'normal 'global
     (kbd "M-C-y") 'browse-at-remote
     (kbd "M-Y") 'browse-at-remote-kill)
-  )
+
+  ;; Set no highlight on ESC
+  (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight))
 
 (use-package! evil-collection
   :config
@@ -105,10 +107,15 @@
 
 (use-package! evil-surround
   :commands (global-evil-surround-mode
-             evil-surround-edit
-             evil-Surround-edit
-             evil-surround-region)
-  :config (global-evil-surround-mode 1))
+	     evil-surround-edit
+	     evil-Surround-edit
+	     evil-surround-region)
+  :config (global-evil-surround-mode 1)
+  :init
+  (evil-define-key 'operator global-map "s" 'evil-surround-edit)
+  (evil-define-key 'operator global-map "S" 'evil-Surround-edit)
+  (evil-define-key 'visual global-map "S" 'evil-surround-region)
+  (evil-define-key 'visual global-map "gS" 'evil-Surround-region))
 
 (use-package! evil-anzu)
 
@@ -125,6 +132,6 @@
                       :bind ((evil-ex-search-highlight-all nil)))
   (evilem-make-motion evilem-motion-search-word-backward #'evil-ex-search-word-backward
                       :bind ((evil-ex-search-highlight-all nil))))
-(provide 'init-evil)
+(provide 'evil)
 
 ;;; init-evil.el ends here

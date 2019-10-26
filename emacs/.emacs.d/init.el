@@ -5,7 +5,8 @@
 
 (require 'preamble)
 (require 'core)
-(require 'evil)
+(require 'evil-config)
 (require 'keys)
 (require 'init-org)
 (require 'langs)
+(require 'tools)

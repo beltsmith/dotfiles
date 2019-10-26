@@ -13,24 +13,20 @@
 (defvar my-cache-dir (concat my-emacs-dir "cache/")
   "Cache file storage for Emacs.")
 
-(defvar my-lisp-dir (concat my-emacs-dir "/lisp/")
+(defvar my-lisp-dir (concat my-emacs-dir "lisp/")
   "Directory containing my Lisp files.")
 
-(defvar my-core-dir (concat my-lisp-dir "/core/")
+(defvar my-core-dir (concat my-lisp-dir "core/")
   "Directory containing my Lisp core init files.")
 
-(defvar my-init-el (concat my-emacs-dir "/init.el")
+(defvar my-init-el (concat my-emacs-dir "init.el")
   "My init.el file for Emacs.")
 
 ;; Add core lib to load path
 (add-to-list 'load-path my-core-dir)
-(require 'settings)
 
-(defun my-prog-mode-hook ()
-  "Relative number lines for program modes"
-  (setq display-line-numbers 'relative))
-(setq display-line-numbers 'relative)
-(add-hook 'prog-mode-hook #'my-prog-mode-hook)
+(require 'settings)
+(require 'hooks)
 
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
@@ -44,58 +40,31 @@
   (interactive)
   (delete-file (buffer-file-name)))
 
+(defun rename-this-file ()
+  "Renames file visited by current buffer and swap to it."
+  (interactive)
+  (let* ((old-buffer (buffer-name))
+	 (current-file (buffer-file-name))
+	 (new-file-name (read-file-name (format "Rename %s to: " current-file))))
+    (rename-file current-file new-file-name)
+    (find-file new-file-name)
+    (kill-buffer old-buffer)))
+
+;; Prefer y/n over yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (use-package! helpful)
 (use-package! general)
 
-(use-package! gruvbox-theme
-  :load-path "themes"
-  :config (load-theme 'gruvbox t))
-
+(require 'look-and-feel)
 (require 'ivy)
 
 (require 'smartparens)
+(require 'init-flycheck)
 ;; (setq gc-cons-threshold most-positive-fixnum)
-(use-package! flycheck :init (global-flycheck-mode))
+(require 'yasnippet)
 
-(use-package! yasnippet)
-;; (use-package! yasnippet-classic-snippets)
-(use-package! auto-yasnippet)
-
-(use-package dired
-  :config
-  (setq ;; Always copy/delete recursively
-        dired-recursive-copies  'always
-        dired-recursive-deletes 'top
-        ;; Instantly revert Dired buffers on re-visiting them, with no message.
-        ;; (A message is shown if insta-revert is either disabled or determined
-        ;; dynamically by setting this variable to a function.)
-        dired-auto-revert-buffer t
-        ;; Auto refresh dired, but be quiet about it
-        dired-hide-details-hide-symlink-targets nil
-        ;; files
-        image-dired-dir (concat my-cache-dir "image-dired/")
-        image-dired-db-file (concat image-dired-dir "db.el")
-        image-dired-gallery-dir (concat image-dired-dir "gallery/")
-        image-dired-temp-image-file (concat image-dired-dir "temp-image")
-        image-dired-temp-rotate-image-file (concat image-dired-dir "temp-rotate-image")))
-
-(use-package! diredfl
-  :hook (dired-mode . diredfl-mode))
-
-(use-package dired-x
-  :hook (dired-mode . dired-omit-mode)
-  :config
-  (setq dired-omit-verbose nil)
-  ;; Disable the prompt about whether I want to kill the Dired buffer for a
-  ;; deleted directory. Of course I do!
-  (setq dired-clean-confirm-killing-deleted-buffers nil))
-
-(use-package! diff-hl
-  :hook (dired-mode . diff-hl-dired-mode)
-  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
-  :config
-  ;; use margin instead of fringe
-  (diff-hl-margin-mode))
+(require 'init-dired)
 
 (use-package! savehist
   ;; persist variables across sessions
@@ -171,7 +140,7 @@
   :config
   (ws-butler-global-mode))
 
-(use-package! rainbow-delimiters :config (rainbow-delimiters-mode))
+(use-package! rainbow-delimiters :config (rainbow-delimiters-mode +1))
 
 (require 'magit)
 

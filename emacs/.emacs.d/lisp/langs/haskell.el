@@ -1,6 +1,6 @@
 (use-package! haskell-mode)
 (use-package! haskell-snippets
-  :after haskell-mode)
+  :after (yasnippet haskell-mode))
 
 (use-package! intero
   :after haskell-mode)

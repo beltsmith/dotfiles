@@ -5,6 +5,6 @@
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
 (use-package! orgit :after org)
-(use-package! org-tempo)
+(use-package  org-tempo)
 
 (provide 'init-org)

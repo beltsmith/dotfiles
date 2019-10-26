@@ -1,8 +1,10 @@
-;;; init-evil.el --- -*- lexical-binding: t; -*-
+;; init-evil.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
+
 (use-package! evil
   :init
+  (setq evil-want-keybinding nil)
   (setq evil-want-integration t ;; This is optional since it's already set to t by default.
         evil-want-keybinding nil
         evil-search-module 'evil-search
@@ -95,6 +97,7 @@
   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight))
 
 (use-package! evil-collection
+  :after evil
   :config
   (evil-collection-init))
 
@@ -132,6 +135,7 @@
                       :bind ((evil-ex-search-highlight-all nil)))
   (evilem-make-motion evilem-motion-search-word-backward #'evil-ex-search-word-backward
                       :bind ((evil-ex-search-highlight-all nil))))
-(provide 'evil)
 
-;;; init-evil.el ends here
+(provide 'evil-config)
+
+;;; evil-config.el ends here

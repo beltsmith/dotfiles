@@ -1,7 +1,7 @@
 ;;; init-langs.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
-(use-package! company)
+(use-package! company :config (global-company-mode +1))
 (use-package! company-dict :requires company)
 (use-package! company-prescient
   :requires company

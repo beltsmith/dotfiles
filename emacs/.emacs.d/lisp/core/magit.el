@@ -40,6 +40,7 @@
   :hook (magit-mode . turn-on-magit-gitflow))
 
 (use-package! evil-magit
+  :after evil
   :init
   (setq evil-magit-state 'normal
 	evil-magit-use-z-for-folds t)

@@ -10,6 +10,11 @@
   (interactive)
   (find-file my-lisp-dir))
 
+(defun edit-my-snippets ()
+  "Edit my snippets directory."
+  (interactive)
+  (find-file my-snippets-dir))
+
 (defun load-my-init ()
   "Eval my init.el to reload Emacs config."
   (interactive)
@@ -30,12 +35,12 @@
 	      (lambda (path)
 		(ignore-errors (file-in-directory-p path my-local-dir)))))
 
-  (defun my--recent-file-truename (file)
-    (if (or (file-remote-p file nil t)
-	    (not (file-remote-p file)))
-	(file-truename file)
-      file))
-  (setq recentf-filename-handlers '(my--recent-file-truename abbreviate-file-name))
+  ;; (defun my--recent-file-truename (file)
+  ;;   (if (or (file-remote-p file nil t)
+  ;; 	    (not (file-remote-p file)))
+  ;; 	(file-truename file)
+  ;;     file))
+  ;; (setq recentf-filename-handlers '(my--recent-file-truename abbreviate-file-name))
 
   (add-hook 'kill-emacs-hook #'recentf-cleanup)
   (recentf-mode +1))
@@ -54,6 +59,7 @@
   "e" '(nil :which-key "Edit")
   "e i" 'edit-my-init
   "e l" 'edit-my-lisp
+  "e s" 'edit-my-snippets
   "l" '(nil :which-key "Load")
   "l i" 'load-my-init
   "x" 'delete-this-file)

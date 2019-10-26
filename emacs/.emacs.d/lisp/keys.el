@@ -52,6 +52,6 @@
 
 (general-define-key )
 
-(require 'init-finders)
+(require 'finders)
 (provide 'keys)
 ;;; keys.el ends here

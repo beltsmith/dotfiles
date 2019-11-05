@@ -35,4 +35,12 @@
   ;; (solaire-mode-swap-bg)
   (solaire-global-mode +1))
 
+(use-package! smart-mode-line
+  :config
+  (sml/setup)
+  :init
+  (setq sml/no-confirm-load-theme t
+	sml/theme 'respectful)
+  )
+
 (provide 'look-and-feel)

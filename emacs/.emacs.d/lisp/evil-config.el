@@ -102,10 +102,6 @@
   (evil-collection-init))
 
 (use-package! evil-commentary
-  :commands (evil-commentary
-             evil-commentary-yank
-             evil-commentary-yank-line
-             evil-commentary-line)
   :config (evil-commentary-mode 1))
 
 (use-package! evil-surround

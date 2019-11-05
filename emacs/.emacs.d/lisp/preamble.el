@@ -18,8 +18,11 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
 (straight-use-package 'use-package)
+
 (defmacro use-package! (name &rest plist)
+  "Use package NAME with straight passing rest PLIST to `use-package'."
   (declare (indent 1))
   `(use-package ,name
      :straight t
@@ -27,4 +30,4 @@
 
 
 (provide 'preamble)
-;;; init-preamble.el ends here
+;;; preamble.el ends here

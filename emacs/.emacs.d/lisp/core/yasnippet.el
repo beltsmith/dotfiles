@@ -18,14 +18,11 @@
   ;; Ensure `yas-reload-all' is called as late as possible. Other modules could
   ;; have additional configuration for yasnippet. For example, file-templates.
   ;; (add-transient-hook 'yas-minor-mode-hook (yas-reload-all))
-  (add-hooks! '(text-mode-hook
-		prog-mode-hook
-		conf-mode-hook
-		snippet-mode-hook)
-	      #'yas-minor-mode-on)
+  (mapcar (lambda (hook) (add-hook hook #'yas-minor-mode-on))
+	  '(text-mode-hook prog-mode-hook conf-mode-hook snippet-mode-hook))
   :config
   (setq yas-verbosity 0
-        yas-also-auto-indent-first-line t
+	yas-also-auto-indent-first-line t
 	yas-snippet-dirs '(my-snippets-dir +private-snippets-dir))
   ;; default snippets library, if available
   (require 'my-snippets nil t)

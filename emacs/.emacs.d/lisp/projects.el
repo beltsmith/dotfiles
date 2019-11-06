@@ -85,4 +85,9 @@ c) are not valid projectile projects."
     " sap"          'counsel-projectile-rg
     (kbd "SPC SPC") 'projectile-find-file))
 
+(use-package! persp-mode)
+(use-package! persp-projectile)
+
+;; setup up snippets/templates
+
 (provide 'projects)

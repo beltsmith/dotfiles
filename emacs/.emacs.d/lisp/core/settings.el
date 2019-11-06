@@ -120,4 +120,6 @@
 (setq-default cursor-in-non-selected-windows nil)
 (setq highlight-nonselected-windows nil)
 
+(setq user-emacs-directory my-local-dir)
+
 (provide 'settings)

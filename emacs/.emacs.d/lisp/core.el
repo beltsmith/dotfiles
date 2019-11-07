@@ -144,5 +144,7 @@
 
 (require 'magit)
 
+(require 'windows)
+
 (provide 'core)
 ;;; init-core.el ends here

@@ -1,12 +1,12 @@
 ;;; init-projects.el  -*- lexical-binding: t; -*-
-(defvar doom-projectile-cache-limit 25000
+(defvar my-projectile-cache-limit 25000
   "If any project cache surpasses this many files it is purged when quitting
 Emacs.")
 
-(defvar doom-projectile-cache-blacklist '("~" "/tmp" "/")
+(defvar my-projectile-cache-blacklist '("~" "/tmp" "/")
   "Directories that should never be cached.")
 
-(defvar doom-projectile-cache-purge-non-projects nil
+(defvar my-projectile-cache-purge-non-projects nil
   "If non-nil, non-projects are purged from the cache on `kill-emacs-hook'.")
 
 (defvar my-projectile-fd-binary
@@ -62,8 +62,7 @@ a) have too many files (see `my-projectile-cache-limit'),
 b) represent blacklisted directories that are too big, change too often or are
    private. (see `my-projectile-cache-blacklist'),
 c) are not valid projectile projects."
-      (when (and (bound-and-true-p projectile-projects-cache)
-                 my-interactive-mode)
+      (when (bound-and-true-p projectile-projects-cache)
         (cl-loop with blacklist = (mapcar #'file-truename my-projectile-cache-blacklist)
                  for proot in (hash-table-keys projectile-projects-cache)
                  if (or (not (stringp proot))
@@ -85,8 +84,15 @@ c) are not valid projectile projects."
     " sap"          'counsel-projectile-rg
     (kbd "SPC SPC") 'projectile-find-file))
 
-(use-package! persp-mode)
-(use-package! persp-projectile)
+(use-package! persp-mode :config (persp-mode))
+(use-package! persp-projectile :after (perp-mode projectile))
+
+(general-def :states 'normal :prefix "SPC"
+  "." 'find-file
+  "SPC" 'projectile-find-file)
+
+(general-def :states 'normal :prefix "SPC p"
+  "p" 'projectile-switch-project)
 
 ;; setup up snippets/templates
 

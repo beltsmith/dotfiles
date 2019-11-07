@@ -3,8 +3,7 @@
   :init
   (setq org-blank-before-new-entry '((heading . nil) (plan-list-item . auto)))
   :config
-  (add-hook 'org-mode-hook 'org-indent-mode)
-  (org-indent-mode 1))
+  (add-hook 'org-mode-hook 'org-indent-mode))
 
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
@@ -39,10 +38,12 @@
 ;; ctrl enter
 (general-def
   :keymaps 'org-mode-map
-  :states '(normal insert emacs)
+  :states 'normal
   "<C-return>" 'org-insert-item-or-heading-below
   "<tab>" 'org-toggle-subtree-or-block
   "<S-return>" 'org-insert-heading-after-current)
 
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
 
 (provide 'init-org)
+;; init-org.el ends here

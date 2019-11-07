@@ -7,5 +7,6 @@
 (add-to-list 'load-path my-tools-dir)
 
 (require 'searching)
+(require 'projects)
 
 (provide 'tools)

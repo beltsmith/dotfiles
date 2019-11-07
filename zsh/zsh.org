@@ -167,6 +167,7 @@ eval "$(hub alias -s)"
 eval "$(fasd --init auto)"
 eval "$(pyenv init -)"
 # eval "$(rbenv init -)"
+test -r /home/beltsmith/.opam/opam-init/init.zsh && . /home/beltsmith/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 #+END_SRC
 ** Completion
 :PROPERTIES:
@@ -489,12 +490,32 @@ codeclimate() {
     local build_number="$1"
   }
 #+END_SRC
-*** heroku psql
+*** heroku
+**** heroku psql
 #+BEGIN_SRC shell
 function hsql() {
     psql `heroku config -a $1 | grep 'MASTER_DATA' | cut -f 2-100 -d ':'`
 }
+
+function _hsql() {
+
+}
 #+END_SRC
+**** heroku apps
+#+BEGIN_SRC shell
+function _herokuapps() {
+    local cache_file = /tmp/heroku_apps
+    [[ ( ! -r $cache_file) ]] && heroku
+    _arguments -C <(cache_file)
+}
+#+END_SRC
+**** heroku config
+#+BEGIN_SRC shell
+function hconf() {
+    heroku config -a $1
+}
+#+END_SRC
+
 ** Plugin manager
 :PROPERTIES:
 :header-args: :noweb-ref plugins

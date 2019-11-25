@@ -47,10 +47,11 @@
 ;;   (dolist (fun functions)
 ;;     (add-hook hook #'fun)))
 
-(defun my-prog-mode-hook ()
-  "Relative number lines for program modes."
-  (setq display-line-numbers 'relative))
-(setq-default display-line-numbers 'relative)
-(add-hook 'prog-mode-hook #'my-prog-mode-hook)
+;; (defun my-prog-mode-hook ()
+;;   "Relative number lines for program modes."
+;;   (setq display-line-numbers 'relative))
+;; (setq-default display-line-numbers 'relative)
+;; (add-hook 'prog-mode-hook #'my-prog-mode-hook)
+
 
 (provide 'hooks)

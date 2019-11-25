@@ -85,7 +85,7 @@ c) are not valid projectile projects."
     (kbd "SPC SPC") 'projectile-find-file))
 
 (use-package! persp-mode :config (persp-mode))
-(use-package! persp-projectile :after (perp-mode projectile))
+;; (use-package! persp-projectile :after (persp-mode projectile))
 
 (general-def :states 'normal :prefix "SPC"
   "." 'find-file
@@ -93,6 +93,18 @@ c) are not valid projectile projects."
 
 (general-def :states 'normal :prefix "SPC p"
   "p" 'projectile-switch-project)
+
+(use-package! dotenv-mode)
+
+(straight-use-package
+ '(dotenv :type git :host github :repo "pkulev/dotenv.el")
+  :config
+  (defun dotenv-projectile-hook ()
+   "Projectile hook."
+   (let ((path (dotenv-path (projectile-project-root))))
+     (when (s-present? path)
+       (dotenv-update-env (dotenv-load path)))))
+  (add-to-list 'projectile-after-switch-project-hook #'dotenv-projectile-hook))
 
 ;; setup up snippets/templates
 

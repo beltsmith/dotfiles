@@ -10,6 +10,13 @@
   :prefix-command 'ruby-local-prefix-command
   :prefix-map 'ruby-local-prefix-map)
 
+(use-package! bundler)
+
+(defun rake-db-migrate ()
+  "Rake db migrate this project."
+  (interactive)
+  (bundle-exec "rake db:migrate"))
+
 ;; Rspec mappings attached to ruby-mode-map to allow executing tests from source
 (ruby-local-def
   "t" '(nil :which-key "Test")
@@ -21,7 +28,13 @@
   "t c" 'rspec-verify-continue
   "t d" '(nil :which-key "Dired")
   "t d v" 'rspec-dired-verify
-  "t d s" 'rspec-dired-verify-single)
+  "t d s" 'rspec-dired-verify-single
+  "r" '(nil :which-key "Rake")
+  "r m" 'rake-db-migrate
+  "b" '(nil :which-key "Bundle")
+  "b c" 'bundle-console
+  "b e" 'bundle-exec
+  "b i" 'bundle-install)
 
 (general-def
   :states '(normal insert emacs)

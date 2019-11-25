@@ -33,6 +33,8 @@
 (use-package! swiper :after ivy)
 (use-package! counsel :after ivy)
 
+(general-def 'normal "SPC / i" 'counsel-imenu)
+
 (use-package! amx :config (amx-mode))
 
 (use-package! ivy-hydra

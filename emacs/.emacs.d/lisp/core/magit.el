@@ -20,11 +20,15 @@
   ;; Close transient with ESC
   (define-key transient-map [escape] #'transient-quit-one))
 
+(setq auth-sources '("~/.authinfo.gpg" "~/.netrc"))
+
 (use-package! forge
   :init
   (setq forge-database-file (concat my-etc-dir "forge/forge-database.sqlite")))
   ;; :config
   ;; (general-def :keymaps forge-topic-list-mode-map :states 'normal "q" #'kill-current-buffer)
+
+(use-package! ghub :after (forge))
 
 (use-package! magit-todos
   :after magit
@@ -68,7 +72,11 @@
 ;; 		    "gj" #'git-rebase-move-line-down
 ;; 		    "gk" #'git-rebase-move-line-up))
 
+(use-package! git-timemachine)
+
 (general-def :states 'normal :prefix "SPC"
-  "g g" 'magit)
+  "g g" 'magit
+  "g b" 'magit-blame-addition
+  "g t" 'git-timemachine)
 
 (provide 'init-magit)

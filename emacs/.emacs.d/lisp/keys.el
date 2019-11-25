@@ -50,8 +50,6 @@
 (general-translate-key nil 'normal
   "SPC w" "C-w")
 
-(general-define-key )
-
 (require 'finders)
 (provide 'keys)
 ;;; keys.el ends here

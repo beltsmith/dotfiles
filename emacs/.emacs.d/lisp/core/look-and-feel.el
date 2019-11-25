@@ -1,3 +1,11 @@
+;;; look-and-feel -- package
+;;; Commentary:
+;;; Provides that warm and fuzzy feeling
+;;; Code:
+
+(global-display-line-numbers-mode)
+(setq display-line-numbers 'visual
+      display-line-numbers-grow-only t)
 
 (use-package! gruvbox-theme :load-path "themes")
 
@@ -5,8 +13,7 @@
   :load-path "themes"
   :config
   (load-theme 'doom-gruvbox t)
-  (doom-themes-org-config)
-  )
+  (doom-themes-org-config))
 
 (use-package! solaire-mode
   :after doom-themes
@@ -40,7 +47,8 @@
   (sml/setup)
   :init
   (setq sml/no-confirm-load-theme t
-	sml/theme 'respectful)
-  )
+	sml/theme 'respectful))
+
+(use-package! rainbow-delimiters :config (rainbow-delimiters-mode +1))
 
 (provide 'look-and-feel)

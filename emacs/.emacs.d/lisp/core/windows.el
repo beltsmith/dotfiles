@@ -5,6 +5,7 @@
 
 (use-package! ace-window
   :after 'general
+  :init
   ;; Enable homerow keys for ace-window
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
   :config

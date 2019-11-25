@@ -3,7 +3,8 @@
   :init
   (setq org-blank-before-new-entry '((heading . nil) (plan-list-item . auto)))
   :config
-  (add-hook 'org-mode-hook 'org-indent-mode))
+  ;; (add-hook 'org-mode-hook 'org-indent-mode)
+  )
 
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
@@ -41,9 +42,19 @@
   :states 'normal
   "<C-return>" 'org-insert-item-or-heading-below
   "<tab>" 'org-toggle-subtree-or-block
-  "<S-return>" 'org-insert-heading-after-current)
+  "<S-return>" 'org-insert-heading-after-current
+  "A-h" 'org-do-promote
+  "A-l" 'org-do-demote
+  "M-L" 'org-demote-subtree
+  "M-H" 'org-promote-subtree)
 
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+(defun org-insert-today ()
+  "Insert a timestamp of today."
+  (interactive)
+  (org-insert-time-stamp (current-time)))
+
 
 (provide 'init-org)
 ;; init-org.el ends here

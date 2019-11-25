@@ -1,4 +1,4 @@
-;;; init-core.el --- -*- lexical-binding: t; -*-
+;;; core.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 (defvar my-local-dir (concat my-emacs-dir "local/")
@@ -33,7 +33,10 @@
 (defun chmodx ()
   "Set current file executable."
   (interactive)
-  (chmod (buffer-file-name) "+x"))
+  (let* ((current-mode (file-modes (buffer-file-name)))
+	 (add-mode (logand ?\111 (default-file-modes)))
+	 (final-mode (logior current-mode add-mode)))
+    (set-file-modes (buffer-file-name) final-mode)))
 
 (defun delete-this-file ()
   "Deletes current buffer from disk."
@@ -65,6 +68,8 @@
 (require 'yasnippet)
 
 (require 'init-dired)
+
+(require 'history)
 
 (use-package! savehist
   ;; persist variables across sessions
@@ -140,11 +145,12 @@
   :config
   (ws-butler-global-mode))
 
-(use-package! rainbow-delimiters :config (rainbow-delimiters-mode +1))
-
 (require 'magit)
 
 (require 'windows)
+(require 'navigation)
+
+(require 'lsp)
 
 (provide 'core)
-;;; init-core.el ends here
+;;; core.el ends here

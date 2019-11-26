@@ -2,3 +2,4 @@
 ;;; Commentary:
 ;;; Sets up my history packages
 ;;; Code:
+(provide 'history)

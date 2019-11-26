@@ -79,10 +79,12 @@ c) are not valid projectile projects."
 (use-package! counsel-projectile
   :after (evil ivy)
   :config
-  (evil-define-key 'normal 'global
-    (kbd "C-SPC")   'counsel-projectile
-    " sap"          'counsel-projectile-rg
-    (kbd "SPC SPC") 'projectile-find-file))
+  (general-def 'normal 'global
+    :prefix "SPC"
+    "SPC" 'projectile-find-file
+    "s a p" 'counsel-projectile-rg)
+  (general-def 'normal 'global
+    "C-SPC"   'counsel-projectile))
 
 (use-package! persp-mode :config (persp-mode))
 ;; (use-package! persp-projectile :after (persp-mode projectile))
@@ -91,8 +93,11 @@ c) are not valid projectile projects."
   "." 'find-file
   "SPC" 'projectile-find-file)
 
-(general-def :states 'normal :prefix "SPC p"
-  "p" 'projectile-switch-project)
+(general-def
+  :states 'normal
+  :prefix "SPC p"
+  "p" 'projectile-switch-project
+  "c" 'projectile-compile-project)
 
 (use-package! dotenv-mode)
 
@@ -107,5 +112,6 @@ c) are not valid projectile projects."
   (add-to-list 'projectile-after-switch-project-hook #'dotenv-projectile-hook))
 
 ;; setup up snippets/templates
+
 
 (provide 'projects)

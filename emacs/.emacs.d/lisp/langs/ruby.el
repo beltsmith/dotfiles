@@ -1,7 +1,22 @@
+;;; Packages:
+
 (use-package! ruby-mode
   :mode "\\.rb\\'"
   :interpreter "ruby")
 
+(use-package! bundler)
+
+(use-package! rufo
+  :after 'ruby-mode
+  :hook (ruby-mode . rufo-minor-mode))
+
+;;; Functions:
+(defun rake-db-migrate ()
+  "Rake db migrate this project."
+  (interactive)
+  (bundle-exec "rake db:migrate"))
+
+;;; Keybinds:
 (general-create-definer ruby-local-def
   :states '(normal insert emacs)
   :keymaps 'ruby-mode-map
@@ -10,17 +25,11 @@
   :prefix-command 'ruby-local-prefix-command
   :prefix-map 'ruby-local-prefix-map)
 
-(use-package! bundler)
-
-(defun rake-db-migrate ()
-  "Rake db migrate this project."
-  (interactive)
-  (bundle-exec "rake db:migrate"))
-
 ;; Rspec mappings attached to ruby-mode-map to allow executing tests from source
 (ruby-local-def
   "t" '(nil :which-key "Test")
   "t v" 'rspec-verify
+  "t b" 'rspec-verify
   "t a" 'rspec-verify-all
   "t m" 'rspec-verify-matching
   "t s" 'rspec-verify-single

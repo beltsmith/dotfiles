@@ -2,51 +2,56 @@
 ;;; Commentary:
 ;;; Code:
 
+(defvar evil-want-Y-yank-to-eol t "Make Y act like y$ rather than yy.")
+
 (use-package! evil
   :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration t ;; This is optional since it's already set to t by default.
-        evil-want-keybinding nil
-        evil-search-module 'evil-search
-        evil-ex-complete-emacs-commands nil
-        evil-vsplit-window-right t ;; like vim's 'splitright'
-        evil-split-window-below t ;; like vim's 'splitbelow'
-        evil-shift-round nil
-        evil-want-C-u-scroll t
-        evil-want-visual-char-semi-exclusive t
-        evil-magic t
-        evil-echo-state t
-        evil-indent-convert-tabs t
-        evil-ex-search-vim-style-regexp t
-        )
+  (setq-default evil-want-keybinding nil)
+  (setq-default evil-want-integration t ;; This is optional since it's already set to t by default.
+		evil-want-keybinding nil
+		evil-search-module 'evil-search
+		evil-ex-complete-emacs-commands nil
+		evil-vsplit-window-right t ;; like vim's 'splitright'
+		evil-split-window-below t ;; like vim's 'splitbelow'
+		evil-shift-round nil
+		evil-want-C-u-scroll t
+		evil-want-visual-char-semi-exclusive t
+		evil-magic t
+		evil-echo-state t
+		evil-indent-convert-tabs t
+		evil-ex-search-vim-style-regexp t)
   :config
   (evil-mode 1)
-  (defun translate-keys (&rest keys)
-    (let* ((translation (car keys))
-	   (from (car translation))
-	   (to (cdr translation))
-	   (rest (cdr keys)))
-      (define-key key-translation-map (kbd from) (kbd to))
-      (unless (null rest) (translate-keys rest))))
-  (define-key key-translation-map
-    (kbd "SPC w") (kbd "C-w"))
-  (evil-define-key 'normal 'global
-    [(control return)] 'evil-ex
-    (kbd "/")          'swiper
-    (kbd "C-'")        'toggle-quotes
-    " Cl"              'org-capture-goto-last-stored
-    (kbd "M-y")        'counsel-yank-pop
 
-    (kbd "SPC b b") 'counsel-switch-buffer
-    (kbd "SPC b k") 'kill-this-buffer)
-  (evil-define-key 'insert 'global
-    (kbd "s-i")        'yas-insert-snippet
-    (kbd "C-v")        'yank
-    (kbd "C-S-l")      'sp-slurp-hybrid-sexp
-    (kbd "C-l")        'hippie-expand
-    (kbd "C-'")        'toggle-quotes)
-  (evil-define-key 'visual 'global
-    ",er" 'eval-region)
+  (general-def 'normal 'override
+    :prefix "SPC"
+    "" 'nil ;; Needed to bind as prefix in some modes(e.g. dired)
+    "w" 'evil-window-map)
+
+  (general-def 'normal 'global
+    [(control return)] 'evil-ex
+    "/"          'swiper
+    "C-'"        'toggle-quotes
+    "SPC C l"    'org-capture-goto-last-stored
+    "M-y"        'counsel-yank-pop)
+
+  (general-def 'insert 'global
+    "s-i"        'yas-insert-snippet
+    "C-v"        'yank
+    "C-S-l"      'sp-slurp-hybrid-sexp
+    "C-l"        'hippie-expand
+    "C-'"        'toggle-quotes)
+
+  (general-def 'visual 'global
+    :prefix ","
+    "e" '(nil :message "Eval")
+    "e r" 'eval-region)
+
+  (general-def 'visual 'global
+    :prefix "SPC"
+    "e" '(nil :message "Eval")
+    "e r" 'eval-region)
+
   (defun evil-unimpaired-insert-space-above (count)
     (interactive "p")
     (dotimes (_ count) (save-excursion (evil-insert-newline-above))))
@@ -55,7 +60,7 @@
     (interactive "p")
     (dotimes (_ count) (save-excursion (evil-insert-newline-below))))
 
-  (evil-define-key 'normal 'global
+  (general-def 'normal 'global
     "[ " 'evil-unimpaired-insert-space-above
     "] " 'evil-unimpaired-insert-space-below)
 
@@ -79,17 +84,17 @@
       (transpose-lines 1)
       (forward-line -1)))
 
-  (evil-define-key 'normal 'global
+  (general-def 'normal 'global
     (kbd "M-j") 'move-line-down
     (kbd "M-k") 'move-line-up)
 
-  (evil-define-key 'normal org-mode-map
+  (general-def 'normal 'org-mode-map
     (kbd "M-j") 'org-metadown
     (kbd "M-k") 'org-metaup
     (kbd "M-h") 'org-metaleft
     (kbd "M-l") 'org-metaright)
 
-  (evil-define-key 'normal 'global
+  (general-def 'normal 'global
     (kbd "M-C-y") 'browse-at-remote
     (kbd "M-Y") 'browse-at-remote-kill)
 

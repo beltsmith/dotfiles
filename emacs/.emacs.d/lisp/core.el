@@ -25,6 +25,9 @@
 ;; Add core lib to load path
 (add-to-list 'load-path my-core-dir)
 
+;; Setup straight.el
+(require 'preamble)
+
 (require 'settings)
 (require 'hooks)
 
@@ -151,6 +154,8 @@
 (require 'navigation)
 
 (require 'lsp)
+
+(require 'buffers)
 
 (provide 'core)
 ;;; core.el ends here

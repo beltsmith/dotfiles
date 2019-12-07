@@ -33,7 +33,10 @@
     "/"          'swiper
     "C-'"        'toggle-quotes
     "SPC C l"    'org-capture-goto-last-stored
-    "M-y"        'counsel-yank-pop)
+    "M-y"        'counsel-yank-pop,
+    "M-j" 'move-line-up
+
+    )
 
   (general-def 'insert 'global
     "s-i"        'yas-insert-snippet
@@ -85,18 +88,18 @@
       (forward-line -1)))
 
   (general-def 'normal 'global
-    (kbd "M-j") 'move-line-down
-    (kbd "M-k") 'move-line-up)
+    "M-j" 'move-line-down
+    "M-k" 'move-line-up)
 
   (general-def 'normal 'org-mode-map
-    (kbd "M-j") 'org-metadown
-    (kbd "M-k") 'org-metaup
-    (kbd "M-h") 'org-metaleft
-    (kbd "M-l") 'org-metaright)
+    "M-j" 'org-metadown
+    "M-k" 'org-metaup
+    "M-h" 'org-metaleft
+    "M-l" 'org-metaright)
 
   (general-def 'normal 'global
-    (kbd "M-C-y") 'browse-at-remote
-    (kbd "M-Y") 'browse-at-remote-kill)
+    "M-C-y" 'browse-at-remote
+    "M-Y" 'browse-at-remote-kill)
 
   ;; Set no highlight on ESC
   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight))

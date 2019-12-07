@@ -10,6 +10,11 @@
   (interactive)
   (find-file my-lisp-dir))
 
+(defun edit-my-org ()
+  "Open dired in my org directory."
+  (interactive)
+  (find-file my-org-dir))
+
 (defun edit-my-snippets ()
   "Edit my snippets directory."
   (interactive)
@@ -59,6 +64,7 @@
   "e" '(nil :which-key "Edit")
   "e i" 'edit-my-init
   "e l" 'edit-my-lisp
+  "e o" 'edit-my-org
   "e s" 'edit-my-snippets
   "l" '(nil :which-key "Load")
   "l i" 'load-my-init

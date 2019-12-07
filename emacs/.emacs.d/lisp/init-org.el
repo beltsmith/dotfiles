@@ -1,10 +1,10 @@
 (use-package! org
   :ensure org-plus-contrib
   :init
-  (setq org-blank-before-new-entry '((heading . nil) (plan-list-item . auto)))
+  (setq org-blank-before-new-entry '((heading . nil) (plan-list-item . auto))
+	org-return-follows-link t)
   :config
-  ;; (add-hook 'org-mode-hook 'org-indent-mode)
-  )
+  (add-hook 'org-mode-hook 'org-indent-mode))
 
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
@@ -30,11 +30,23 @@
   (cond ((org-at-heading-p) (org-insert-subheading-below))
 	((org-at-item-p) (org-insert-item-below))))
 
+(defun org-move-item-or-heading-down ()
+  "Move an item or heading down."
+  (interactive)
+  (cond ((org-at-heading-p) (org-move-subtree-down))
+	((org-at-item-p) (org-move-item-down))))
+
+(defun org-move-item-or-heading-up ()
+  "Move an item or heading up."
+  (interactive)
+  (cond ((org-at-heading-p) (org-move-subtree-up))
+	((org-at-item-p) (org-move-item-up))))
+
 (defun org-toggle-subtree-or-block ()
   "Toggle current subtree or block quote."
   (interactive)
-  (cond ((org-in-src-block-p) (org-hide-block-toggle))
-	((org-at-heading-p) (outline-toggle-children))))
+  (cond ((org-at-heading-p) (outline-toggle-children))
+	(t (org-hide-block-toggle))))
 
 ;; ctrl enter
 (general-def
@@ -43,10 +55,12 @@
   "<C-return>" 'org-insert-item-or-heading-below
   "<tab>" 'org-toggle-subtree-or-block
   "<S-return>" 'org-insert-heading-after-current
-  "A-h" 'org-do-promote
-  "A-l" 'org-do-demote
+  "M-h" 'org-do-promote
+  "M-l" 'org-do-demote
   "M-L" 'org-demote-subtree
-  "M-H" 'org-promote-subtree)
+  "M-H" 'org-promote-subtree
+  "M-j" 'org-move-item-or-heading-down
+  "M-k" 'org-move-item-or-heading-up)
 
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
@@ -55,6 +69,11 @@
   (interactive)
   (org-insert-time-stamp (current-time)))
 
+(defvar my-org-config-dir (concat my-lisp-dir "/org"))
+(add-to-list 'load-path my-org-config-dir)
+
+
+(require 'babel)
 
 (provide 'init-org)
 ;; init-org.el ends here

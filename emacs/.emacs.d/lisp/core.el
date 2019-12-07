@@ -16,6 +16,9 @@
 (defvar my-lisp-dir (concat my-emacs-dir "lisp/")
   "Directory containing my Lisp files.")
 
+(defvar my-org-dir (expand-file-name "~/org")
+  "Directory containing my org files.")
+
 (defvar my-core-dir (concat my-lisp-dir "core/")
   "Directory containing my Lisp core init files.")
 
@@ -44,7 +47,8 @@
 (defun delete-this-file ()
   "Deletes current buffer from disk."
   (interactive)
-  (delete-file (buffer-file-name)))
+  (delete-file (buffer-file-name))
+  (kill-this-buffer))
 
 (defun rename-this-file ()
   "Renames file visited by current buffer and swap to it."
@@ -63,6 +67,7 @@
 (use-package! general)
 
 (require 'look-and-feel)
+(require 'company)
 (require 'ivy)
 
 (require 'smartparens)

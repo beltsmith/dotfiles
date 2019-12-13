@@ -8,5 +8,6 @@
 
 (require 'searching)
 (require 'projects)
+(require 'prodigy)
 
 (provide 'tools)

@@ -5,6 +5,7 @@
 (defvar my-langs-dir (concat my-lisp-dir "/langs"))
 (add-to-list 'load-path my-langs-dir)
 
+;; Front end
 (require 'elm)
 (require 'reasonml)
 
@@ -17,10 +18,13 @@
 
 (require 'json)
 
-;(require 'ocaml)
 (require 'docker)
 
 (require 'markdown)
+
+(require 'ocaml)
+(require 'plantuml)
+(require 'rust)
 
 (provide 'langs)
 ;;; langs.el ends here

@@ -28,29 +28,25 @@
     "" 'nil ;; Needed to bind as prefix in some modes(e.g. dired)
     "w" 'evil-window-map)
 
-  (general-def 'normal 'global
+  (general-def 'normal 'override
     [(control return)] 'evil-ex
-    "/"          'swiper
-    "C-'"        'toggle-quotes
     "SPC C l"    'org-capture-goto-last-stored
-    "M-y"        'counsel-yank-pop,
-    "M-j" 'move-line-up
+    "M-y"        'counsel-yank-pop
+    "M-j"        'move-line-up)
 
-    )
-
-  (general-def 'insert 'global
+  (general-def 'insert 'override
     "s-i"        'yas-insert-snippet
     "C-v"        'yank
     "C-S-l"      'sp-slurp-hybrid-sexp
     "C-l"        'hippie-expand
     "C-'"        'toggle-quotes)
 
-  (general-def 'visual 'global
+  (general-def 'visual 'override
     :prefix ","
     "e" '(nil :message "Eval")
     "e r" 'eval-region)
 
-  (general-def 'visual 'global
+  (general-def 'visual 'override
     :prefix "SPC"
     "e" '(nil :message "Eval")
     "e r" 'eval-region)
@@ -63,9 +59,9 @@
     (interactive "p")
     (dotimes (_ count) (save-excursion (evil-insert-newline-below))))
 
-  (general-def 'normal 'global
-    "[ " 'evil-unimpaired-insert-space-above
-    "] " 'evil-unimpaired-insert-space-below)
+  (general-def 'normal 'override
+    "[ SPC" 'evil-unimpaired-insert-space-above
+    "] SPC" 'evil-unimpaired-insert-space-below)
 
   (defmacro save-column (&rest body)
     `(let ((column (current-column)))

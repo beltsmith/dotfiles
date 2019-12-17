@@ -33,6 +33,7 @@ export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
 alias l="exa -lgh"
 # alias ls='exa' # for compatibility with fzf
 alias la='l -a'
+alias lm="l -smodified"
 #alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
 alias nsw="sudo netctl switch-to"
 #alias ncl="netctl list"

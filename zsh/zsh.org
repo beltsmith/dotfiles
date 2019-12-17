@@ -198,6 +198,7 @@ I like pretty colours, pretty girls like trap music.
   alias l="exa -lgh"
   # alias ls='exa' # for compatibility with fzf
   alias la='l -a'
+  alias lm="l -smodified"
 #+END_SRC
 *** netctl
 #+BEGIN_SRC shell

@@ -7,10 +7,14 @@
 (setq display-line-numbers 'visual
       display-line-numbers-grow-only t)
 
-(use-package! gruvbox-theme :load-path "themes")
+(defmacro use-theme! (theme)
+  "Wrapper around use-package! to load THEME from themes dir."
+  (declare (indent 1))
+  `(use-package! ,theme :load-path "themes"))
 
-(use-package! doom-themes
-  :load-path "themes"
+(use-theme! gruvbox-theme)
+
+(use-theme! doom-themes
   :config
   (load-theme 'doom-gruvbox t)
   (doom-themes-org-config))
@@ -37,7 +41,6 @@
 	      "Disables fringes in mini-buffers"
 	      (set-window-fringes (minibuffer-window) 0 0 nil)))
 
-  (message "swapping dat bg")
   ;; Currently not swapping BG as doom-gruvbox doesn't need it
   ;; (solaire-mode-swap-bg)
   (solaire-global-mode +1))

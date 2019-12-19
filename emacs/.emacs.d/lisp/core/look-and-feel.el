@@ -54,4 +54,6 @@
 
 (use-package! rainbow-delimiters :config (rainbow-delimiters-mode +1))
 
+(use-package! editorconfig)
+
 (provide 'look-and-feel)

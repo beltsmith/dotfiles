@@ -1,8 +1,9 @@
 (use-package! org
   :ensure org-plus-contrib
+  :pin org
   :init
   (setq org-blank-before-new-entry '((heading . nil) (plan-list-item . auto))
-	org-return-follows-link t)
+        org-return-follows-link t)
   :config
   (add-hook 'org-mode-hook 'org-indent-mode))
 
@@ -28,25 +29,25 @@
   "Insert an item or heading below the current."
   (interactive)
   (cond ((org-at-heading-p) (org-insert-subheading-below))
-	((org-at-item-p) (org-insert-item-below))))
+        ((org-at-item-p) (org-insert-item-below))))
 
 (defun org-move-item-or-heading-down ()
   "Move an item or heading down."
   (interactive)
   (cond ((org-at-heading-p) (org-move-subtree-down))
-	((org-at-item-p) (org-move-item-down))))
+        ((org-at-item-p) (org-move-item-down))))
 
 (defun org-move-item-or-heading-up ()
   "Move an item or heading up."
   (interactive)
   (cond ((org-at-heading-p) (org-move-subtree-up))
-	((org-at-item-p) (org-move-item-up))))
+        ((org-at-item-p) (org-move-item-up))))
 
 (defun org-toggle-subtree-or-block ()
   "Toggle current subtree or block quote."
   (interactive)
   (cond ((org-at-heading-p) (outline-toggle-children))
-	(t (org-hide-block-toggle))))
+        (t (org-cycle))))
 
 ;; ctrl enter
 (general-def
@@ -74,6 +75,7 @@
 
 
 (require 'babel)
+(require 'capture)
 
 (provide 'init-org)
 ;; init-org.el ends here

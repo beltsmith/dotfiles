@@ -30,9 +30,9 @@
 
   (general-def 'normal 'override
     [(control return)] 'evil-ex
-    "SPC C l"    'org-capture-goto-last-stored
+    "C-'"        'toggle-quotes
     "M-y"        'counsel-yank-pop
-    "M-j"        'move-line-up)
+    "M-j" 'move-line-up)
 
   (general-def 'insert 'override
     "s-i"        'yas-insert-snippet

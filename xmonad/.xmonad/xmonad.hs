@@ -132,9 +132,13 @@ myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 dbusInterface :: [Char]
 dbusInterface = "org.xmonad.Log"
 
+spawnOnceAsync :: [Char] -> X ()
+spawnOnceAsync prog = spawnOnce $ prog ++ " &"
+
 myStartupHook = do
-  spawnOnce "polybar main &"
-  spawnOnce "compton &"
+  spawnOnceAsync "polybar main"
+  spawnOnceAsync "compton"
+  spawnOnce "auto-x"
   setWMName "LG3D"
 
 

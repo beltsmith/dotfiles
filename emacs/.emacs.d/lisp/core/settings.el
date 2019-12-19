@@ -20,6 +20,7 @@
 ;;                  (y-or-n-p (format "Directory `%s' does not exist! Create it?" parent-directory)))
 ;;         (make-directory parent-directory t)))))
 
+(setq-default indent-tabs-mode nil)
 
 ;; Don't autosave files or create lock/history/backup files. The
 ;; editor doesn't need to hold our hands so much. We'll rely on git

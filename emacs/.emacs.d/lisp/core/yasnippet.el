@@ -1,3 +1,8 @@
+;;; yasnippet.el -- -*- lexical-binding: t; -*-
+;;; Commentary:
+;;; Code:
+(require 'preamble)
+
 (defvar my-snippets-dir (expand-file-name "snippets/" my-emacs-dir)
   "Directory containing my snippets.")
 
@@ -59,19 +64,20 @@ If evil-local-mode isn't enabled, run ORIG-FN as is."
 (use-package! auto-yasnippet
   :defer t
   :init (setq aya-persist-snippets-dir (concat my-etc-dir "auto-snippets/"))
-  :config
-  (defadvice! +snippets--inhibit-yas-global-mode-a (orig-fn &rest args)
-    "auto-yasnippet enables `yas-global-mode'. This is obnoxious for folks like
-us who use yas-minor-mode and enable yasnippet more selectively. This advice
-swaps `yas-global-mode' with `yas-minor-mode'."
-    :around '(aya-expand aya-open-line)
-    (cl-letf (((symbol-function #'yas-global-mode) #'yas-minor-mode)
-	      (yas-global-mode yas-minor-mode))
-      (apply orig-fn args))))
+;;   :config
+;;   (defadvice! +snippets--inhibit-yas-global-mode-a (orig-fn &rest args)
+;;     "auto-yasnippet enables `yas-global-mode'. This is obnoxious for folks like
+;; us who use yas-minor-mode and enable yasnippet more selectively. This advice
+;; swaps `yas-global-mode' with `yas-minor-mode'."
+;;     :around '(aya-expand aya-open-line)
+;;     (cl-letf (((symbol-function #'yas-global-mode) #'yas-minor-mode)
+;; 	      (yas-global-mode yas-minor-mode))
+;;       (apply orig-fn args)))
+  )
 
 (defvar file-templates-default-trigger "__"
-  "The default yasnippet trigger key (a string) for file template rules that
-don't have a :trigger property in `+file-templates-alist'.")
+  "The default yasnippet trigger key (a string) for file template rules that don't
+have a :trigger property in `+file-templates-alist'.")
 
 (defvar file-templates-alist
   `(
@@ -146,7 +152,7 @@ evil is loaded and enabled)."
             ((abbreviate-file-name path))))))
 
 (defun file-template-p (rule)
-  "Return t if given RULE applies to the current BUFFER."
+  "Return t if given RULE apply to the current BUFFER."
   (let ((pred (car rule))
         (plist (cdr rule)))
     (and (cond ((and (stringp pred) buffer-file-name)
@@ -157,3 +163,4 @@ evil is loaded and enabled)."
          rule)))
 
 (provide 'yasnippet)
+;;; yasnippet.el ends here

@@ -7,10 +7,10 @@
 (setq display-line-numbers 'visual
       display-line-numbers-grow-only t)
 
-(defmacro use-theme! (theme)
+(defmacro use-theme! (theme &rest plist)
   "Wrapper around use-package! to load THEME from themes dir."
   (declare (indent 1))
-  `(use-package! ,theme :load-path "themes"))
+  `(use-package! ,theme :load-path "themes" ,@plist))
 
 (use-theme! gruvbox-theme)
 

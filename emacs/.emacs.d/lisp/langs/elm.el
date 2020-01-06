@@ -1,8 +1,12 @@
-(use-package! elm-mode)
-(use-package! flycheck-elm
-  :after (flycheck elm)
+(use-package! elm-mode
+  :custom
+  (elm-reactor-command '("npx" "elm" "reactor"))
+  (elm-interactive-command '("npx" "elm" "repl"))
   :config
-  '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+  (setq elm-format-on-save t))
 
+(use-package! flycheck-elm
+  :after flycheck
+  :hook (flycheck-mode . flycheck-elm-setup))
 
 (provide 'elm)

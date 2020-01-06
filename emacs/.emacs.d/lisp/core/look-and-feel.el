@@ -14,10 +14,13 @@
 
 (use-theme! gruvbox-theme)
 
+(use-theme! color-theme-sanityinc-tomorrow)
+
 (use-theme! doom-themes
   :config
-  (load-theme 'doom-gruvbox t)
-  (doom-themes-org-config))
+  (load-theme 'doom-molokai t)
+  (doom-themes-org-config)
+  )
 
 (use-package! solaire-mode
   :after doom-themes

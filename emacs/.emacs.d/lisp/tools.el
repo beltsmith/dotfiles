@@ -9,5 +9,6 @@
 (require 'searching)
 (require 'projects)
 (require 'prodigy)
+(require 'qls)
 
 (provide 'tools)

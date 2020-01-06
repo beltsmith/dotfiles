@@ -13,6 +13,7 @@
 (require 'elm)
 (require 'reasonml)
 
+(require 'go)
 (require 'ruby)
 (require 'haml)
 

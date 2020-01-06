@@ -1,5 +1,6 @@
 ;;; init-preamble.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
+;;; Preamble provides use-package! macro and sets up package archives
 ;;; Code:
 (require 'package)
 

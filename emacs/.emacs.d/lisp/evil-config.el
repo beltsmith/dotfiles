@@ -31,8 +31,7 @@
   (general-def 'normal 'override
     [(control return)] 'evil-ex
     "C-'"        'toggle-quotes
-    "M-y"        'counsel-yank-pop
-    "M-j" 'move-line-up)
+    "M-y"        'counsel-yank-pop)
 
   (general-def 'insert 'override
     "s-i"        'yas-insert-snippet
@@ -135,6 +134,8 @@
                       :bind ((evil-ex-search-highlight-all nil)))
   (evilem-make-motion evilem-motion-search-word-backward #'evil-ex-search-word-backward
                       :bind ((evil-ex-search-highlight-all nil))))
+
+(use-package! evil-string-inflection)
 
 (provide 'evil-config)
 

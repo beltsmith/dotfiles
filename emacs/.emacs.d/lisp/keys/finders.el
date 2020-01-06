@@ -25,32 +25,6 @@
   (interactive)
   (load-file my-init-el))
 
-(use-package! recentf
-  ;; Keep track of recently opened files
-  :commands recentf-open-files
-  :config
-  (setq recentf-save-file (concat my-cache-dir "recentf")
-	recentf-auto-cleanup 'never
-	recentf-max-menu-items 0
-	recentf-max-saved-items 200
-	recentf-exclude
-	(list "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\)$" "^/tmp/" "^/ssh:"
-	      "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$"
-	      ;; ignore private DOOM temp files
-	      (lambda (path)
-		(ignore-errors (file-in-directory-p path my-local-dir)))))
-
-  ;; (defun my--recent-file-truename (file)
-  ;;   (if (or (file-remote-p file nil t)
-  ;; 	    (not (file-remote-p file)))
-  ;; 	(file-truename file)
-  ;;     file))
-  ;; (setq recentf-filename-handlers '(my--recent-file-truename abbreviate-file-name))
-
-  (add-hook 'kill-emacs-hook #'recentf-cleanup)
-  (recentf-mode +1))
-
-
 (general-create-definer file-def
   :states '(normal insert emacs)
   :prefix "SPC f"

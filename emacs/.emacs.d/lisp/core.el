@@ -31,40 +31,13 @@
 ;; Setup straight.el
 (require 'preamble)
 
+;; setup general early
+(use-package! general)
+
 (require 'settings)
 (require 'hooks)
 
-(add-to-list 'write-file-functions 'delete-trailing-whitespace)
-
-(defun chmodx ()
-  "Set current file executable."
-  (interactive)
-  (let* ((current-mode (file-modes (buffer-file-name)))
-	 (add-mode (logand ?\111 (default-file-modes)))
-	 (final-mode (logior current-mode add-mode)))
-    (set-file-modes (buffer-file-name) final-mode)))
-
-(defun delete-this-file ()
-  "Deletes current buffer from disk."
-  (interactive)
-  (delete-file (buffer-file-name))
-  (kill-this-buffer))
-
-(defun rename-this-file ()
-  "Renames file visited by current buffer and swap to it."
-  (interactive)
-  (let* ((old-buffer (buffer-name))
-	 (current-file (buffer-file-name))
-	 (new-file-name (read-file-name (format "Rename %s to: " current-file))))
-    (rename-file current-file new-file-name)
-    (find-file new-file-name)
-    (kill-buffer old-buffer)))
-
-;; Prefer y/n over yes/no
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(use-package! helpful)
-(use-package! general)
+(require 'files)
 
 (require 'look-and-feel)
 (require 'company)
@@ -79,61 +52,7 @@
 
 (require 'history)
 
-(use-package! savehist
-  ;; persist variables across sessions
-  :config
-  (setq savehist-file (concat my-cache-dir "savehist")
-        savehist-save-minibuffer-history t
-        savehist-autosave-interval nil ; save on kill only
-        savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
-  (savehist-mode +1)
-
-  (add-hook 'kill-emacs-hook
-    (defun my-unpropertize-kill-ring-h ()
-      "Remove text properties from `kill-ring' for a smaller savehist file."
-      (setq kill-ring (cl-loop for item in kill-ring
-                               if (stringp item)
-                               collect (substring-no-properties item)
-                               else if item collect it)))))
-
-
-(use-package! saveplace
-  ;; persistent point location in buffers
-  :config
-  (setq save-place-file (concat my-cache-dir "saveplace")
-        save-place-limit 100)
-
-  (save-place-mode +1))
-
-(use-package! helpful
-  ;; a better *help* buffer
-  :after apropos
-  :commands helpful--read-symbol
-  :init
-  (define-key
-    [remap describe-function] #'helpful-callable
-    [remap describe-command]  #'helpful-command
-    [remap describe-variable] #'helpful-variable
-    [remap describe-key]      #'helpful-key
-    [remap describe-symbol]   #'doom/describe-symbol)
-
-  (defun my-use-helpful-a (orig-fn &rest args)
-    "Force ORIG-FN to use helpful instead of the old describe-* commands."
-    (cl-letf (((symbol-function #'describe-function) #'helpful-function)
-              ((symbol-function #'describe-variable) #'helpful-variable))
-      (apply orig-fn args)))
-
-  ;; patch apropos buttons to call helpful instead of help
-  (dolist (fun-bt '(apropos-function apropos-macro apropos-command))
-    (button-type-put
-     fun-bt 'action
-     (lambda (button)
-       (helpful-callable (button-get button 'apropos-symbol)))))
-  (dolist (var-bt '(apropos-variable apropos-user-option))
-    (button-type-put
-     var-bt 'action
-     (lambda (button)
-       (helpful-variable (button-get button 'apropos-symbol))))))
+(require 'help)
 
 (use-package! undo-tree
   ;; Branching & persistent undo

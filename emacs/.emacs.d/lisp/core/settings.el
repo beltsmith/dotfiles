@@ -1,7 +1,14 @@
+;;; settings --- My Emacs settings
+;;; Commentary:
+;;; Code:
+
 ;; Disable all the window chrome
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
+
+;; Prefer y/n over yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;;
 ;;; File handling
@@ -124,3 +131,4 @@
 (setq user-emacs-directory my-local-dir)
 
 (provide 'settings)
+;;; settings.el ends here

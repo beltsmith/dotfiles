@@ -1,7 +1,8 @@
-;;; keys.el --- ~/.emacs.d/init.el -*- lexical-binding: t; -*-
+;;; keys.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; This file sets up keybinds for core Emacs functionality.
 ;;; Code:
+
 (use-package! which-key
   :defer 1
   :init
@@ -18,6 +19,12 @@
   ;(setq-hook! 'which-key-init-buffer-hook line-spacing 3)
 
   (which-key-mode +1))
+
+(defvar my-keys-dir (concat my-lisp-dir "keys/")
+  "Directory containing core key binds.")
+;; Add keys lib to load path
+(add-to-list 'load-path my-keys-dir)
+
 
 (defvar +default-minibuffer-maps
   '(minibuffer-local-map
@@ -51,5 +58,6 @@
   "SPC w" "C-w")
 
 (require 'finders)
+
 (provide 'keys)
 ;;; keys.el ends here

@@ -20,3 +20,4 @@ flycheck_*.elc
 /emacs/.emacs.d/amx-items
 /emacs/.emacs.d/transient/
 /emacs/.emacs.d/private/
+eshell/history

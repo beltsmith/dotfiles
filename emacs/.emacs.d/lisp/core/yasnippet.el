@@ -57,8 +57,8 @@ If evil-local-mode isn't enabled, run ORIG-FN as is."
 
   ;; (Evil only) fix off-by-one issue with line-wise visual selections in
   ;; `yas-insert-snippet', and switches to insert mode afterwards.
-  (advice-add #'yas-insert-snippet :around #'+snippets-expand-on-region-a)
-  )
+  (advice-add #'yas-insert-snippet :around #'+snippets-expand-on-region-a))
+
 (use-package! yasnippet-snippets)
 
 (use-package! auto-yasnippet

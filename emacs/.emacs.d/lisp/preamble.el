@@ -33,6 +33,8 @@
      :straight t
      ,@plist))
 
+(use-package! auto-compile
+  :config (auto-compile-on-load-mode))
 
 (provide 'preamble)
 ;;; preamble.el ends here

@@ -29,5 +29,7 @@
 (require 'plantuml)
 (require 'rust)
 
+(require 'tex)
+
 (provide 'langs)
 ;;; langs.el ends here

@@ -4,8 +4,8 @@
 ;;; Code:
 
 (global-display-line-numbers-mode)
-(setq display-line-numbers 'visual
-      display-line-numbers-grow-only t)
+(setq-default display-line-numbers 'visual
+              display-line-numbers-grow-only t)
 
 (defmacro use-theme! (theme &rest plist)
   "Wrapper around use-package! to load THEME from themes dir."
@@ -17,6 +17,10 @@
   (declare (indent 1))
   `(use-package ,theme :load-path "themes" ,@plist))
 
+;(use-theme darkplus-theme
+;  :straight (darkplus-theme :host github :repo "dunstontc/darkpluc-emacs")
+;  :config
+;  (load-theme 'darkplus t))
 
 (use-theme! gruvbox-theme)
 

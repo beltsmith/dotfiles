@@ -81,8 +81,10 @@ c) are not valid projectile projects."
   :config
   (general-def 'normal 'global
     :prefix "SPC"
-    "SPC" 'projectile-find-file
-    "s a p" 'counsel-projectile-rg)
+    "SPC" 'projectile-find-file)
+  (general-def 'normal 'global
+    :prefix "SPC s"
+    "a p" 'counsel-projectile-rg)
   (general-def 'normal 'global
     "C-SPC"   'counsel-projectile))
 

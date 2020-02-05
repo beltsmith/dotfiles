@@ -163,18 +163,18 @@ export EMAIL="me@alexgirlder.com"
 export WORK_EMAIL="alex.girdler@sonder.com"
 #+end_src
 ** Evals
-   :PROPERTIES:
-   :header-args: :noweb-ref evals
-   :END:
-   *queue Kenny Loggins' Danger Zone*
-   #+BEGIN_SRC shell
+:PROPERTIES:
+:header-args: :noweb-ref evals
+:END:
+*queue Kenny Loggins' Danger Zone*
+#+BEGIN_SRC shell
 eval "$(hub alias -s)"
 
 eval "$(fasd --init auto)"
 eval "$(pyenv init -)"
 # eval "$(rbenv init -)"
 test -r /home/beltsmith/.opam/opam-init/init.zsh && . /home/beltsmith/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-   #+END_SRC
+#+END_SRC
 ** Completion
 :PROPERTIES:
 :header-args: :noweb-ref completion
@@ -270,6 +270,12 @@ alias ......="\cd ../../../../.."
 *** Unaliases
 #+begin_src shell
   # unalias rg # Fuck off rails generate, who the hell uses you
+#+end_src
+*** cassandra
+#+begin_src sh
+alias cassandra="docker run --rm --network host cassandra"
+alias cassandrad="docker run --network host --name my-cassandrad -d cassandra"
+alias cqlsh="docker run --rm -it --network host cassandra cqlsh"
 #+end_src
 ** Functions
 :PROPERTIES:
@@ -450,7 +456,7 @@ More or less a comprehensive list of config files I've worked with for linux.
 Use emacs so no need for this because recentf
 #+BEGIN_SRC shell :noweb-ref no
 conf() {
-	  case $1 in
+          case $1 in
         awesome)    emacsclient -c ~/.config/awesome/rc.lua ;;
         herbst)     emacsclient -c ~/.config/herbstluftwm/autostart ;;
         xmonad)     emacsclient -c ~/.xmonad/xmonad.hs ;;
@@ -469,11 +475,11 @@ conf() {
         xinit)      emacsclient -c ~/.xinitrc ;;
         xresources)	emacsclient -c ~/.Xresources && xrdb ~/.Xresources ;;
         zsh)        emacsclient -c ~/.zshrc && source ~/.zshrc ;;
-		    hosts)		  sudoedit /etc/hosts ;;
-		    vhosts)		  sudoedit /etc/httpd/conf/extra/httpd-vhosts.conf ;;
-		    httpd)		  sudoedit /etc/httpd/conf/httpd.conf ;;
-		    *)			    echo "Unknown application: $1" ;;
-	  esac
+                    hosts)		  sudoedit /etc/hosts ;;
+                    vhosts)		  sudoedit /etc/httpd/conf/extra/httpd-vhosts.conf ;;
+                    httpd)		  sudoedit /etc/httpd/conf/httpd.conf ;;
+                    *)			    echo "Unknown application: $1" ;;
+          esac
 }
 #+END_SRC
 *** Code Climate
@@ -677,3 +683,8 @@ setopt autopushd
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #+END_SRC
 ** Compde
+** Secrets
+shoosh
+#+begin_src shell
+loadit ~/.secrets
+#+end_src

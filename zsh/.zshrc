@@ -27,6 +27,8 @@ append_path "/usr/local/bin"
 append_path "$HOME/.local/bin"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
+export EMAIL="me@alexgirlder.com"
+export WORK_EMAIL="alex.girdler@sonder.com"
 ###############################################
 #################  Aliases   ##################
 ###############################################
@@ -69,6 +71,9 @@ alias ......="\cd ../../../../.."
 
 alias kc="kubectl"
 # unalias rg # Fuck off rails generate, who the hell uses you
+alias cassandra="docker run --rm --network host cassandra"
+alias cassandrad="docker run --network host --name my-cassandrad -d cassandra"
+alias cqlsh="docker run --rm -it --network host cassandra cqlsh"
 ###############################################
 ################# Functions  ##################
 ###############################################

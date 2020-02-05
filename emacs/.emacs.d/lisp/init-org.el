@@ -52,7 +52,7 @@
 ;; ctrl enter
 (general-def
   :keymaps 'org-mode-map
-  :states 'normal
+  :states '(normal insert)
   "<C-return>" 'org-insert-item-or-heading-below
   "<tab>" 'org-toggle-subtree-or-block
   "<S-return>" 'org-insert-heading-after-current

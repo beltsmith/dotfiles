@@ -12,15 +12,24 @@
   (declare (indent 1))
   `(use-package! ,theme :load-path "themes" ,@plist))
 
+(defmacro use-theme (theme &rest plist)
+  "Wrapper around use-package! to load THEME from themes dir."
+  (declare (indent 1))
+  `(use-package ,theme :load-path "themes" ,@plist))
+
+
 (use-theme! gruvbox-theme)
 
 (use-theme! color-theme-sanityinc-tomorrow)
 
+;; (use-theme darkplus-theme
+;;   :straight (:host github :repo "dunstontc/darkplus-emacs")
+;;   :config (load-theme 'darkplus t))
+
 (use-theme! doom-themes
   :config
-  (load-theme 'doom-molokai t)
-  (doom-themes-org-config)
-  )
+  (load-theme 'doom-one t)
+  (doom-themes-org-config))
 
 (use-package! solaire-mode
   :after doom-themes
@@ -58,5 +67,7 @@
 (use-package! rainbow-delimiters :config (rainbow-delimiters-mode +1))
 
 (use-package! editorconfig)
+
+(use-package! indent-guide :config (indent-guide-global-mode))
 
 (provide 'look-and-feel)

@@ -7,6 +7,23 @@
   :config
   (add-hook 'org-mode-hook 'org-indent-mode))
 
+;; org reveal
+(use-package! ox-reveal
+  :after org
+  :config
+  (setq org-reveal-root "http://cdn.jsdelivr.net/npm/reveal.js"
+        org-reveal-mathjax t))
+
+(use-package! htmlize)
+
+;; ctrl enter
+(general-def
+  :keymaps 'org-present-mode-map
+  :states '(normal)
+  "l" 'org-present-next
+  "h" 'org-present-previous
+  )
+
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
 (use-package! orgit :after org)

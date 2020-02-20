@@ -8,21 +8,27 @@
   (add-hook 'org-mode-hook 'org-indent-mode))
 
 ;; org reveal
-(use-package! ox-reveal
+(use-package! reveal
   :after org
   :config
   (setq org-reveal-root "http://cdn.jsdelivr.net/npm/reveal.js"
         org-reveal-mathjax t))
 
+(use-package! ox-reveal
+  :after reveal
+  :config
+  (setq org-reveal-root "http://cdn.jsdelivr.net/npm/reveal.js"
+        org-reveal-mathjax t))
+
+;; (use-package! org-re-reveal
+;;   :after reveal
+;;   :config
+;;   (setq org-re-reveal-root "http://cdn.jsdelivr.net/npm/reveal.js"
+;;         org-re-reveal-mathjax t))
+
 (use-package! htmlize)
 
 ;; ctrl enter
-(general-def
-  :keymaps 'org-present-mode-map
-  :states '(normal)
-  "l" 'org-present-next
-  "h" 'org-present-previous
-  )
 
 (use-package! org-bullets :after org)
 (use-package! evil-org :after (org evil))
@@ -90,6 +96,9 @@
 (defvar my-org-config-dir (concat my-lisp-dir "/org"))
 (add-to-list 'load-path my-org-config-dir)
 
+
+(setq org-log-into-drawer t
+      org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
 
 (require 'babel)
 (require 'capture)

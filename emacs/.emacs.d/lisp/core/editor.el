@@ -14,5 +14,7 @@
   "SPC s i p" 'string-inflection-python-style-cycle)
 
 
+(global-eldoc-mode)
+
 (provide 'editor)
 ;;; editor.el ends here

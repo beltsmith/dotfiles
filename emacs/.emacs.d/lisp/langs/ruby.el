@@ -34,10 +34,15 @@
   (interactive)
   (bundle-exec "rake db:migrate"))
 
+(defun my-bundle-console ()
+  "Run bundle exec rails c for this project."
+  (interactive)
+  (bundle-exec "rails c"))
+
 ;;; Keybinds:
 (general-create-definer ruby-local-def
   :states '(normal insert emacs)
-  :keymaps 'enh-ruby-mode-map
+  :keymaps '(ruby-mode-map enh-ruby-mode-map)
   :prefix "SPC m"
   :non-normal-prefix "M-SPC m"
   :prefix-command 'ruby-local-prefix-command
@@ -59,9 +64,13 @@
   "r" '(nil :which-key "Rake")
   "r m" 'rake-db-migrate
   "b" '(nil :which-key "Bundle")
-  "b c" 'bundle-console
+  "b c" 'my-bundle-console
   "b e" 'bundle-exec
   "b i" 'bundle-install)
+
+;; (ruby-local-def
+;;   "g" '(nil :which-key "Goto")
+;;   "g g" 'rails-goto-gemfile)
 
 (general-def
   :states '(normal insert emacs)

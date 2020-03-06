@@ -29,6 +29,8 @@
 (require 'plantuml)
 (require 'rust)
 
+(require 'gql)
+
 ;; (require 'tex)
 
 (provide 'langs)

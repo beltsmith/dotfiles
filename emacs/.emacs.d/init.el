@@ -6,7 +6,7 @@
 (add-to-list 'load-path (concat my-emacs-dir "/lisp"))
 
 (require 'core)
-(require 'modes)
+;; (require 'modes)
 (require 'evil-config)
 (require 'keys)
 (require 'init-org)

@@ -97,8 +97,9 @@
 (add-to-list 'load-path my-org-config-dir)
 
 
-(setq org-log-into-drawer t
-      org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+(setq-default org-log-into-drawer t
+              org-todo-keywords '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))
+              org-src-window-setup 'split-window-right)
 
 (require 'babel)
 (require 'capture)

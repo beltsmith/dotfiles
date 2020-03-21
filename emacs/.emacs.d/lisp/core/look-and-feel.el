@@ -3,7 +3,7 @@
 ;;; Provides that warm and fuzzy feeling
 ;;; Code:
 
-(global-eldoc-mode)
+(global-eldoc-mode +1)
 (global-display-line-numbers-mode)
 (setq-default display-line-numbers 'visual
               display-line-numbers-type 'visual

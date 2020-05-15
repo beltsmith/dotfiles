@@ -1,6 +1,7 @@
+{-# LANGUAGE FlexibleContexts #-}
 import           XMonad
 import           XMonad.Config.Desktop
-import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.DynamicLog hiding (wrap)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
@@ -14,9 +15,11 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ResizableTile
 import           Graphics.X11.ExtraTypes.XF86
 
+
+import Text.Regex.Posix ((=~))
 import Data.List (sortBy)
 import Data.Function (on)
-import Control.Monad (forM_, join)
+import Control.Monad (forM_, join, when)
 import XMonad.Util.Run (safeSpawn)
 import XMonad.Util.NamedWindows (getName)
 
@@ -32,7 +35,7 @@ import qualified DBus.Client as     D
 
 -- Configuration variables
 myWorkspaces :: [[Char]]
-myWorkspaces         = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces         = ["emacs","web","term","chat","games","music","7","8","9"]
 myTerminal :: [Char]
 -- myTerminal           = "termite"
 myTerminal           = "alacritty"
@@ -71,15 +74,17 @@ passSelect :: [Char]
 passSelect = "dmenu-lpass-nu"
 
 -- Colours
-winBlack   :: [Char]
-slateGrey  :: [Char]
-vaporPink  :: [Char]
-powderBlue :: [Char]
-coolBlue   :: [Char]
-selected   :: [Char]
-barBg      :: [Char]
-urgentBlue :: [Char]
-red        :: [Char]
+winBlack    :: [Char]
+slateGrey   :: [Char]
+vaporPink   :: [Char]
+powderBlue  :: [Char]
+coolBlue    :: [Char]
+selected    :: [Char]
+barBg       :: [Char]
+urgentBlue  :: [Char]
+red         :: [Char]
+currWsFg    :: [Char]
+visibleWsFg :: [Char]
 
 urgentBlue = "#010081"
 barBg      = "#C0C0C0" -- win95 taskbar
@@ -90,6 +95,9 @@ vaporPink  = "#ff7faa" -- vapor pink
 slateGrey  = "#2d2d2d" -- slate grey? yup
 winBlack   = "#010303" -- Win95 font colour
 red        = "#fb4934" -- not red? nope it's red
+
+currWsFg    = vaporPink
+visibleWsFg = powderBlue
 
 -- Hookers
 
@@ -108,6 +116,8 @@ myLayoutHook = smartBorders $ avoidStruts $ full $ tiled ||| Mirror tiled ||| em
 myFloaterHook :: ManageHook
 myFloaterHook = insertPosition End Newer
 
+q ~? x = fmap(=~ x) q
+
 myManageHook :: ManageHook
 myManageHook = composeAll . concat $
     [ [ isFullscreen                                --> (doF W.focusDown <+> doFullFloat) ]
@@ -116,6 +126,7 @@ myManageHook = composeAll . concat $
     , [ fmap ("Zoom Meeting" `isPrefixOf`) title    --> doFloat                        ]
     , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
     , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
+    , [ className =? c                              --> doIgnore | c <- myClassMasters ]
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
@@ -125,36 +136,47 @@ myManageHook = composeAll . concat $
         role           = stringProperty "WM_WINDOW_ROLE"
         myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
         myClassIgnores = [] -- ["doomx64.exe", "DOOMx64"]
+        myClassMasters = ["emacs", "twitchui.exe", "battle.net.exe"]
         myResourceIgnores = myClassIgnores
 
+-- myEventHook :: Event -> X All
 myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 
 dbusInterface :: [Char]
 dbusInterface = "org.xmonad.Log"
 
-spawnOnceAsync :: [Char] -> X ()
-spawnOnceAsync prog = spawnOnce $ prog ++ " &"
+-- spawnOnceAsync :: [Char] -> X ()
+-- spawnOnceAsync = spawnOnce . (++ " &")
 
+myStartupHook :: X ()
 myStartupHook = do
-  spawnOnceAsync "polybar main"
-  spawnOnceAsync "compton"
-  spawnOnce "auto-x"
   setWMName "LG3D"
+  spawnOnce "auto-x"
 
 
+polybarColor :: String -> String -> String
+polybarColor code = wrap left right
+  where left = wrap "%{F" "}" code
+        right = "%{F-}"
+
+eventLogHook :: X ()
 eventLogHook = do
   winset <- gets windowset
-  title <- maybe (return "") (fmap show . getName) . W.peek $ winset
+  windowTitle <- maybe (return "") (fmap show . getName) . W.peek $ winset
   let currWs = W.currentTag winset
+  let visible = W.visible winset
+  let visibleWs = map (\s-> W.tag $ W.workspace s) visible
   let wss = map W.tag $ W.workspaces winset
-  let wsStr = join $ map (fmt currWs) $ sort' wss
+  let wsStr = intercalate " " $ map (fmt currWs visibleWs) $ sort' wss
+  let titleStr = polybarColor coolBlue ">>=   " ++ windowTitle
 
-  io $ appendFile "/tmp/.xmonad-title-log" (title ++ "\n")
+  io $ appendFile "/tmp/.xmonad-title-log" (titleStr ++ "\n")
   io $ appendFile "/tmp/.xmonad-workspace-log" (wsStr ++ "\n")
 
-  where fmt currWs ws
-          | currWs == ws = wrap "%{F#0a81f5}" "%{F-}" $ wrap "[" "]" ws
-          | otherwise    = " " ++ ws ++ " "
+  where fmt currWs visibleWs ws
+          | currWs == ws = polybarColor currWsFg $ wrap "[" "]" ws
+          | ws `elem` visibleWs = polybarColor visibleWsFg $ wrap "(" ")" ws
+          | otherwise    = ws
         sort' = sortBy (compare `on` (!! 0))
 
 -- Main xmonad
@@ -184,8 +206,8 @@ main = do
     , startupHook        = myStartupHook
     }
 
--- wrap :: String -> String -> String -> String
--- wrap h t b = h ++ b ++ t
+wrap :: String -> String -> String -> String
+wrap h t = (h ++) . (++ t)
 
 colourWrapper :: String -> String -> String -> String
 colourWrapper kind colour = wrap startTag endTag
@@ -217,7 +239,7 @@ myLogHook dbus = def
     fg        = winBlack
     bg        = barBg
     fgHidden  = fg
-    fgCurrent = vaporPink
+    fgCurrent = bg
     fgUrgent  = urgentBlue
     fgVisible = vaporPink
     bgCurrent = selected
@@ -248,10 +270,10 @@ rofiConfig =
                       , ("theme"         , "Arc-Dark")]
 
 rofi :: String -> String
-rofi mode = "rofi -show " ++ mode ++ rofiConfig
+rofi = ("rofi -show " ++) . (++ rofiConfig)
 
 rofiRun :: String -> String
-rofiRun cmd = "rofi -dmenu " ++ cmd ++ rofiConfig
+rofiRun = ("rofi -dmenu " ++) . (++ rofiConfig)
 
 rofiCmd :: String
 rofiCmd = rofiRun ""
@@ -268,17 +290,17 @@ shOr :: String -> String -> String
 shOr l r = wrap l r " || "
 
 myRecompileCmd :: String
-myRecompileCmd = "(xmonad --recompile && xmonad --restart && notify-send 'reloaded xmonad') || notify-send 'Failed to reload xmonad' --urgency=critical && notify-send --urgency=critical $(cat /tmp/xmonad-compile.log)"
--- myRecompileCmd = compileCmd `shOr` failureCmd
---   where
---     compileCommands = ["notify-send 'reloaded xmonad'"
---                       , "xmonad --restart"]
---     failureCommands = [ "notify-send 'Failed to reload xmonad' --urgency=critical"
---                       , "notify-send <(cat /tmp/xmonad-compile.log) --urgency=critical"
---                       ]
---     comandify       = \commands -> wrap "(" ")" $ concat $ intersperse " && " commands
---     failureCmd      = comandify failureCommands
---     compileCmd      = comandify compileCommands
+myRecompileCmd = compileCmd `shOr` failureCmd
+  where
+    compileCommands = [ "xmonad --restart"
+                      , "notify-send 'reloaded xmonad'"
+                      ]
+    failureCommands = [ "notify-send 'Failed to reload xmonad' --urgency=critical"
+                      , "notify-send <(cat /tmp/xmonad-compile.log) --urgency=critical"
+                      ]
+    comandify       = wrap "(" ")" . intercalate " && "
+    failureCmd      = comandify failureCommands
+    compileCmd      = comandify compileCommands
 
 -- I stole these from xmonad
 

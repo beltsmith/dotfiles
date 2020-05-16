@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 import           XMonad
 import           XMonad.Config.Desktop
-import           XMonad.Hooks.DynamicLog hiding (wrap)
+-- import           XMonad.Hooks.DynamicLog hiding (wrap)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
@@ -17,29 +17,23 @@ import           Graphics.X11.ExtraTypes.XF86
 
 
 import Text.Regex.Posix ((=~))
-import Data.List (sortBy)
-import Data.Function (on)
-import Control.Monad (forM_, join, when)
+import Control.Monad (forM_)
 import XMonad.Util.Run (safeSpawn)
 import XMonad.Util.NamedWindows (getName)
 
-import qualified Codec.Binary.UTF8.String as UTF8
 import           Data.List
 import           System.Exit
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as        M
 
-import qualified DBus as            D
-import qualified DBus.Client as     D
-
 -- Configuration variables
-myWorkspaces :: [[Char]]
-myWorkspaces         = ["emacs","web","term","chat","games","music","7","8","9"]
-myTerminal :: [Char]
+myWorkspaces :: [String]
+myWorkspaces         = ["emacs","web","term","chat","games","music","logs","idea",""]
+myTerminal :: String
 -- myTerminal           = "termite"
 myTerminal           = "alacritty"
-myTerminalTmux :: [Char]
+myTerminalTmux :: String
 myTerminalTmux       = myTerminal ++ " -e tmux"
 myModMask :: KeyMask
 myModMask            = mod4Mask
@@ -49,42 +43,42 @@ ctrlMask :: KeyMask
 ctrlMask = controlMask
 myBorderWidth :: Dimension
 myBorderWidth        = 3
-myNormalBorderColor :: [Char]
+myNormalBorderColor :: String
 myNormalBorderColor  = powderBlue
-myFocusedBorderColor :: [Char]
+myFocusedBorderColor :: String
 myFocusedBorderColor = vaporPink
-myBrowser :: [Char]
+myBrowser :: String
 myBrowser            = "firefox-nightly"
-myEditor :: [Char]
+myEditor :: String
 myEditor             = "emacs"
 
 -- Brightness
-brightnessCommand :: [Char] -> [Char]
-brightnessCommand command = "/home/beltsmith/scripts/brightness_change " ++ command
+brightnessCommand :: String -> String
+brightnessCommand = ("/home/beltsmith/scripts/brightness_change " ++)
 
 data Direction = Up | Down
-monBrightnessChange :: Direction -> [Char]
+monBrightnessChange :: Direction -> String
 monBrightnessChange Up = brightnessCommand "up"
 monBrightnessChange Down = brightnessCommand "down"
 
-scrot :: [Char]
+scrot :: String
 scrot = "flameshot gui"
 
-passSelect :: [Char]
+passSelect :: String
 passSelect = "dmenu-lpass-nu"
 
 -- Colours
-winBlack    :: [Char]
-slateGrey   :: [Char]
-vaporPink   :: [Char]
-powderBlue  :: [Char]
-coolBlue    :: [Char]
-selected    :: [Char]
-barBg       :: [Char]
-urgentBlue  :: [Char]
-red         :: [Char]
-currWsFg    :: [Char]
-visibleWsFg :: [Char]
+winBlack    :: String
+slateGrey   :: String
+vaporPink   :: String
+powderBlue  :: String
+coolBlue    :: String
+selected    :: String
+barBg       :: String
+urgentBlue  :: String
+red         :: String
+currWsFg    :: String
+visibleWsFg :: String
 
 urgentBlue = "#010081"
 barBg      = "#C0C0C0" -- win95 taskbar
@@ -126,7 +120,7 @@ myManageHook = composeAll . concat $
     , [ fmap ("Zoom Meeting" `isPrefixOf`) title    --> doFloat                        ]
     , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
     , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
-    , [ className =? c                              --> doIgnore | c <- myClassMasters ]
+    , [ className ~? c                              --> doIgnore | c <- myClassMasters ]
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
@@ -136,20 +130,19 @@ myManageHook = composeAll . concat $
         role           = stringProperty "WM_WINDOW_ROLE"
         myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
         myClassIgnores = [] -- ["doomx64.exe", "DOOMx64"]
-        myClassMasters = ["emacs", "twitchui.exe", "battle.net.exe"]
+        myClassMasters = ["emacs@*", "twitchui.exe", "battle.net.exe"]
         myResourceIgnores = myClassIgnores
 
 -- myEventHook :: Event -> X All
 myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
-
-dbusInterface :: [Char]
-dbusInterface = "org.xmonad.Log"
 
 -- spawnOnceAsync :: [Char] -> X ()
 -- spawnOnceAsync = spawnOnce . (++ " &")
 
 myStartupHook :: X ()
 myStartupHook = do
+  forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> safeSpawn "mkfifo" ["/tmp/" ++ file]
+
   setWMName "LG3D"
   spawnOnce "auto-x"
 
@@ -165,9 +158,9 @@ eventLogHook = do
   windowTitle <- maybe (return "") (fmap show . getName) . W.peek $ winset
   let currWs = W.currentTag winset
   let visible = W.visible winset
-  let visibleWs = map (\s-> W.tag $ W.workspace s) visible
+  let visibleWs = map (W.tag . W.workspace) visible
   let wss = map W.tag $ W.workspaces winset
-  let wsStr = intercalate " " $ map (fmt currWs visibleWs) $ sort' wss
+  let wsStr = unwords $ map (fmt currWs visibleWs) $ sort' wss
   let titleStr = polybarColor coolBlue ">>=   " ++ windowTitle
 
   io $ appendFile "/tmp/.xmonad-title-log" (titleStr ++ "\n")
@@ -177,20 +170,12 @@ eventLogHook = do
           | currWs == ws = polybarColor currWsFg $ wrap "[" "]" ws
           | ws `elem` visibleWs = polybarColor visibleWsFg $ wrap "(" ")" ws
           | otherwise    = ws
-        sort' = sortBy (compare `on` (!! 0))
+        sort' = sortOn wsOrder
+        wsOrder k = M.findWithDefault (-1) k $ M.fromList $ zip myWorkspaces [0..]
 
 -- Main xmonad
 main :: IO ()
-main = do
-  dbus <- D.connectSession
-  -- Request access to the DBus name
-  D.requestName dbus (D.busName_ dbusInterface)
-      [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-
-  forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> do
-    safeSpawn "mkfifo" ["/tmp/" ++ file]
-
-  xmonad $ docks desktopConfig
+main = xmonad $ docks $ ewmh $ desktopConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , borderWidth        = myBorderWidth
@@ -209,57 +194,57 @@ main = do
 wrap :: String -> String -> String -> String
 wrap h t = (h ++) . (++ t)
 
-colourWrapper :: String -> String -> String -> String
-colourWrapper kind colour = wrap startTag endTag
-  where
-    startTag = wrap "%{" "} " $ kind ++ colour
-    endTag   = wrap " %{" "-}" kind
+-- colourWrapper :: String -> String -> String -> String
+-- colourWrapper kind colour = wrap startTag endTag
+--   where
+--     startTag = wrap "%{" "} " $ kind ++ colour
+--     endTag   = wrap " %{" "-}" kind
 
-wsPP :: String -> String -> WorkspaceId -> String
-wsPP bg fg wsId = bgWrapper $ fgWrapper wsId
-  where
-    bgWrapper = colourWrapper "B" bg
-    fgWrapper = colourWrapper "F" fg
+-- wsPP :: String -> String -> WorkspaceId -> String
+-- wsPP bg fg wsId = bgWrapper $ fgWrapper wsId
+--   where
+--     bgWrapper = colourWrapper "B" bg
+--     fgWrapper = colourWrapper "F" fg
 
 
 -- Override the PP values as you would otherwise, adding colors etc depending
 -- on  the statusbar used
-myLogHook :: D.Client -> PP
-myLogHook dbus = def
-    { ppOutput  = dbusOutput dbus
-    , ppCurrent = wsPP bgCurrent fgCurrent
-    , ppVisible = wsPP bg fgVisible
-    , ppUrgent  = wsPP bg fgUrgent
-    , ppHidden  = wsPP bg fgHidden
-    , ppWsSep   = ""
-    , ppSep     = " : "
-    , ppTitle   = shorten 40
-    }
-  where
-    fg        = winBlack
-    bg        = barBg
-    fgHidden  = fg
-    fgCurrent = bg
-    fgUrgent  = urgentBlue
-    fgVisible = vaporPink
-    bgCurrent = selected
+-- myLogHook :: D.Client -> PP
+-- myLogHook dbus = def
+--     { ppOutput  = dbusOutput dbus
+--     , ppCurrent = wsPP bgCurrent fgCurrent
+--     , ppVisible = wsPP bg fgVisible
+--     , ppUrgent  = wsPP bg fgUrgent
+--     , ppHidden  = wsPP bg fgHidden
+--     , ppWsSep   = ""
+--     , ppSep     = " : "
+--     , ppTitle   = shorten 40
+--     }
+--   where
+--     fg        = winBlack
+--     bg        = barBg
+--     fgHidden  = fg
+--     fgCurrent = bg
+--     fgUrgent  = urgentBlue
+--     fgVisible = vaporPink
+--     bgCurrent = selected
 
 
 
--- Emit a DBus signal on log updates
-dbusOutput :: D.Client -> String -> IO ()
-dbusOutput dbus str = do
-    let signal = (D.signal objectPath interfaceName memberName) {
-            D.signalBody = [D.toVariant $ UTF8.decodeString str]
-        }
-    D.emit dbus signal
-  where
-    objectPath    = D.objectPath_ "/org/xmonad/Log"
-    interfaceName = D.interfaceName_ dbusInterface
-    memberName    = D.memberName_ "Update"
+-- -- Emit a DBus signal on log updates
+-- dbusOutput :: D.Client -> String -> IO ()
+-- dbusOutput dbus str = do
+--     let signal = (D.signal objectPath interfaceName memberName) {
+--             D.signalBody = [D.toVariant $ UTF8.decodeString str]
+--         }
+--     D.emit dbus signal
+--   where
+--     objectPath    = D.objectPath_ "/org/xmonad/Log"
+--     interfaceName = D.interfaceName_ dbusInterface
+--     memberName    = D.memberName_ "Update"
 
 -- Rofi
-rofiConfig :: [Char]
+rofiConfig :: String
 rofiConfig =
   foldl configify "" configList
   where
@@ -278,10 +263,10 @@ rofiRun = ("rofi -dmenu " ++) . (++ rofiConfig)
 rofiCmd :: String
 rofiCmd = rofiRun ""
 
-switchMonitor :: [Char]
+switchMonitor :: String
 switchMonitor = "/home/beltsmith/.screenlayout/$(ls /home/beltsmith/.screenlayout | " ++ rofiCmd ++ ")"
 
-switchWifi :: [Char]
+switchWifi :: String
 switchWifi = "netctl switch-to $(netctl list | " ++ rofiCmd ++ " | cut -f 2-3 -d '')"
 
 -- Utility functions
@@ -292,8 +277,9 @@ shOr l r = wrap l r " || "
 myRecompileCmd :: String
 myRecompileCmd = compileCmd `shOr` failureCmd
   where
-    compileCommands = [ "xmonad --restart"
+    compileCommands = [ "xmonad --recompile"
                       , "notify-send 'reloaded xmonad'"
+                      , "xmonad --restart"
                       ]
     failureCommands = [ "notify-send 'Failed to reload xmonad' --urgency=critical"
                       , "notify-send <(cat /tmp/xmonad-compile.log) --urgency=critical"
@@ -305,7 +291,7 @@ myRecompileCmd = compileCmd `shOr` failureCmd
 -- I stole these from xmonad
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     -- launch a terminal
     [ ((modm .|. ctrlMask,  xK_Return), spawn $ XMonad.terminal conf)
     , ((modm .|. shiftMask, xK_Return), spawn myTerminalTmux)
@@ -320,9 +306,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- rofi launch
     , ((modm,               xK_space ), spawn $ rofi "run")
     , ((modm,               xK_w     ), spawn $ rofi "window")
-    , ((modm,               xK_p     ), spawn $ passSelect)
-    , ((0, xF86XK_Display            ), spawn $ switchMonitor)
-    , ((0, xF86XK_Tools              ), spawn $ switchWifi)
+    , ((modm,               xK_p     ), spawn passSelect)
+    , ((0, xF86XK_Display            ), spawn switchMonitor)
+    , ((0, xF86XK_Tools              ), spawn switchWifi)
     -- , ((mod4Mask,           xK_e     ), spawn $ rofi "run")
     -- rofi switch
     -- Resize viewed windows to the correct size
@@ -375,7 +361,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_b     ), sendMessage ToggleStruts)
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask, xK_q     ), io exitSuccess)
 
     -- Restart xmonad
     , ((modm .|. shiftMask, xK_r     ), spawn myRecompileCmd)
@@ -425,4 +411,4 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- --
     [((m .|. modm , key), screenWorkspace screen >>= flip whenJust (windows . f))
         | (key, screen) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, (controlMask)), (W.shift, (controlMask .|. shiftMask))]]
+        , (f, m) <- [(W.view, controlMask), (W.shift, controlMask .|. shiftMask)]]

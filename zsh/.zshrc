@@ -60,9 +60,6 @@ alias pbpaste='xsel --clipboard --output'
 alias xboxc='sudo xboxdrv --mimic-xpad --detach-kernel-driver --silent'
 alias steam_wine='WINEDEBUG=-all wine ~/.wine/drive_c/Program\ Files/Steam/Steam.exe -no-dwrite >/dev/null 2>&1 &'
 alias bt='bluetoothctl'
-alias mem="memory"
-alias ms="memory show"
-alias menv="memory env dump"
 alias ..="\cd .."
 alias ...="\cd ../.."
 alias ....="\cd ../../.."
@@ -74,6 +71,7 @@ alias kc="kubectl"
 alias cassandra="docker run --rm --network host cassandra"
 alias cassandrad="docker run --network host --name my-cassandrad -d cassandra"
 alias cqlsh="docker run --rm -it --network host cassandra cqlsh"
+alias nassh="TERM=xterm-256color ssh root@tower"
 ###############################################
 ################# Functions  ##################
 ###############################################

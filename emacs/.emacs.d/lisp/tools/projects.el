@@ -99,7 +99,8 @@ c) are not valid projectile projects."
   :states 'normal
   :prefix "SPC p"
   "p" 'projectile-switch-project
-  "c" 'projectile-compile-project)
+  "c" 'projectile-compile-project
+  "i" 'projectile-invalidate-cache)
 
 (use-package! dotenv-mode)
 

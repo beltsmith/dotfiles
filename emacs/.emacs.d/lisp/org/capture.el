@@ -35,7 +35,7 @@
 
 
 (setq org-capture-templates
-      `(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks") ,global-todo-capture-template)
+      `(("t" "Todo" entry (file+headline "~/org/todo.org" "Inbox") ,global-todo-capture-template)
         ("w" "Work" entry (file+datetree "~/org/work/journal.org") ,work-capture-template)
         ("s" "Standup" entry (file+datetree "~/org/work/standup.org") ,standup-capture-template)))
 

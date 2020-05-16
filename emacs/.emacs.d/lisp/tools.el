@@ -6,9 +6,12 @@
 ;; Add core lib to load path
 (add-to-list 'load-path my-tools-dir)
 
-(require 'searching)
-(require 'projects)
-(require 'prodigy)
-(require 'qls)
+(defvar my-enabled-tools '(searching
+                           projects
+                           prodigy
+                           qls
+                           exercism))
+
+(require-all my-enabled-tools)
 
 (provide 'tools)

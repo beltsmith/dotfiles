@@ -3,9 +3,15 @@
 ;;; Provides that warm and fuzzy feeling
 ;;; Code:
 
+(global-eldoc-mode +1)
 (global-display-line-numbers-mode)
 (setq-default display-line-numbers 'visual
+              display-line-numbers-type 'visual
               display-line-numbers-grow-only t)
+
+(setq display-line-numbers 'visual
+      display-line-numbers-type 'visual
+      display-line-numbers-grow-only t)
 
 (defmacro use-theme! (theme &rest plist)
   "Wrapper around use-package! to load THEME from themes dir."

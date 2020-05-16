@@ -1,4 +1,4 @@
-;;; init-preamble.el --- -*- lexical-binding: t; -*-
+;;; init-preamble.el --- -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Commentary:
 ;;; Preamble provides use-package! macro and sets up package archives
 ;;; Code:
@@ -34,7 +34,10 @@
      ,@plist))
 
 (use-package! auto-compile
-  :config (auto-compile-on-load-mode))
+  :config
+  (progn
+    (auto-compile-on-load-mode)
+    (auto-compile-on-save-mode)))
 
 (provide 'preamble)
 ;;; preamble.el ends here

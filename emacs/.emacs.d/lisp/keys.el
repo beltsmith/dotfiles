@@ -57,6 +57,10 @@
 (general-translate-key nil 'normal
   "SPC w" "C-w")
 
+(general-def
+  :states 'normal :prefix "SPC o"
+  "e" 'eshell)
+
 (require 'finders)
 
 (provide 'keys)

@@ -25,6 +25,14 @@
   (interactive)
   (load-file my-init-el))
 
+(defvar my-dotfiles-dir (expand-file-name "~/dotfiles")
+  "Directory containing my dotfiles.")
+
+(defun edit-my-dotfiles ()
+  "Edit my dotfiles directory."
+  (interactive)
+  (find-file my-dotfiles-dir))
+
 ;; (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
 (defun chmodx ()
@@ -66,6 +74,7 @@
   "e l" 'edit-my-lisp
   "e o" 'edit-my-org
   "e s" 'edit-my-snippets
+  "e d" 'edit-my-dotfiles
   "l" '(nil :which-key "Load")
   "l i" 'load-my-init
   "x" 'delete-this-file)

@@ -2,32 +2,31 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package! elf-mode)
+
 (defvar my-langs-dir (concat my-lisp-dir "/langs"))
 (add-to-list 'load-path my-langs-dir)
 
-;; file types
-(require 'json)
-(require 'csv)
+(defvar my-enabled-langs
+  '(json
+    csv
+    ccode
+    elm
+    reasonml
+    go
+    ruby
+    haml
+    scala
+    haskell
+    docker
+    markdown
+    ocaml
+    plantuml
+    rust
+    graphviz-dot
+    gql))
 
-;; Front end
-(require 'elm)
-(require 'reasonml)
-
-(require 'go)
-(require 'ruby)
-(require 'haml)
-
-(require 'scala)
-
-(require 'haskell)
-
-(require 'docker)
-
-(require 'markdown)
-
-(require 'ocaml)
-(require 'plantuml)
-(require 'rust)
+(dolist (lang my-enabled-langs) (require lang))
 
 ;; (require 'tex)
 

@@ -28,31 +28,42 @@
 ;; Add core lib to load path
 (add-to-list 'load-path my-core-dir)
 
+(defun require-all (requires)
+  "Require all given REQUIRES."
+  (dolist (req requires) (require req)))
+
 ;; Setup straight.el
 (require 'preamble)
+
+(recentf-mode 1)
+(run-at-time "5 min" 300 'recentf-save-list)
 
 ;; setup general early
 (use-package! general)
 
-(require 'settings)
-(require 'hooks)
+(defvar my-core-modules
+  '(settings
+                          hooks
+                          files
+                          look-and-feel
+                          company
+                          ivy
+                          smartparens
+                          init-flycheck
+                          yasnippet
+                          init-dired
+                          history
+                          help
+                          magit
+                          windows
+                          navigation
+                          lsp
+                          buffers
+                          compilation)
+  "Core modules to load for my Emacs config.")
 
-(require 'files)
+(require-all my-core-modules)
 
-(require 'look-and-feel)
-(require 'company)
-(require 'ivy)
-
-(require 'smartparens)
-(require 'init-flycheck)
-;; (setq gc-cons-threshold most-positive-fixnum)
-(require 'yasnippet)
-
-(require 'init-dired)
-
-(require 'history)
-
-(require 'help)
 
 (use-package! undo-tree
   ;; Branching & persistent undo
@@ -71,15 +82,6 @@
   ;; a less intrusive `delete-trailing-whitespaces' on save
   :config
   (ws-butler-global-mode))
-
-(require 'magit)
-
-(require 'windows)
-(require 'navigation)
-
-(require 'lsp)
-
-(require 'buffers)
 
 (provide 'core)
 ;;; core.el ends here

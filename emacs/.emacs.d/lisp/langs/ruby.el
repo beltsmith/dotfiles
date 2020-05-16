@@ -3,9 +3,31 @@
 ;;; Code:
 ;;; Packages:
 
+(defvar rspec-matchers
+  '("receive" "match")
+  "List of rspec matchers.")
+
+(defvar rspec-dsl-keywords
+  (append '("describe" "context")
+          '("it" "specify" "is_expected")
+          '("before" "after" "around" )
+          '("allow" "expect")
+          '("subject" "subject!" "let" "let!"))
+  "List of rspec dsl keywords.")
+
+(defvar rspec-keywords
+  (append rspec-dsl-keywords rspec-matchers)
+  "List of rspec keywords to fontify with enh-ruby-mode.")
+
 (use-package! enh-ruby-mode
   :mode "\\.rb\\'"
-  :interpreter "ruby")
+  :interpreter "ruby"
+  :custom
+  (enh-ruby-extra-keywords rspec-keywords)
+  :config
+  (setq display-line-numbers 'visual
+        display-line-numbers-type 'visual
+        display-line-numbers-grow-only t))
 
 (use-package! bundler)
 
@@ -15,18 +37,30 @@
 
 (use-package! yard-mode
   :after 'enh-ruby-mode
-  :hook (enh-ruby-mode . yard))
+  :hook enh-ruby-mode)
 
 (use-package! rubocop
-  :after 'enh-ruby-mode)
+  :after 'enh-ruby-mode
+  :hook enh-ruby-mode)
+
 (use-package! robe
-  :after 'enh-ruby-mode)
+  :after 'enh-ruby-mode
+  :hook enh-ruby-mode)
 
 (use-package! inf-ruby)
 (use-package! company-inf-ruby)
 
-;; (use-package! ruby-end
-;;   :hook (enh-ruby-mode . ruby-end))
+(use-package! ruby-end
+  :hook enh-ruby
+  :config
+  ;; Define as config block so that it takes precedence over ruby-end
+  (defconst ruby-end-expand-postfix-modifiers-before-re
+    "\\(?:unless\\|while\\)"
+    "Regular expression matching statements before point.")
+  (defconst ruby-end-expand-keywords-before-re
+    "\\(?:^\\|\\s-+\\)\\(?:def\\|class\\|module\\|case\\|for\\|begin\\)"
+    "Regular expression matching blocks before point, do is omitted as it is handled elsewhere."))
+
 
 ;;; Functions:
 (defun rake-db-migrate ()

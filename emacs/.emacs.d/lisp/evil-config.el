@@ -40,6 +40,17 @@
     "C-l"        'hippie-expand
     "C-'"        'toggle-quotes)
 
+  (general-def 'normal
+    :prefix ","
+    "e" '(nil :message "Eval")
+    "e l" 'my-eval-line)
+
+  (defun my-eval-line ()
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (eval-last-sexp nil)))
+
   (general-def 'visual 'override
     :prefix ","
     "e" '(nil :message "Eval")
@@ -49,6 +60,13 @@
     :prefix "SPC"
     "e" '(nil :message "Eval")
     "e r" 'eval-region)
+
+  (general-create-definer uninpaired-def
+    :states '(normal insert emacs)
+    :prefix "["
+    :non-normal-prefix "M-["
+    :prefix-command 'unimpaired-prefix-command
+    :prefix-map 'unimpaired-prefix-map)
 
   (defun evil-unimpaired-insert-space-above (count)
     (interactive "p")

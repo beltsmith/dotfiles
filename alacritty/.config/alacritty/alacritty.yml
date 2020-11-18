@@ -21,6 +21,7 @@ window:
     columns: 80
     lines: 24
 
+  dynamic_title: true
   # Window padding (changes require restart)
   #
   # Blank space added around the window in pixels. This padding is scaled
@@ -83,19 +84,19 @@ scrolling:
 font:
   # Normal (roman) font face
   normal:
-    family: FuraMono NF
+    family: Hack Nerd Font Mono
     # The `style` can be specified to pick a specific face.
     #style: Regular
 
   # Bold font face
   bold:
-    family: FuraMono NF
+    family: Hack Nerd Font Mono
     # The `style` can be specified to pick a specific face.
     #style: Bold
 
   # Italic font face
   italic:
-    family: FuraMono NF
+    family: Hack Nerd Font Mono
     # The `style` can be specified to pick a specific face.
     #style: Italic
 
@@ -211,10 +212,10 @@ colors:
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-visual_bell:
-  animation: EaseOutExpo
-  duration: 0
-  color: '0xffffff'
+#visual_bell:
+#  animation: EaseOutExpo
+#  duration: 0
+#  color: '0xffffff'
 
 # Background opacity
 #
@@ -273,7 +274,6 @@ selection:
   # clipboard.
   save_to_clipboard: false
 
-dynamic_title: true
 
 cursor:
   # Cursor style

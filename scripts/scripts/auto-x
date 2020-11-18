@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+flameshot &
+blueman-applet &
+picom &
+redshift-gtk &

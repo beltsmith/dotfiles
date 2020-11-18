@@ -52,7 +52,6 @@ line-color = #f00
 
 padding-left = 0
 padding-right = 2
-
 module-margin-left = 1
 module-margin-right = 2
 
@@ -89,13 +88,13 @@ label-unmounted-foreground = ${colors.foreground-alt}
 [module/workspaces-xmonad]
 type = custom/script
 exec = tail -F /tmp/.xmonad-workspace-log
-exec-if = [ -p /tmp/.xmonad-workspace-log ]
+; exec-if = [ -p /tmp/.xmonad-workspace-log ]
 tail = true
 
 [module/title-xmonad]
 type = custom/script
 exec = tail -F /tmp/.xmonad-title-log
-exec-if = [ -p /tmp/.xmonad-title-log ]
+; exec-if = [ -p /tmp/.xmonad-title-log ]
 tail = true
 
 [module/cpu]

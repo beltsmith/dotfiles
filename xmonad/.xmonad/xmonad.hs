@@ -32,7 +32,8 @@ myWorkspaces :: [String]
 myWorkspaces         = ["emacs","web","term","chat","games","music","logs","idea",""]
 myTerminal :: String
 -- myTerminal           = "termite"
-myTerminal           = "alacritty"
+-- myTerminal           = "alacritty"
+myTerminal           = "kitty"
 myTerminalTmux :: String
 myTerminalTmux       = myTerminal ++ " -e tmux"
 myModMask :: KeyMask
@@ -95,9 +96,9 @@ visibleWsFg = powderBlue
 
 -- Hookers
 
-myLayoutHook = smartBorders $ avoidStruts $ full $ tiled ||| Mirror tiled ||| emptyBSP
+myLayoutHook = smartBorders $ avoidStruts $ toggleFull $ tiled ||| Mirror tiled ||| emptyBSP
   where
-     full    = mkToggle $ NOBORDERS ?? FULL ?? EOT
+     toggleFull    = mkToggle $ NOBORDERS ?? FULL ?? EOT
      -- default tiling algorithm partitions the screen into two panes
      tiled   = ResizableTall nmaster delta ratio []
      -- The default number of windows in the master pane
@@ -171,7 +172,8 @@ eventLogHook = do
           | ws `elem` visibleWs = polybarColor visibleWsFg $ wrap "(" ")" ws
           | otherwise    = ws
         sort' = sortOn wsOrder
-        wsOrder k = M.findWithDefault (-1) k $ M.fromList $ zip myWorkspaces [0..]
+        find' = M.findWithDefault (-1)
+        wsOrder k = find' k . M.fromList $ zip myWorkspaces [0..]
 
 -- Main xmonad
 main :: IO ()

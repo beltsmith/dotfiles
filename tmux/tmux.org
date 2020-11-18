@@ -181,23 +181,17 @@ set -g status-interval 2
 Send me some messages boo
 ** TODO find new names
 #+begin_src conf :tangle no
-  set -g message-fg black
-  set -g message-bg yellow
-  set -g message-command-fg blue
-  set -g message-command-bg black
-  setw -g window-status-current-bg colour0
-  setw -g window-status-current-fg colour11
-  setw -g window-status-current-attr dim
-  setw -g window-status-bg green
-  setw -g window-status-fg black
-  setw -g window-status-attr reverse
+  set -g message-style fg=black,bg=yellow
+  set -g message-command-style fg=blue,bg=black
+  setw -g window-status-current-style bg=colour0,fg=colour11,dim
+  setw -g window-status-style bg=green,fg=black,reverse
 #+end_src
 ** Disgusting fucking bull shit which looks nice on the right
 #+begin_src conf
 setw -g window-status-format " #F#I:#W#F "
 setw -g window-status-current-format " #F#I:#W#F "
-setw -g window-status-format "#[fg=magenta]#[bg=black] #I #[bg=cyan]#[fg=colour0] #W"
-setw -g window-status-current-format "#[bg=brightmagenta]#[fg=colour8] #I #[fg=colour8]#[bg=colour14] #W"
+setw -g window-status-format "#[fg=magenta]#[bg=black] #I #[bg=cyan]#[fg=colour0] #W "
+setw -g window-status-current-format "#[bg=brightmagenta]#[fg=colour8] #I #[fg=colour8]#[bg=colour14] #W "
 #+end_src
 ** Clean left side
 #+begin_src conf

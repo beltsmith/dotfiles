@@ -160,8 +160,19 @@ export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
 Various infos of me I may use in scripts
 #+begin_src shell
 export EMAIL="me@alexgirlder.com"
-export WORK_EMAIL="alex.girdler@sonder.com"
+export WORK_EMAIL="alexander@prevail.io"
 #+end_src
+*** Lpass
+#+BEGIN_SRC shell
+export LPASS_HOME=$HOME/.lpass
+export LPASS_AGENT_TIMEOUT=0
+#+END_SRC
+*** aws-vault
+#+BEGIN_SRC shell
+export AWS_VAULT_BACKEND=pass
+export AWS_REGION=us-east-1
+export AWS_SESSION_TOKEN_TTL=12h
+#+END_SRC
 ** Evals
 :PROPERTIES:
 :header-args: :noweb-ref evals
@@ -180,9 +191,13 @@ test -r /home/beltsmith/.opam/opam-init/init.zsh && . /home/beltsmith/.opam/opam
 :header-args: :noweb-ref completion
 :END:
 #+begin_src shell
-  autoload -Uz compinit
-  compinit
+autoload -Uz compinit
+compinit
+autoload -Uz compinit && compinit -i
 #+end_src
+
+#+RESULTS:
+
 ** Tools
 :PROPERTIES:
 :header-args: :noweb-ref tools
@@ -261,6 +276,10 @@ alias ......="\cd ../../../../.."
 #+BEGIN_SRC shell
   alias kc="kubectl"
 #+END_SRC
+*** docker
+#+BEGIN_SRC shell
+alias dcmp="docker-compose"
+#+END_SRC
 *** Unaliases
 #+begin_src shell
   # unalias rg # Fuck off rails generate, who the hell uses you
@@ -275,6 +294,12 @@ alias cqlsh="docker run --rm -it --network host cassandra cqlsh"
 #+begin_src sh
 alias nassh="TERM=xterm-256color ssh root@tower"
 #+end_src
+**** hosts
+#+BEGIN_SRC sh
+alias hosts="hosts --auto-sudo"
+
+fpath=(~/.zsh/completion $fpath)
+#+END_SRC
 ** Functions
 :PROPERTIES:
 :header-args: :noweb-ref functions
@@ -296,7 +321,12 @@ loadit() {
 #+END_SRC
 *** up
 #+BEGIN_SRC shell
-up() { for i in $(seq $1); do cd ..; done; }
+up() {
+    for i in $(seq $1);
+    do
+    cd ..
+    done
+}
 #+END_SRC)
 *** Ruby
 #+BEGIN_SRC shell
@@ -380,6 +410,15 @@ RBenv Install This
 as-circle() {
     CIRCLE_BRANCH=$(git rev-parse --abbrev-ref HEAD) CIRCLE_SHA1=$(git rev-parse --short HEAD) "$@"
 }
+#+END_SRC
+**** fzmv
+#+BEGIN_SRC shell
+fzmv() {
+    local src=$(find "$1" -type f | fzf)
+    local dest=$2
+    mv "$src" "$dest"
+}
+
 #+END_SRC
 *** Wine
 wine helper functions, I'm not using wine anymore so I don't tangle this block

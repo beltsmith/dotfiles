@@ -35,7 +35,8 @@
 ;; Setup straight.el
 (require 'preamble)
 
-(recentf-mode 1)
+(recentf-mode t)
+(setq recentf-max-saved-items 50)
 (run-at-time "5 min" 300 'recentf-save-list)
 
 ;; setup general early
@@ -43,23 +44,23 @@
 
 (defvar my-core-modules
   '(settings
-                          hooks
-                          files
-                          look-and-feel
-                          company
-                          ivy
-                          smartparens
-                          init-flycheck
-                          yasnippet
-                          init-dired
-                          history
-                          help
-                          magit
-                          windows
-                          navigation
-                          lsp
-                          buffers
-                          compilation)
+    hooks
+    files
+    look-and-feel
+    company
+    ivy
+    smartparens
+    init-flycheck
+    my-yasnippet
+    init-dired
+    history
+    help
+    init-magit
+    windows
+    navigation
+    lsp
+    buffers
+    compilation)
   "Core modules to load for my Emacs config.")
 
 (require-all my-core-modules)

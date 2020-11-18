@@ -32,9 +32,8 @@
 
 (use-theme! color-theme-sanityinc-tomorrow)
 
-;; (use-theme darkplus-theme
-;;   :straight (:host github :repo "dunstontc/darkplus-emacs")
-;;   :config (load-theme 'darkplus t))
+;; (use-package! vscode-dark-plus-theme
+;;   :config (load-theme 'vscode-dark-plus t))
 
 (use-theme! doom-themes
   :config

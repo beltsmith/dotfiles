@@ -4,3 +4,4 @@ flameshot &
 blueman-applet &
 picom &
 redshift-gtk &
+polybar main &

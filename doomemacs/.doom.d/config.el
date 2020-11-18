@@ -13,7 +13,7 @@
 
 (setq org-log-into-drawer t)
 (setq display-line-numbers-type 'visual)
-(setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 14))
+;(setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 14))
 
 (setq doom-theme 'doom-gruvbox)
 
@@ -332,7 +332,7 @@
          :name "Rails Server Debug"))
   )
 
-(load-file "/home/alex/.doom.d/dap-mode-launch-json.el")
+(load-file "~/.doom.d/dap-mode-launch-json.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

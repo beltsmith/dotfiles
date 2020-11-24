@@ -16,3 +16,19 @@ append_path "$HOME/.local/bin"
 
 eval "$(hub alias -s)"
 eval "$(fasd --oinit auto)"
+
+autoload -Uz compinit
+compinit
+
+bindkey -e
+bindkey "\e." insert-last-word
+
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
+
+bindkey "\e[3~" delete-char
+
+setopt autopushd

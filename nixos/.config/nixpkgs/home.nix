@@ -1,7 +1,14 @@
 { pkgs, ... }:
 
-{
+let
+  doom-emacs = pkgs.callPackage (builtins.fetchTarball {
+    url = https://github.com/vlaci/nix-doom-emacs/archive/master.tar.gz;
+  }) {
+    doomPrivateDir = ~/dotfiles/doom.d;
+  };
+in {
   home.packages = [
+    doom-emacs
     pkgs.zplug
     pkgs.glances
     pkgs.exa
@@ -19,7 +26,14 @@
 
   programs.home-manager.enable = true;
 
-  programs.asdf.enable = true;
+  programs.git = {
+    enable = true;
+    userName = "beltsmith";
+    userEmail = "me+gh@alexgirdler.com";
+    extraConfig = {
+      pull = { rebase = true; };
+    };
+  };
 
   programs.zsh = {
     enable = true;
@@ -29,8 +43,13 @@
       l  = "exa -lgh";
       la = "l -a";
       lm = "l -smodified";
-      pbcopy="xsel --clipboard --input";
-      pbpaste="xsel --clipboard --output";
+      pbcopy = "xsel --clipboard --input";
+      pbpaste = "xsel --clipboard --output";
+      kc = "kubectl";
+      edit = "$EDITOR";
+      hm = "home-manager";
+      hms = "home-manager switch";
+      hmb = "home-manager build";
     };
   };
 
@@ -63,6 +82,6 @@
 
   home.file = {
     ".config/kitty/kitty.conf".source = ~/dotfiles/kitty/.config/kitty/kitty.conf;
-    # " ~/.tmux/plugins/tpm".source = git clone https://github.com/tmux-plugins/tpm
+    ".emacs.d/init.el".text = ''(load "default.el")'';
   };
 }

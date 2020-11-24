@@ -33,9 +33,9 @@ bind-key M-a send-prefix
 :header-args: :noweb-ref shell
 :END:
 I use zsh as my default shell and as such I set tmux up to behave accordingly.
-#+BEGIN_SRC conf
-set -g default-command /bin/zsh
-set -g default-shell /bin/zsh
+#+BEGIN_SRC conf :tangle no
+# set -g default-command /bin/zsh
+# set -g default-shell /bin/zsh
 #+END_SRC
 
 * Settings

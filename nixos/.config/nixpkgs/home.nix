@@ -55,7 +55,7 @@ in {
 
   programs.zsh.zplug = {
     enable = true;
-    plugins = [ 
+    plugins = [
       {name = "zsh-users/zsh-history-substring-search";}
       {name = "zsh-users/zsh-completions";}
       {name = "mafredri/zsh-async";}

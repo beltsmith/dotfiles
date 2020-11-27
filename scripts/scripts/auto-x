@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-flameshot &
-blueman-applet &
-picom &
-redshift-gtk &
-polybar main &
+# polybar main &
+# flameshot &
+# blueman-applet &
+# picom &
+# redshift-gtk &

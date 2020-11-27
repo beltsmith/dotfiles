@@ -63,9 +63,11 @@
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.bluetooth.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
+  services.blueman.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.belt = {
@@ -89,24 +91,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget vim
-    emacs git synergy
-    lastpass-cli
-    stow
-    zplug
-    nerdfonts
-    polybar rofi dunst
-    kitty alacritty tmux
-    slack discord
-    exa ripgrep-all
-
-    arandr
-    flameshot
-    blueman
-    picom redshift
-
-    google-chrome google-chrome-dev
-    firefox #latest.firefox-nightly-bin
+    wget vim git
+    home-manager
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

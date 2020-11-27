@@ -21,25 +21,20 @@ primary = FuraMono Nerd Font:style=Medium,Regular:size=10
 secondary = fixed:pixelsize=10;1
 special = siji:pixelsize=10;1
 
-[colors]
-;background = ${xrdb:color0:#222}
-background = #222
-background-alt = #444
-;foreground = ${xrdb:color7:#222}
-foreground = #dfdfdf
-foreground-alt = #555
-primary = #ffb52a
-secondary = #e60053
-alert = #bd2c40
+; [colors]
+; background = #222
+; background-alt = #444
+; ;foreground = ${xrdb:color7:#222}
+; foreground = #dfdfdf
+; foreground-alt = #555
+; primary = #ffb52a
+; secondary = #e60053
+; alert = #bd2c40
 
 [bar/main]
-;monitor = ${env:MONITOR:HDMI-1}
-width = 100%
-height = 27
-;offset-x = 1%
-;offset-y = 1%
-;radius = 6.0
-fixed-center = false
+; width = 100%
+; height = 27
+; fixed-center = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -87,13 +82,13 @@ label-unmounted-foreground = ${colors.foreground-alt}
 
 [module/workspaces-xmonad]
 type = custom/script
-exec = tail -F /tmp/.xmonad-workspace-log
+exec = /run/current-system/sw/bin/tail -F /tmp/.xmonad-workspace-log
 ; exec-if = [ -p /tmp/.xmonad-workspace-log ]
 tail = true
 
 [module/title-xmonad]
 type = custom/script
-exec = tail -F /tmp/.xmonad-title-log
+exec = /run/current-system/sw/bin/tail -F /tmp/.xmonad-title-log
 ; exec-if = [ -p /tmp/.xmonad-title-log ]
 tail = true
 
@@ -200,56 +195,56 @@ bar-volume-empty = ─
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
-[module/temperature]
-type = internal/temperature
-thermal-zone = 0
-warn-temperature = 60
+; [module/temperature]
+; type = internal/temperature
+; thermal-zone = 0
+; warn-temperature = 60
 
-format = <ramp> <label>
-format-underline = #f50a4d
-format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
+; format = <ramp> <label>
+; format-underline = #f50a4d
+; format-warn = <ramp> <label-warn>
+; format-warn-underline = ${self.format-underline}
 
-label = %temperature-c%
-label-warn = %temperature-c%
-label-warn-foreground = ${colors.secondary}
+; label = %temperature-c%
+; label-warn = %temperature-c%
+; label-warn-foreground = ${colors.secondary}
 
-ramp-0 = .
-ramp-1 = o
-ramp-2 = O
-; ramp-0 = 
-; ramp-1 = 
-; ramp-2 = 
-ramp-foreground = ${colors.foreground-alt}
+; ramp-0 = .
+; ramp-1 = o
+; ramp-2 = O
+; ; ramp-0 = 
+; ; ramp-1 = 
+; ; ramp-2 = 
+; ramp-foreground = ${colors.foreground-alt}
 
-[module/powermenu]
-type = custom/menu
+; [module/powermenu]
+; type = custom/menu
 
-expand-right = true
+; expand-right = true
 
-format-spacing = 1
+; format-spacing = 1
 
-label-open = 
-label-open-foreground = ${colors.secondary}
-label-close =  cancel
-label-close-foreground = ${colors.secondary}
-label-separator = |
-label-separator-foreground = ${colors.foreground-alt}
+; label-open = 
+; label-open-foreground = ${colors.secondary}
+; label-close =  cancel
+; label-close-foreground = ${colors.secondary}
+; label-separator = |
+; label-separator-foreground = ${colors.foreground-alt}
 
-menu-0-0 = reboot
-menu-0-0-exec = menu-open-1
-menu-0-1 = power off
-menu-0-1-exec = menu-open-2
+; menu-0-0 = reboot
+; menu-0-0-exec = menu-open-1
+; menu-0-1 = power off
+; menu-0-1-exec = menu-open-2
 
-menu-1-0 = cancel
-menu-1-0-exec = menu-open-0
-menu-1-1 = reboot
-menu-1-1-exec = sudo reboot
+; menu-1-0 = cancel
+; menu-1-0-exec = menu-open-0
+; menu-1-1 = reboot
+; menu-1-1-exec = sudo reboot
 
-menu-2-0 = power off
-menu-2-0-exec = sudo poweroff
-menu-2-1 = cancel
-menu-2-1-exec = menu-open-0
+; menu-2-0 = power off
+; menu-2-0-exec = sudo poweroff
+; menu-2-1 = cancel
+; menu-2-1-exec = menu-open-0
 
 [settings]
 screenchange-reload = true

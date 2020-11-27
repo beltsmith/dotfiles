@@ -1,0 +1,1 @@
+/home/belt/dotfiles/nixpkgs-config.nix

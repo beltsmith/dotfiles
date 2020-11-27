@@ -49,7 +49,7 @@ myNormalBorderColor  = powderBlue
 myFocusedBorderColor :: String
 myFocusedBorderColor = vaporPink
 myBrowser :: String
-myBrowser            = "firefox-nightly"
+myBrowser            = "firefox"
 myEditor :: String
 myEditor             = "emacs"
 
@@ -143,9 +143,7 @@ myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 myStartupHook :: X ()
 myStartupHook = do
   forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> safeSpawn "mkfifo" ["/tmp/" ++ file]
-
   setWMName "LG3D"
-  spawnOnce "auto-x"
 
 
 polybarColor :: String -> String -> String

@@ -25,16 +25,19 @@ in {
     glances
     exa
     gitAndTools.hub
-    fasd
     barrier
-    fzf
+    fasd fzf
     asdf direnv
     jq
 
-    spotify
+    spotify cmus
+    lutris
+    steam
 
     # terminals
     kitty alacritty
+
+    runelite
 
     feh
 
@@ -42,11 +45,22 @@ in {
     lastpass-cli
     stow
 
+    aws-cli aws-vault
+
     polybar rofi dunst
-    slack discord
+    slack discord zulip
 
     arandr
     blueman flameshot picom redshift
+
+    krita
+
+    pandoc
+    ranger
+
+    kubectl
+
+    docker docker-compose
 
     # fonts
     nerdfonts
@@ -97,7 +111,7 @@ in {
       {name = "zsh-users/zsh-syntax-highlighting"; tags = ["defer:3"]; }
       {name = "sindresorhus/pure"; tags = [ "use:pure.zsh" "as:theme"];}
       {name = "b4b4r07/enhancd"; tags = ["use:init.sh"];}
-      {name = "plugins/heroku"; tags = ["from:oh-my-zsh"];}
+      # {name = "plugins/heroku"; tags = ["from:oh-my-zsh"];}
       {name = "plugins/kubectl"; tags = ["from:oh-my-zsh"];}
       {name = "plugins/git"; tags = ["from:oh-my-zsh"];}
       {name = "plugins/sudo"; tags = ["from:oh-my-zsh"];}

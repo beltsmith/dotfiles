@@ -28,3 +28,5 @@
 (package! toggle-quotes)
 
 (package! counsel-dash)
+
+(package! rufo)

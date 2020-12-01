@@ -14,6 +14,8 @@ append_path "$HOME/scripts"
 append_path "/usr/local/bin"
 append_path "$HOME/.local/bin"
 
+export AWS_VAULT_BACKEND=pass
+
 eval "$(hub alias -s)"
 eval "$(fasd --oinit auto)"
 

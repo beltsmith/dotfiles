@@ -332,9 +332,8 @@
          :name "Rails Server Debug"))
   )
 
-(after! rufo
-  (add-hook 'ruby-mode 'rufo-minor-mode)
-  (setq rufo-minor-mode-use-bundler t))
+(add-hook 'ruby-mode 'rufo-minor-mode)
+(setq rufo-minor-mode-use-bundler t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

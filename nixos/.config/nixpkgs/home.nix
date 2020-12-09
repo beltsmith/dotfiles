@@ -2,48 +2,80 @@
 
 let
   doom-emacs = pkgs.callPackage (builtins.fetchTarball {
-    url = https://github.com/vlaci/nix-doom-emacs/archive/master.tar.gz;
-  }) {
-    doomPrivateDir = ~/dotfiles/doom.d;
-  };
+    url = "https://github.com/vlaci/nix-doom-emacs/archive/master.tar.gz";
+  }) { doomPrivateDir = ~/dotfiles/doom.d; };
 in {
   nixpkgs.config = import dotfiles/nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = dotfiles/nixpkgs-config.nix;
-  nixpkgs.overlays =
-    let
-      # Change this to a rev sha to pin
-      moz-rev = "master";
-      moz-url = builtins.fetchTarball { url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";};
-      nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-    in [
-      nightlyOverlay
-    ];
+  nixpkgs.overlays = let
+    # Change this to a rev sha to pin
+    moz-rev = "master";
+    moz-url = builtins.fetchTarball {
+      url =
+        "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
+    };
+    nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
+  in [ nightlyOverlay ];
 
   home.packages = with pkgs; [
+    # editors
     doom-emacs
+    vscode
+
+    # languages
+    ruby_2_7
+    bundix
+
+    ocaml
+    dune
+
+    etcd
+    etcdctl
+    docker
+    docker-compose
+    kubectl
+
+    nethack
+    tree
+    # tools
     zplug
     glances
     exa
     gitAndTools.hub
     barrier
-    fasd fzf
-    direnv nix-direnv
+    fasd
+    fzf
+    direnv
+    nix-direnv
     jq
+
+    peek
+
+    # FS
+    nfs-utils
+
+    nixfmt
+
+    unzip
 
     postgresql
 
-    gparted winusb
+    gparted
+    winusb
 
     pavucontrol
 
-    spotify cmus
+    spotify
+    cmus
 
-    vulkan-tools lutris
+    vulkan-tools
+    lutris
     steam
     runelite
 
     # terminals
-    kitty alacritty
+    kitty
+    alacritty
 
     feh
 
@@ -55,47 +87,53 @@ in {
     zoom-us
 
     pass
-    awscli2 aws-vault
+    awscli2
+    aws-vault
 
     # jdk12
     jetbrains.idea-community
 
     heroku
 
-    polybar rofi dunst
-    slack discord zulip
+    polybar
+    rofi
+    dunst
+    slack
+    discord
+    zulip
 
+    vagrant
     virtualbox
 
     arandr
-    blueman flameshot picom redshift
+    blueman
+    flameshot
+    picom
+    redshift
 
     krita
 
     pandoc
     ranger
 
-    kubectl
-
-    docker docker-compose
-
     # # fonts
     # nerdfonts
 
-    ripgrep ripgrep-all
+    ripgrep
+    ripgrep-all
 
-    google-chrome google-chrome-dev
-    chromedriver
+    chromium
+    google-chrome
+    google-chrome-dev
     latest.firefox-nightly-bin
 
     gnumake
 
     poppler_utils
 
-    ruby_2_7
-
     xorg.xfontsel
     xorg.xkill
+    xorg.libxcb
   ];
 
   programs.home-manager.enable = true;
@@ -104,9 +142,7 @@ in {
     enable = true;
     userName = "beltsmith";
     userEmail = "me+gh@alexgirdler.com";
-    extraConfig = {
-      pull = { rebase = true; };
-    };
+    extraConfig = { pull = { rebase = true; }; };
   };
 
   programs.zsh = {
@@ -114,7 +150,7 @@ in {
     autocd = true;
     initExtra = (builtins.readFile zsh/initExtra.zsh);
     shellAliases = {
-      l  = "exa -lgh";
+      l = "exa -lgh";
       la = "l -a";
       lm = "l -smodified";
       pbcopy = "xsel --clipboard --input";
@@ -130,20 +166,47 @@ in {
   programs.zsh.zplug = {
     enable = true;
     plugins = [
-      {name = "zsh-users/zsh-history-substring-search";}
-      {name = "zsh-users/zsh-completions";}
-      {name = "mafredri/zsh-async";}
-      {name = "agkozak/zsh-z";}
-      {name = "zsh-users/zsh-syntax-highlighting"; tags = ["defer:3"]; }
-      {name = "sindresorhus/pure"; tags = [ "use:pure.zsh" "as:theme"];}
-      {name = "b4b4r07/enhancd"; tags = ["use:init.sh"];}
+      { name = "zsh-users/zsh-history-substring-search"; }
+      { name = "zsh-users/zsh-completions"; }
+      { name = "mafredri/zsh-async"; }
+      { name = "agkozak/zsh-z"; }
+      {
+        name = "zsh-users/zsh-syntax-highlighting";
+        tags = [ "defer:3" ];
+      }
+      {
+        name = "sindresorhus/pure";
+        tags = [ "use:pure.zsh" "as:theme" ];
+      }
+      {
+        name = "b4b4r07/enhancd";
+        tags = [ "use:init.sh" ];
+      }
       # {name = "plugins/heroku"; tags = ["from:oh-my-zsh"];}
-      {name = "plugins/kubectl"; tags = ["from:oh-my-zsh"];}
-      {name = "plugins/git"; tags = ["from:oh-my-zsh"];}
-      {name = "plugins/sudo"; tags = ["from:oh-my-zsh"];}
-      {name = "plugins/bundler"; tags = ["from:oh-my-zsh"];}
-      {name = "junegunn/fzf-bin"; tags = ["from:gh-r" "as:command" "rename-to:fzf"];}
-      {name = "junegunn/fzf"; tags = ["as:command" "use:'bin/fzf-tmux'"];}
+      {
+        name = "plugins/kubectl";
+        tags = [ "from:oh-my-zsh" ];
+      }
+      {
+        name = "plugins/git";
+        tags = [ "from:oh-my-zsh" ];
+      }
+      {
+        name = "plugins/sudo";
+        tags = [ "from:oh-my-zsh" ];
+      }
+      {
+        name = "plugins/bundler";
+        tags = [ "from:oh-my-zsh" ];
+      }
+      {
+        name = "junegunn/fzf-bin";
+        tags = [ "from:gh-r" "as:command" "rename-to:fzf" ];
+      }
+      {
+        name = "junegunn/fzf";
+        tags = [ "as:command" "use:'bin/fzf-tmux'" ];
+      }
     ];
   };
 
@@ -161,7 +224,6 @@ in {
   };
 
   services.flameshot.enable = true;
-  # services.blueman.enable = true;
   services.blueman-applet.enable = true;
   services.picom.enable = true;
   services.redshift = {
@@ -189,7 +251,7 @@ in {
         secondary = "#e60053";
         alert = "#bd2c40";
       };
-      "bar/main" =  {
+      "bar/main" = {
         width = "100%";
         height = "27";
         fixed-center = false;
@@ -208,7 +270,8 @@ in {
 
         modules-left = "workspaces-xmonad title-xmonad";
         modules-center = "";
-        modules-right = "filesystem pulseaudio memory cpu eth temperature date powermenu";
+        modules-right =
+          "filesystem pulseaudio memory cpu eth temperature date powermenu";
         tray-position = "right";
         tray-padding = 2;
 
@@ -308,9 +371,7 @@ in {
         bar-volume-empty-font = 2;
         bar-volume-empty-foreground = "\${colors.foreground-alt}";
       };
-      "settings" = {
-        screenchange-reload = true;
-      };
+      "settings" = { screenchange-reload = true; };
       "global/wm" = {
         margin-top = 0;
         margin-bottom = 0;
@@ -390,7 +451,11 @@ in {
         #   %i  iconname (including its path)
         #   %I  iconname (without its path)
         #   %p  progress value if set ([  0%] to [100%]) or nothing
-        format = "%a\n<b>%s</b>\n%b\n%p";
+        format = ''
+          %a
+          <b>%s</b>
+          %b
+          %p'';
 
         # The geometry of the window. Format: [{width}]x{height}[+/-{x}+/-{y}]
         # The height = number of notifications, all other variables are px
@@ -424,19 +489,25 @@ in {
         # Shrink window if it's smaller than the width (ignored if width is 0)
         monitor = 0;
         # Display notifications on the monitor indicated (0 is default)
-        follow = "mouse";              # Follow mouse/keyboard/none
-        show_indicators = false;        # Display indicators for URLs (U) and actions (A)
-        line_height = 0;             # The spacing between lines (forced to height of font at minimum)
-        notification_height = 0;     # The height of the entire notification (forced to height of font height and padding at minimum)
-        separator_height = 2;        # Space in pixels between two notifications
-        padding = 8;                 # Padding between text and separator
-        horizontal_padding = 8;      # Horizontal padding
-        separator_color = "frame";     # Color for separator: auto/foreground/frame/X color
-        icon_position = "right";         # Align icons left/right/off
+        follow = "mouse"; # Follow mouse/keyboard/none
+        show_indicators =
+          false; # Display indicators for URLs (U) and actions (A)
+        line_height =
+          0; # The spacing between lines (forced to height of font at minimum)
+        notification_height =
+          0; # The height of the entire notification (forced to height of font height and padding at minimum)
+        separator_height = 2; # Space in pixels between two notifications
+        padding = 8; # Padding between text and separator
+        horizontal_padding = 8; # Horizontal padding
+        separator_color =
+          "frame"; # Color for separator: auto/foreground/frame/X color
+        icon_position = "right"; # Align icons left/right/off
 
-        idle_threshold = 120;        # Don't remove messages if the user is idle (no mouse or keyboard input) for longer than idle_threshold seconds
-        sticky_history = true;        # Make notifications remain until clicked on (yes) or timeout as normal (no) when recalled from history
-        history_length = 20;         # Maximum amount of notifications kept in history
+        idle_threshold =
+          120; # Don't remove messages if the user is idle (no mouse or keyboard input) for longer than idle_threshold seconds
+        sticky_history =
+          true; # Make notifications remain until clicked on (yes) or timeout as normal (no) when recalled from history
+        history_length = 20; # Maximum amount of notifications kept in history
 
         icon_folders = "/usr/share/icons/hicolor/16x16";
         startup_notification = false;
@@ -461,7 +532,5 @@ in {
     };
   };
 
-  home.file = {
-    ".emacs.d/init.el".text = ''(load "default.el")'';
-  };
+  home.file = { ".emacs.d/init.el".text = ''(load "default.el")''; };
 }

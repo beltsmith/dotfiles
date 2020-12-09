@@ -197,10 +197,6 @@ in {
         tags = [ "from:oh-my-zsh" ];
       }
       {
-        name = "plugins/bundler";
-        tags = [ "from:oh-my-zsh" ];
-      }
-      {
         name = "junegunn/fzf-bin";
         tags = [ "from:gh-r" "as:command" "rename-to:fzf" ];
       }

@@ -21,3 +21,4 @@ flycheck_*.elc
 /emacs/.emacs.d/transient/
 /emacs/.emacs.d/private/
 eshell/history
+/result

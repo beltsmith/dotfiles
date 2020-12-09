@@ -122,6 +122,7 @@ in {
     ripgrep
     ripgrep-all
 
+    chromedriver
     chromium
     google-chrome
     google-chrome-dev

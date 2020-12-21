@@ -144,6 +144,7 @@ myStartupHook :: X ()
 myStartupHook = do
   forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> safeSpawn "mkfifo" ["/tmp/" ++ file]
   setWMName "LG3D"
+  spawnOnce "xsetroot -cursor_name left_ptr"
 
 
 polybarColor :: String -> String -> String
@@ -252,7 +253,8 @@ rofiConfig =
     configify       = \cnf t -> cnf ++ toConfig t
     configList      = [ ("case-sensitive", "")
                       , ("match"         , "fuzzy")
-                      , ("theme"         , "Arc-Dark")]
+                      , ("theme"         , "Arc-Dark")
+                      , ("show-icons"    , "")]
 
 rofi :: String -> String
 rofi = ("rofi -show " ++) . (++ rofiConfig)

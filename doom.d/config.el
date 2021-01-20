@@ -114,7 +114,7 @@
    (transpose-lines 1)
    (forward-line -1)))
 
-(evil-define-key 'normal 'global
+(general-def :states 'normal
   (kbd "M-j") 'move-line-down
   (kbd "M-k") 'move-line-up)
 
@@ -271,6 +271,7 @@
     "a p" 'prodigy))
 
 
+
 (setq +popup-defaults '(:side left :height 0.50 :width 40 :quit t :select ignore :ttl 5))
 
 (set-popup-rules! '(("^\\*prodigy\\*" :side left :height 0.05 :width 100 :vslot 1 :select 1 :ttl nil :quit nil)
@@ -297,6 +298,11 @@
       (_ (save-excursion
            (goto-line 0)
            (insert frozen-string-magic-comment "\n\n"))))))
+
+;; (add-hook 'ruby-mode 'rufo-minor-mode)
+(setq rufo-minor-mode-use-bundler t)
+(setq-hook! 'ruby-mode-hook +format-with-lsp nil)
+(setq-hook! 'ruby-mode-hook +format-with 'rufo)
 
 ;; dap-mode
 (after! dap-mode
@@ -331,9 +337,6 @@
          :program "/home/alex/dev/prevail/bin/rails"
          :name "Rails Server Debug"))
   )
-
-(add-hook 'ruby-mode 'rufo-minor-mode)
-(setq rufo-minor-mode-use-bundler t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

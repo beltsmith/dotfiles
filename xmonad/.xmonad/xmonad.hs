@@ -96,7 +96,7 @@ visibleWsFg = powderBlue
 
 -- Hookers
 
-myLayoutHook = smartBorders $ avoidStruts $ toggleFull $ tiled ||| Mirror tiled ||| emptyBSP
+myLayoutHook = smartBorders . avoidStruts . toggleFull $ tiled ||| Mirror tiled ||| emptyBSP
   where
      toggleFull    = mkToggle $ NOBORDERS ?? FULL ?? EOT
      -- default tiling algorithm partitions the screen into two panes
@@ -131,7 +131,7 @@ myManageHook = composeAll . concat $
         role           = stringProperty "WM_WINDOW_ROLE"
         myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
         myClassIgnores = [] -- ["doomx64.exe", "DOOMx64"]
-        myClassMasters = ["emacs@*", "twitchui.exe", "battle.net.exe"]
+        myClassMasters = ["*- Doom Emacs", "emacs@*", "twitchui.exe", "battle.net.exe"]
         myResourceIgnores = myClassIgnores
 
 -- myEventHook :: Event -> X All
@@ -176,7 +176,7 @@ eventLogHook = do
 
 -- Main xmonad
 main :: IO ()
-main = xmonad $ docks $ ewmh $ desktopConfig
+main = xmonad . docks . ewmh $ desktopConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , borderWidth        = myBorderWidth

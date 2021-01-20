@@ -1,9 +1,13 @@
 { pkgs, services, ... }:
 
 let
-  doom-emacs = pkgs.callPackage (builtins.fetchTarball {
-    url = "https://github.com/vlaci/nix-doom-emacs/archive/master.tar.gz";
-  }) { doomPrivateDir = ~/dotfiles/doom.d; };
+  # doom-emacs = pkgs.callPackage (builtins.fetchTarball {
+  #   url = "https://github.com/vlaci/nix-doom-emacs/archive/master.tar.gz";
+  # }) { doomPrivateDir = ~/dotfiles/doom.d; };
+  langs = (import ./langs.nix) { inherit pkgs; };
+  myemacs = (import ./emacs.nix) { inherit pkgs; };
+  tools = (import ./tools.nix) { inherit pkgs; };
+  games = (import ./games.nix) { inherit pkgs; };
 in {
   nixpkgs.config = import dotfiles/nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = dotfiles/nixpkgs-config.nix;
@@ -15,139 +19,156 @@ in {
         "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
     };
     nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-  in [ nightlyOverlay ];
+    emacs-url = builtins.fetchTarball {
+      url =
+        "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+    };
+    emacsOverlay = (import emacs-url);
+  in [ nightlyOverlay emacsOverlay ];
 
-  home.packages = with pkgs; [
-    # editors
-    doom-emacs
-    vscode
+  home.packages = with pkgs;
+    langs.packages ++ games.packages ++ tools.packages ++ myemacs.packages ++ [
+      vscode
 
-    # languages
-    ruby_2_7
-    rubyPackages_2_7.rails
-    solargraph
-    bundix
+      bind # dig
 
-    bind # dig
+      wireguard-tools
 
-    ispell
+      elvish
 
-    wireguard-tools
+      ocaml
+      dune
 
-    elvish
+      etcd
+      etcdctl
+      docker
+      docker-compose
+      kubectl
 
-    ocaml
-    dune
+      # tools
 
-    etcd
-    etcdctl
-    docker
-    docker-compose
-    kubectl
+      peek
 
-    nethack
-    tree
-    # tools
-    zplug
-    glances
-    exa
-    gitAndTools.hub
-    barrier
-    fasd
-    fzf
-    direnv
-    nix-direnv
-    jq
+      # FS
 
-    peek
+      nixfmt
 
-    # FS
-    nfs-utils
+      postgresql
 
-    nixfmt
+      pasystray
+      udiskie
+      pavucontrol
+      nitrogen
 
-    unzip
+      spotify
+      cmus
 
-    postgresql
+      nvtop
+      vulkan-headers
+      vulkan-loader
+      vulkan-tools
 
-    gparted
-    winusb
+      # terminals
+      kitty
+      alacritty
 
-    pavucontrol
+      lastpass-cli
+      stow
 
-    spotify
-    cmus
+      # libwacom xf86_input_wacom
+      zoom-us
 
-    vulkan-tools
-    lutris
-    steam
-    runelite
+      qbittorrent
+      unrar
 
-    # terminals
-    kitty
-    alacritty
+      wine
 
-    feh
+      qemu
+      virt-manager
 
-    synergy
-    lastpass-cli
-    stow
+      openjdk
+      # jdk12
+      # jetbrains.idea-community
+      vlc
+      obs-studio
 
-    # libwacom xf86_input_wacom
-    zoom-us
+      lxappearance
+      shades-of-gray-theme
+      numix-gtk-theme
+      numix-icon-theme
+      gnome3.adwaita-icon-theme
 
-    pass
-    awscli2
-    aws-vault
+      heroku
 
-    # jdk12
-    jetbrains.idea-community
+      nagios
+      iftop
 
-    heroku
+      fuse-common
+      gcc
 
-    polybar
-    rofi
-    dunst
-    slack
-    discord
-    zulip
+      # polybarFull
+      slack
+      discord
+      zulip
 
-    vagrant
-    virtualbox
+      # vagrant
+      virtualbox
 
-    arandr
-    blueman
-    flameshot
-    picom
-    redshift
+      krita
 
-    krita
+      pandoc
+      ranger
 
-    pandoc
-    ranger
+      ripgrep
+      ripgrep-all
 
-    # # fonts
-    # nerdfonts
+      chromedriver
+      chromium
+      google-chrome
+      google-chrome-dev
+      latest.firefox-nightly-bin
+    ];
 
-    ripgrep
-    ripgrep-all
-
-    chromedriver
-    chromium
-    google-chrome
-    google-chrome-dev
-    latest.firefox-nightly-bin
-
-    gnumake
-
-    poppler_utils
-
-    xorg.xfontsel
-    xorg.xkill
-    xorg.libxcb
-  ];
+  # fonts.fonts = with pkgs; [ emacs-all-the-icons-fonts ];
 
   programs.home-manager.enable = true;
+
+  # programs.gmailieer.enable = true;
+
+  # programs.notmuch = {
+  #   enable = true;
+  #   # hooks = { preNew = "mbsync --all"; };
+  # };
+
+  # accounts.email = {
+  #   accounts.gmail = {
+  #     address = "alexander.girdler@gmail.com";
+  #     # gpg = {
+  #     #   key = "F9119EC8FCC56192B5CF53A0BF4F64254BD8C8B5";
+  #     #   signByDefault = true;
+  #     # };
+  #     imap.host = "gmail.com";
+  #     # mbsync = {
+  #     #   enable = true;
+  #     #   create = "maildir";
+  #     # };
+  #     # msmtp.enable = true;
+  #     notmuch.enable = true;
+  #     primary = true;
+  #     realName = "Alex Girdler";
+  #     # signature = {
+  #     #   text = ''
+  #     #     Mit besten Wünschen
+  #     #     Ben Justus Bals
+  #     #     https://keybase.io/beb
+  #     #   '';
+  #     #   showSignature = "append";
+  #     # };
+  #     passwordCommand = "mail-password";
+  #     smtp = { host = "gmail.com"; };
+  #     userName = "alexander.girdler@gmail.com";
+  #   };
+  # };
 
   programs.git = {
     enable = true;
@@ -309,6 +330,7 @@ in {
         alert = "#bd2c40";
       };
       "bar/main" = {
+        override-redirect = true;
         width = "100%";
         height = "27";
         fixed-center = false;
@@ -340,7 +362,6 @@ in {
         interval = 25;
 
         mount-0 = "/";
-        # mount-1 = "/home";
 
         label-mounted = "%{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%";
         label-unmounted = "%mountpoint% ";
@@ -471,6 +492,13 @@ in {
     };
   };
 
+  services.pasystray.enable = true;
+
+  services.udiskie = {
+    enable = true;
+    tray = "always";
+  };
+
   services.dunst = {
     enable = true;
     settings = {
@@ -589,5 +617,10 @@ in {
     };
   };
 
-  home.file = { ".emacs.d/init.el".text = ''(load "default.el")''; };
+  home.file = {
+    ".xprofile".text = ''
+      xrandr --output DVI-D-0 --mode 1920x1080 --pos 3760x0 --rotate normal --output HDMI-0 --off --output HDMI-1 --off --output DP-0 --mode 2560x1440 --pos 3440x1080 --rotate normal --output DP-1 --off --output DP-2 --primary --mode 3440x1440 --pos 0x1080 --rotate normal --output DP-3 --off
+    '';
+  };
+  # home.file = { ".emacs.d/init.el".text = ''(load "default.el")''; };
 }

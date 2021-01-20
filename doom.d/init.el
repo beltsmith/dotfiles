@@ -14,12 +14,19 @@
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
+(defun fix-define-obsolete-function-alias (orig-fun a b &optional when &rest args)
+  (apply orig-fun a b (or when "25.1") args))
+
+(advice-add 'define-obsolete-function-alias :around #'fix-define-obsolete-function-alias)
+
+(straight-use-package 'dash)
+
 (doom! :completion
        company           ; the ultimate code completion backend
-       (ivy +prescient)               ; a search engine for love and life
+       (ivy +prescient +icons)               ; a search engine for love and life
 
        :ui
-       ;;deft              ; notational velocity for Emacs
+       deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
@@ -28,13 +35,14 @@
        hydra
        ;;indent-guides     ; highlighted indent columns
        modeline          ; snazzy, Atom-inspired modeline, plus API
-       minimap           ; show a map of the code on the side
+       ;; minimap           ; show a map of the code on the side
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup            ; tame sudden yet inevitable temporary windows
         ;; +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
+       (ligatures)
        ;; (pretty-code +hasklig)       ; replace bits of code with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
@@ -62,7 +70,7 @@
        :emacs
        dired             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ;;ibuffer         ; interactive buffer management
+       ibuffer         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -96,7 +104,7 @@
        pdf               ; pdf enhancements
        ;; prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
-       ;;taskrunner        ; taskrunner for all your projects
+       ;; taskrunner        ; taskrunner for all your projects
        terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
@@ -114,8 +122,8 @@
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        ;;(dart +flutter)   ; paint ui and not much else
-       ;; elixir            ; erlang done right
-       ;;elm               ; care for a cup of TEA?
+       elixir            ; erlang done right
+       elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;; erlang            ; an elegant language for a more civilized age
        ess               ; emacs speaks statistics
@@ -123,7 +131,7 @@
        ;;fsharp           ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       (go +lsp)               ; the hipster dialect
+       ;; (go +lsp)               ; the hipster dialect
        (haskell +dante) ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
@@ -140,17 +148,17 @@
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        nix               ; I hereby declare "nix geht mehr!"
-       (ocaml +lsp)             ; an objective camel
+       ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
-        +dragndrop       ; file drag & drop support
-        +ipython         ; ipython support for babel
-        +pandoc          ; pandoc integration into org's exporter
+        ;; +dragndrop       ; file drag & drop support
+        ;; +ipython         ; ipython support for babel
+        ;; +pandoc          ; pandoc integration into org's exporter
         +present)        ; using Emacs for presentations
        ;; raku              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       python            ; beautiful is better than ugly
+       ;; python            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        racket            ; a DSL for DSLs
        rest              ; Emacs as a REST client
@@ -166,8 +174,8 @@
        yaml
 
        :email
-       ;;(mu4e +gmail)       ; WIP
-       ;;notmuch             ; WIP
+       ;; (mu4e +gmail)       ; WIP
+       notmuch             ; WIP
        ;;(wanderlust +gmail) ; WIP
 
        ;; Applications are complex and opinionated modules that transform Emacs

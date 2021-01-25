@@ -12,13 +12,20 @@
     rofi
     dunst
 
-    font-awesome-ttf
-    material-design-icons
     arandr
     blueman
     flameshot
     picom
     redshift
+    pasystray
+    udiskie
+    pavucontrol
+    nitrogen
+
+    lastpass-cli
+
+    font-awesome-ttf
+    material-design-icons
 
     xorg.xfontsel
     xorg.xkill

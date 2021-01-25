@@ -8,6 +8,8 @@ let
   myemacs = (import ./emacs.nix) { inherit pkgs; };
   tools = (import ./tools.nix) { inherit pkgs; };
   games = (import ./games.nix) { inherit pkgs; };
+  media = (import ./media.nix) { inherit pkgs; };
+  virt = (import ./virt.nix) { inherit pkgs; };
 in {
   nixpkgs.config = import dotfiles/nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = dotfiles/nixpkgs-config.nix;
@@ -27,17 +29,11 @@ in {
   in [ nightlyOverlay emacsOverlay ];
 
   home.packages = with pkgs;
-    langs.packages ++ games.packages ++ tools.packages ++ myemacs.packages ++ [
+    langs.packages ++ games.packages ++ tools.packages ++ myemacs.packages
+    ++ media.packages ++ virt.packages ++ [
       vscode
 
-      bind # dig
-
-      wireguard-tools
-
       elvish
-
-      ocaml
-      dune
 
       etcd
       etcdctl
@@ -45,20 +41,7 @@ in {
       docker-compose
       kubectl
 
-      # tools
-
-      peek
-
-      # FS
-
-      nixfmt
-
       postgresql
-
-      pasystray
-      udiskie
-      pavucontrol
-      nitrogen
 
       spotify
       cmus
@@ -72,25 +55,14 @@ in {
       kitty
       alacritty
 
-      lastpass-cli
       stow
 
       # libwacom xf86_input_wacom
       zoom-us
 
-      qbittorrent
-      unrar
-
-      wine
-
-      qemu
-      virt-manager
-
       openjdk
       # jdk12
       # jetbrains.idea-community
-      vlc
-      obs-studio
 
       lxappearance
       shades-of-gray-theme
@@ -112,7 +84,7 @@ in {
       zulip
 
       # vagrant
-      virtualbox
+      # virtualbox
 
       krita
 
@@ -132,6 +104,8 @@ in {
   # fonts.fonts = with pkgs; [ emacs-all-the-icons-fonts ];
 
   programs.home-manager.enable = true;
+
+  services.lorri.enable = true;
 
   # programs.gmailieer.enable = true;
 
@@ -460,6 +434,8 @@ in {
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
+    maxCacheTtlSsh = 72000;
+    maxCacheTtl = 72000;
   };
 
   programs.kitty = {

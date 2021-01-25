@@ -9,8 +9,13 @@
     bundix
     rufo
 
-    arduino-core
-    arduino-cli
-    arduino-ci
+    arduino
+    # arduino-core
+    # arduino-cli
+    # arduino-ci
+
+    ocaml
+    dune
+
   ];
 }

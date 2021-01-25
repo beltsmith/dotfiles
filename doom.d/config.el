@@ -15,7 +15,7 @@
 (setq display-line-numbers-type 'visual)
 (setq doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14))
 
-(setq doom-theme 'doom-gruvbox)
+(setq doom-theme 'doom-snazzy)
 
 (after! toggle-quotes
   (general-def :states 'normal

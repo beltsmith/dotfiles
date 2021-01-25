@@ -20,6 +20,11 @@
     gparted
     winusb
 
+    usbutils
+
+    cifs-utils
+    lsof
+
     pass
     awscli2
     aws-vault
@@ -40,5 +45,21 @@
     time
 
     valgrind
+
+    bind # dig
+
+    wireguard-tools
+
+    peek
+
+    # FS
+
+    nixfmt
+
+    qbittorrent
+    unrar
+
+    vlc
+    obs-studio
   ];
 }

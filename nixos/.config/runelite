@@ -1,0 +1,2 @@
+#!/run/current-system/sw/bin/bash
+appimage-run /home/belt/Downloads/RuneLite.AppImage

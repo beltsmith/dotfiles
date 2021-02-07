@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, services, ... }:
 
 {
   packages = with pkgs; [
@@ -23,6 +23,12 @@
     nitrogen
 
     lastpass-cli
+
+    lxappearance
+    shades-of-gray-theme
+    numix-gtk-theme
+    numix-icon-theme
+    gnome3.adwaita-icon-theme
 
     font-awesome-ttf
     material-design-icons

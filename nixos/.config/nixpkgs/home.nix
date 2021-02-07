@@ -10,27 +10,36 @@ let
   games = (import ./games.nix) { inherit pkgs; };
   media = (import ./media.nix) { inherit pkgs; };
   virt = (import ./virt.nix) { inherit pkgs; };
+  desktop = (import ./desktop.nix) {
+    inherit pkgs;
+    inherit services;
+  };
 in {
   nixpkgs.config = import dotfiles/nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = dotfiles/nixpkgs-config.nix;
   nixpkgs.overlays = let
-    # Change this to a rev sha to pin
-    moz-rev = "master";
-    moz-url = builtins.fetchTarball {
-      url =
-        "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";
+    importOverlay = { rev, url }:
+      (import
+        (builtins.fetchTarball { url = "${url}/archive/${rev}.tar.gz"; }));
+    nightlyOverlay = importOverlay {
+      rev = "master";
+      url = "https://github.com/mozilla/nixpkgs-mozilla";
     };
-    nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
-    emacs-url = builtins.fetchTarball {
-      url =
-        "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+    emacsOverlay = importOverlay {
+      rev = "master";
+      url = "https://github.com/nix-community/emacs-overlay";
     };
-    emacsOverlay = (import emacs-url);
   in [ nightlyOverlay emacsOverlay ];
+
+  home.file.runelite = {
+    source = ../runelite;
+    target = "games/runelite";
+    executable = true;
+  };
 
   home.packages = with pkgs;
     langs.packages ++ games.packages ++ tools.packages ++ myemacs.packages
-    ++ media.packages ++ virt.packages ++ [
+    ++ media.packages ++ virt.packages ++ desktop.packages ++ [
       vscode
 
       elvish
@@ -63,12 +72,6 @@ in {
       openjdk
       # jdk12
       # jetbrains.idea-community
-
-      lxappearance
-      shades-of-gray-theme
-      numix-gtk-theme
-      numix-icon-theme
-      gnome3.adwaita-icon-theme
 
       heroku
 

@@ -55,7 +55,7 @@ myEditor             = "emacs"
 
 -- Brightness
 brightnessCommand :: String -> String
-brightnessCommand = ("/home/beltsmith/scripts/brightness_change " ++)
+brightnessCommand = ("/home/belt/scripts/brightness_change " ++)
 
 data Direction = Up | Down
 monBrightnessChange :: Direction -> String
@@ -265,11 +265,29 @@ rofiRun = ("rofi -dmenu " ++) . (++ rofiConfig)
 rofiCmd :: String
 rofiCmd = rofiRun ""
 
+runScripIn :: String -> String
+-- runScripIn dir = dir ++ "$(ls " ++ dir ++ " | " ++ rofiCmd ++ ")"
+runScripIn dir = cmdWithRofiArgRaw filesInDir dir
+  where filesInDir = "ls " ++ dir
+
+pipeThru :: String -> String
+pipeThru = wrap " | " " | "
+
+cmdWithRofiArg :: String -> String -> String -> String
+cmdWithRofiArg cmd rofiSrc etl = cmd ++ "$(" ++ rofiSrc ++ " | " ++ rofiCmd ++ " | " ++ etl ++ ")"
+-- cmdWithRofiArg cmd rofiSrc etl = cmd ++ (wrap "$(" ")" $ wrap rofiSrc etl . pipeThru rofiCmd)
+
+cmdWithRofiArgRaw :: String -> String -> String
+cmdWithRofiArgRaw cmd rofiSrc = cmdWithRofiArg cmd rofiSrc "echo"
+
 switchMonitor :: String
-switchMonitor = "/home/beltsmith/.screenlayout/$(ls /home/beltsmith/.screenlayout | " ++ rofiCmd ++ ")"
+switchMonitor = runScripIn "/home/belt/.screenlayout/"
+
+runScript :: String
+runScript = runScripIn "/home/belt/dotfiles/scripts/scripts"
 
 switchWifi :: String
-switchWifi = "netctl switch-to $(netctl list | " ++ rofiCmd ++ " | cut -f 2-3 -d '')"
+switchWifi = cmdWithRofiArg "netctl switch-to " "netctl list" "cut -f 2-3 -d ''"
 
 -- Utility functions
 
@@ -346,6 +364,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
+
+    , ((modm .|. shiftMask .|. ctrlMask, xK_s), spawn runScript)
 
     -- Fullscreen that shit motherfucker
     -- , ((modm .|. shiftMask, xK_f     ), setLayout fullscreenFull)

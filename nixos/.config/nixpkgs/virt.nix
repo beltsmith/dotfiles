@@ -8,5 +8,6 @@
     qemu
     virt-manager
 
+    appimage-run
   ];
 }

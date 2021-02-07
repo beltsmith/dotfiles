@@ -4,8 +4,10 @@
   packages = with pkgs; [
     lutris
     steam
-    runelite
+    # runelite
 
     nethack
+
+    xboxdrv
   ];
 }

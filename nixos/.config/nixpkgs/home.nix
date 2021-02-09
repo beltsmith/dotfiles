@@ -14,6 +14,8 @@ let
     inherit pkgs;
     inherit services;
   };
+  laptop = true;
+  interface = if laptop then "wlp2s0" else "enp0s31f6";
 in {
   nixpkgs.config = import dotfiles/nixpkgs-config.nix;
   xdg.configFile."nixpkgs/config.nix".source = dotfiles/nixpkgs-config.nix;
@@ -69,6 +71,7 @@ in {
 
       stow
 
+      libnotify
       # libwacom xf86_input_wacom
       zoom-us
 
@@ -332,12 +335,48 @@ in {
         modules-left = "workspaces-xmonad title-xmonad";
         modules-center = "";
         modules-right =
-          "filesystem pulseaudio memory cpu eth temperature date powermenu";
+          "filesystem memory cpu eth temperature battery date powermenu";
         tray-position = "right";
         tray-padding = 2;
 
         cursor-click = "pointer";
         cursor-scroll = "ns-resize";
+      };
+      "module/battery" = {
+        type = "internal/battery";
+        battery = "BAT0";
+        adapter = "ADP1";
+        poll-interval = 20;
+        format-charging = "<animation-charging> <label-charging>";
+        format-discharging = "<ramp-capacity> <label-discharging>";
+        label-charging = " %percentage%%";
+
+        label-discharging = "%percentage%%";
+
+        label-full = "Fully charged";
+
+        ramp-capacity-0 = "";
+        ramp-capacity-1 = "";
+        ramp-capacity-2 = "";
+        ramp-capacity-3 = "";
+        ramp-capacity-4 = "";
+
+        bar-capacity-width = 10;
+
+        animation-charging-0 = "";
+        animation-charging-1 = "";
+        animation-charging-2 = "";
+        animation-charging-3 = "";
+        animation-charging-4 = "";
+        animation-charging-framerate = 750;
+
+        animation-discharging-0 = "";
+        animation-discharging-1 = "";
+        animation-discharging-2 = "";
+        animation-discharging-3 = "";
+        animation-discharging-4 = "";
+        animation-discharging-framerate = 500;
+
       };
       "module/filesystem" = {
         type = "internal/fs";
@@ -363,7 +402,7 @@ in {
       "module/cpu" = {
         type = "internal/cpu";
         interval = 2;
-        format-prefix = "";
+        format-prefix = " ";
         format-prefix-foreground = "\${colors.foreground-alt}";
         format-underline = "#f90000";
         label = "%percentage:2%%";
@@ -378,7 +417,7 @@ in {
       };
       "module/eth" = {
         type = "internal/network";
-        interface = "enp0s31f6";
+        interface = interface;
         interval = "3.0";
 
         format-connected-underline = "#55aa55";
@@ -398,38 +437,9 @@ in {
         time = "%H:%M";
         time-alt = "%H:%M:%S";
 
-        format-prefix = "";
-        format-prefix-foreground = "\${colors.foreground-alt}";
         format-underline = "#0a6cf5";
 
         label = "%date% %time%";
-      };
-      "module/pulseaudio" = {
-        type = "internal/pulseaudio";
-
-        format-volume = "<label-volume> <bar-volume>";
-        label-volume = "VOL %percentage%%";
-        label-volume-foreground = "\${root.foreground}";
-
-        label-muted = "🔇 muted";
-        label-muted-foreground = "#666";
-
-        bar-volume-width = 10;
-        bar-volume-foreground-0 = "#55aa55";
-        bar-volume-foreground-1 = "#55aa55";
-        bar-volume-foreground-2 = "#55aa55";
-        bar-volume-foreground-3 = "#55aa55";
-        bar-volume-foreground-4 = "#55aa55";
-        bar-volume-foreground-5 = "#f5a70a";
-        bar-volume-foreground-6 = "#ff5555";
-        bar-volume-gradient = false;
-        bar-volume-indicator = "|";
-        bar-volume-indicator-font = 2;
-        bar-volume-fill = "─";
-        bar-volume-fill-font = 2;
-        bar-volume-empty = "─";
-        bar-volume-empty-font = 2;
-        bar-volume-empty-foreground = "\${colors.foreground-alt}";
       };
       "settings" = { screenchange-reload = true; };
       "global/wm" = {

@@ -30,6 +30,8 @@
     numix-icon-theme
     gnome3.adwaita-icon-theme
 
+    gucharmap
+
     font-awesome-ttf
     material-design-icons
 

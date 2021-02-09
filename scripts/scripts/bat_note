@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/run/current-system/sw//bin/bash
 
 #Customize this stuff
 SECS="1"            # sleep $SECS
@@ -13,4 +13,4 @@ WIDTH="180"         # window width
 #ICON=~/.xmonad/dzen2/spkr_01.xbm
 DISPLAY=:0
 
-notify-send $(acpi -V | head -n 1 | cut -d ',' -f 2-3)
+notify-send "$(acpi -V | head -n 1 | cut -d ',' -f 2-3)"

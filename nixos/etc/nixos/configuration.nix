@@ -21,23 +21,29 @@
   networking = {
     hostName = "abydos"; # Define your hostname.
     # hostName = "cheyenne-mtn"; # Define your hostname.
-    # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-    # wireless.userControlled.enable = true;
-    # wireless.networks.StarGateCommand = {
-    #   pskRaw = "35b3c38c28eb73494e89ee73bf52efa9b110c62c604e4d7d66f0230197da23de";
-    # };
+
+    nameservers = [ "1.1.1.1" "9.9.9.9" ];
+
+    wireless = {
+      enable = true; # Enables wireless support via wpa_supplicant.
+      userControlled.enable = true;
+      networks.StarGateCommand = {
+        pskRaw =
+          "35b3c38c28eb73494e89ee73bf52efa9b110c62c604e4d7d66f0230197da23de";
+      };
+    };
 
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
     # Per-interface useDHCP will be mandatory in the future, so this generated config
     # replicates the default behaviour.
     useDHCP = false;
+    useNetworkd = true;
     interfaces.enp0s31f6.useDHCP = true;
     interfaces.wlp2s0.useDHCP = true;
 
     extraHosts = ''
-      127.0.0.1     cheyenne-mtn
-      ::1           cheyenne-mtn
-      127.0.1.1     cheyenne-mtn.localdomain cheyenne-mtn
+      10.0.0.9     cheyenne-mtn
+      10.0.0.9     cheyenne-mtn
 
       10.0.0.3      tower tower.local
       10.0.0.3      sonarr.tower sonarr.tower.local
@@ -62,8 +68,6 @@
     # Configure network proxy if necessary
     # networking.proxy.default = "http://user:password@proxy:port/";
     # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-    nameservers = [ "1.1.1.1" "9.9.9.9" ];
   };
 
   # Set your time zone.
@@ -94,26 +98,38 @@
   # };
 
   # Enable the Plasma 5 Desktop Environment.
-  services.xserver.enable = true;
-  services.xserver.wacom.enable = true;
-  services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.videoDrivers = [ "nvidiaVulkanBeta" ];
-
-  services.xserver.windowManager.xmonad = {
+  services.xserver = {
     enable = true;
-    enableContribAndExtras = true;
+    wacom.enable = true;
+    displayManager.sddm.enable = true;
+    videoDrivers = [ "nvidiaVulkanBeta" ];
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+    };
+
+    # Configure keymap in X11
+    layout = "us";
+    xkbOptions = "eurosign:e";
+
+    # Enable touchpad support (enabled default in most desktopManager).
+    libinput.enable = true;
+
   };
 
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
+  services.acpid.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+    support32Bit = true;
+  };
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
@@ -122,14 +138,10 @@
     driSupport32Bit = true;
     extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   };
-  hardware.pulseaudio.support32Bit = true;
 
   # steam
   systemd.extraConfig = "DefaultLimitNOFILE=1048576";
   hardware.steam-hardware.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.belt = {
@@ -172,6 +184,8 @@
     direnv
     nix-direnv
     wireguard
+    nix-prefetch-scripts
+    acpi
   ];
 
   fonts.fonts = with pkgs; [ nerdfonts ];
@@ -219,10 +233,10 @@
 
   services.redis.enable = true;
 
-  # security.acme = {
-  #   acceptTerms = true;
-  #   email = "me@alexgirdler.com";
-  # };
+  security.acme = {
+    acceptTerms = true;
+    email = "me@alexgirdler.com";
+  };
 
   services.nginx = {
     enable = true;

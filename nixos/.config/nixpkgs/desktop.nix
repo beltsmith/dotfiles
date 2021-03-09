@@ -31,6 +31,7 @@
     gnome3.adwaita-icon-theme
 
     gucharmap
+    mkchromecast
 
     font-awesome-ttf
     material-design-icons

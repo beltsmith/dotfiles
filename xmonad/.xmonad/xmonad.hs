@@ -161,7 +161,7 @@ eventLogHook = do
   let visibleWs = map (W.tag . W.workspace) visible
   let wss = map W.tag $ W.workspaces winset
   let wsStr = unwords $ map (fmt currWs visibleWs) $ sort' wss
-  let titleStr = polybarColor coolBlue ">>=   " ++ windowTitle
+  let titleStr = polybarColor coolBlue ">>=   " ++ (take 100 windowTitle)
 
   io $ appendFile "/tmp/.xmonad-title-log" (titleStr ++ "\n")
   io $ appendFile "/tmp/.xmonad-workspace-log" (wsStr ++ "\n")

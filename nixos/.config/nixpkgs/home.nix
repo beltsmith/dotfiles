@@ -110,6 +110,7 @@ in {
       # latest.firefox-nightly-bin
       firefox
       sox
+      xbacklight
     ];
 
   # fonts.fonts = with pkgs; [ emacs-all-the-icons-fonts ];
@@ -332,6 +333,9 @@ in {
         font-1 = "\${fonts.secondary}";
         font-2 = "\${fonts.special}";
 
+        # modules-left = "workspaces-xmonad";
+        # modules-center = "title-xmonad";
+        # modules-right = "pulseaudio";
         modules-left = "workspaces-xmonad title-xmonad";
         modules-center = "";
         modules-right =
@@ -346,10 +350,10 @@ in {
         type = "internal/battery";
         battery = "BAT0";
         adapter = "ADP1";
-        poll-interval = 20;
+        poll-interval = 10;
         format-charging = "<animation-charging> <label-charging>";
         format-discharging = "<ramp-capacity> <label-discharging>";
-        label-charging = " %percentage%%";
+        label-charging = "%percentage%% ";
 
         label-discharging = "%percentage%%";
 

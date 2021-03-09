@@ -2,7 +2,7 @@
 
 {
   packages = with pkgs; [
-    lutris
+    # lutris
     steam
     # runelite
 

@@ -8,6 +8,8 @@
     qemu
     virt-manager
 
+    virtualbox
+
     appimage-run
   ];
 }

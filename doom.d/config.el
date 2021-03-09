@@ -11,11 +11,10 @@
 (setq js-indent-level 2)
 (remove-hook 'window-size-change-functions #'+doom-dashboard-resize-h)
 
-(setq org-log-into-drawer t)
-(setq display-line-numbers-type 'visual)
-(setq doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14))
-
-(setq doom-theme 'doom-snazzy)
+(setq org-log-into-drawer nil
+      display-line-numbers-type 'visual
+      doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14)
+      doom-theme 'doom-laserwave)
 
 (after! toggle-quotes
   (general-def :states 'normal
@@ -337,6 +336,17 @@
          :program "/home/alex/dev/prevail/bin/rails"
          :name "Rails Server Debug"))
   )
+
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+
+(setq org-modules '(ol-notmuch ol-bibtext ol-eww ol-gnus habits)
+      org-habit-preceding-days 21
+      org-habit-following-days 7
+      org-habit-show-habits-only-for-today nil
+      org-habit-show-all-today t
+      org-habit-today-glyph ?‖
+      org-habit-completed-glyph ?✓)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

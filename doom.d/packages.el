@@ -30,3 +30,5 @@
 (package! counsel-dash)
 
 (package! rufo)
+
+(package! exec-path-from-shell)

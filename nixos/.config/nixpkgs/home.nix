@@ -21,15 +21,16 @@ in {
     importOverlay = { rev, url }:
       (import
         (builtins.fetchTarball { url = "${url}/archive/${rev}.tar.gz"; }));
-    nightlyOverlay = importOverlay {
-      rev = "master";
-      url = "https://github.com/mozilla/nixpkgs-mozilla";
-    };
+    # nightlyOverlay = importOverlay {
+    #   rev = "master";
+    #   url = "https://github.com/mozilla/nixpkgs-mozilla";
+    # };
     emacsOverlay = importOverlay {
       rev = "master";
       url = "https://github.com/nix-community/emacs-overlay";
     };
-  in [ nightlyOverlay emacsOverlay ];
+  in [ emacsOverlay ];
+  # in [ nightlyOverlay emacsOverlay ];
 
   home.file.runelite = {
     source = ../runelite;
@@ -41,6 +42,8 @@ in {
     langs.packages ++ games.packages ++ tools.packages ++ myemacs.packages
     ++ media.packages ++ virt.packages ++ desktop.packages ++ [
       vscode
+
+      cmake
 
       elvish
 
@@ -88,6 +91,7 @@ in {
 
       # vagrant
       # virtualbox
+      libreoffice
 
       krita
 
@@ -101,7 +105,9 @@ in {
       chromium
       google-chrome
       google-chrome-dev
-      latest.firefox-nightly-bin
+      # latest.firefox-nightly-bin
+      firefox
+      sox
     ];
 
   # fonts.fonts = with pkgs; [ emacs-all-the-icons-fonts ];

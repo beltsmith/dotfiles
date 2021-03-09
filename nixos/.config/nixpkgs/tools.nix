@@ -49,8 +49,7 @@
     bind # dig
 
     wireguard-tools
-
-    peek
+    gcc-unwrapped
 
     # FS
 
@@ -61,5 +60,8 @@
 
     vlc
     obs-studio
+    kazam
+
+    bc
   ];
 }

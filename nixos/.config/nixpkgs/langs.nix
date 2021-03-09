@@ -17,5 +17,6 @@
     ocaml
     dune
 
+    python3
   ];
 }

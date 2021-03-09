@@ -130,7 +130,7 @@ myManageHook = composeAll . concat $
     where
         role           = stringProperty "WM_WINDOW_ROLE"
         myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
-        myClassIgnores = [] -- ["doomx64.exe", "DOOMx64"]
+        myClassIgnores = [".kazam-wrapped"] -- ["doomx64.exe", "DOOMx64"]
         myClassMasters = ["*- Doom Emacs", "emacs@*", "twitchui.exe", "battle.net.exe"]
         myResourceIgnores = myClassIgnores
 

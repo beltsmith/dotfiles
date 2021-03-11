@@ -18,5 +18,7 @@
     dune
 
     python3
+
+    openjdk
   ];
 }

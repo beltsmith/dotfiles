@@ -72,7 +72,6 @@ in {
       # libwacom xf86_input_wacom
       zoom-us
 
-      openjdk
       # jdk12
       # jetbrains.idea-community
 

@@ -14,7 +14,7 @@
 (setq org-log-into-drawer nil
       display-line-numbers-type 'visual
       doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14)
-      doom-theme 'doom-laserwave)
+      doom-theme 'doom-dracula)
 
 (after! toggle-quotes
   (general-def :states 'normal
@@ -314,7 +314,7 @@
   ;; enables mouse hover support
   ;; (dap-tooltip-mode 1)
   (require 'dap-ruby)
-  (setq dap-ruby-debug-program `("/home/alex/.asdf/shims/node"
+  (setq dap-ruby-debug-program `("/home/belt/.asdf/shims/node"
                                     ,(f-join dap-ruby-debug-path "extension/dist/debugger/main.js")))
 
   (defun my-dap-ruby--populate-start-file-args (conf)
@@ -332,13 +332,12 @@
    (list :type "Rails"
          :request "launch"
          :args "s"
-         :cwd "/home/alex/dev/prevail"
-         :program "/home/alex/dev/prevail/bin/rails"
+         :cwd "/home/belt/dev/prevail"
+         :program "/home/belt/dev/prevail/bin/rails"
          :name "Rails Server Debug"))
   )
 
-(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
-
+(require 'org-habit)
 (setq org-modules '(ol-notmuch ol-bibtext ol-eww ol-gnus habits)
       org-habit-preceding-days 21
       org-habit-following-days 7
@@ -346,6 +345,8 @@
       org-habit-show-all-today t
       org-habit-today-glyph ?‖
       org-habit-completed-glyph ?✓)
+
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
 
 (custom-set-variables

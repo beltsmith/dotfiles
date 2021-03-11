@@ -63,5 +63,10 @@
     kazam
 
     bc
+
+    jetbrains.idea-community
+
+    nix-tree
+    coreutils
   ];
 }

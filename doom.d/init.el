@@ -190,6 +190,14 @@
        ;; +wordnut         ; wordnet (wn) search
        ;; +langtool)       ; a proofreader (grammar/style check) for Emacs
 
+       :conf
+       exercism
+       js
+       org
+       prodigy
+       ruby
+       rust
+
        :config
        ;; For literate config users. This will tangle+compile a config.org
        ;; literate config in your `doom-private-dir' whenever it changes.

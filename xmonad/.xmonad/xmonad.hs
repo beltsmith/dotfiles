@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 import           XMonad
-import           XMonad.Config.Desktop
+-- import           XMonad.Config.Desktop
+import           XMonad.Config.Gnome
 -- import           XMonad.Hooks.DynamicLog hiding (wrap)
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
@@ -16,7 +17,7 @@ import           XMonad.Layout.ResizableTile
 import           Graphics.X11.ExtraTypes.XF86
 
 
-import Text.Regex.Posix ((=~))
+-- import Text.Regex.Posix ((=~))
 import Control.Monad (forM_)
 import XMonad.Util.Run (safeSpawn)
 import XMonad.Util.NamedWindows (getName)
@@ -49,9 +50,13 @@ myNormalBorderColor  = powderBlue
 myFocusedBorderColor :: String
 myFocusedBorderColor = vaporPink
 myBrowser :: String
-myBrowser            = "firefox"
+-- myBrowser            = "firefox"
+myBrowser            = "google-chrome-stable"
 myEditor :: String
 myEditor             = "emacs"
+
+rotatePad :: String
+rotatePad = "/home/belt/scripts/rotate-pad.sh"
 
 -- Brightness
 brightnessCommand :: String -> String
@@ -111,7 +116,7 @@ myLayoutHook = smartBorders . avoidStruts . toggleFull $ tiled ||| Mirror tiled 
 myFloaterHook :: ManageHook
 myFloaterHook = insertPosition End Newer
 
-q ~? x = fmap(=~ x) q
+-- q ~? x = fmap(=~ x) q
 
 myManageHook :: ManageHook
 myManageHook = composeAll . concat $
@@ -121,7 +126,7 @@ myManageHook = composeAll . concat $
     , [ fmap ("Zoom Meeting" `isPrefixOf`) title    --> doFloat                        ]
     , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
     , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
-    , [ className ~? c                              --> doIgnore | c <- myClassMasters ]
+--    , [ className ~? c                              --> doIgnore | c <- myClassMasters ]
     , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
@@ -131,7 +136,7 @@ myManageHook = composeAll . concat $
         role           = stringProperty "WM_WINDOW_ROLE"
         myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
         myClassIgnores = [".kazam-wrapped"] -- ["doomx64.exe", "DOOMx64"]
-        myClassMasters = ["*- Doom Emacs", "emacs@*", "twitchui.exe", "battle.net.exe"]
+        -- myClassMasters = ["*- Doom Emacs", "emacs@*", "twitchui.exe", "battle.net.exe"]
         myResourceIgnores = myClassIgnores
 
 -- myEventHook :: Event -> X All
@@ -144,7 +149,7 @@ myStartupHook :: X ()
 myStartupHook = do
   forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> safeSpawn "mkfifo" ["/tmp/" ++ file]
   setWMName "LG3D"
-  spawnOnce "xsetroot -cursor_name left_ptr"
+  spawnOnce "~/graphic-session"
 
 
 polybarColor :: String -> String -> String
@@ -176,7 +181,7 @@ eventLogHook = do
 
 -- Main xmonad
 main :: IO ()
-main = xmonad . docks . ewmh $ desktopConfig
+main = xmonad . docks . ewmh $ gnomeConfig
     { terminal           = myTerminal
     , modMask            = myModMask
     , borderWidth        = myBorderWidth
@@ -253,11 +258,10 @@ rofiConfig =
     configify       = \cnf t -> cnf ++ toConfig t
     configList      = [ ("case-sensitive", "")
                       , ("match"         , "fuzzy")
-                      , ("theme"         , "Arc-Dark")
                       , ("show-icons"    , "")]
 
 rofi :: String -> String
-rofi = ("rofi -show " ++) . (++ rofiConfig)
+rofi = ("rofi -modi drun -show " ++) . (++ rofiConfig)
 
 rofiRun :: String -> String
 rofiRun = ("rofi -dmenu " ++) . (++ rofiConfig)
@@ -265,9 +269,9 @@ rofiRun = ("rofi -dmenu " ++) . (++ rofiConfig)
 rofiCmd :: String
 rofiCmd = rofiRun ""
 
-runScripIn :: String -> String
--- runScripIn dir = dir ++ "$(ls " ++ dir ++ " | " ++ rofiCmd ++ ")"
-runScripIn dir = cmdWithRofiArgRaw filesInDir dir
+runScriptIn :: String -> String
+-- runScriptIn dir = dir ++ "$(ls " ++ dir ++ " | " ++ rofiCmd ++ ")"
+runScriptIn dir = cmdWithRofiArgRaw filesInDir dir
   where filesInDir = "ls " ++ dir
 
 pipeThru :: String -> String
@@ -281,10 +285,10 @@ cmdWithRofiArgRaw :: String -> String -> String
 cmdWithRofiArgRaw cmd rofiSrc = cmdWithRofiArg cmd rofiSrc "echo"
 
 switchMonitor :: String
-switchMonitor = runScripIn "/home/belt/.screenlayout/"
+switchMonitor = runScriptIn "/home/belt/.screenlayout/"
 
 runScript :: String
-runScript = runScripIn "/home/belt/dotfiles/scripts/scripts"
+runScript = runScriptIn "/home/belt/dotfiles/scripts/scripts"
 
 switchWifi :: String
 switchWifi = cmdWithRofiArg "netctl switch-to " "netctl list" "cut -f 2-3 -d ''"
@@ -304,8 +308,8 @@ myRecompileCmd = compileCmd `shOr` failureCmd
     failureCommands = [ "notify-send 'Failed to reload xmonad' --urgency=critical"
                       , "notify-send <(cat /tmp/xmonad-compile.log) --urgency=critical"
                       ]
-    comandify       = wrap "(" ")" . intercalate " && "
-    failureCmd      = comandify failureCommands
+    comandify       = intercalate " && "
+    failureCmd      = wrap "(" ")" $ comandify failureCommands
     compileCmd      = comandify compileCommands
 
 -- I stole these from xmonad
@@ -319,14 +323,16 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     , ((modm, xK_b), spawn myBrowser)
     , ((modm              , xK_e     ), spawn myEditor)
     -- close focused window
+    , ((modm .|. shiftMask, xK_s     ), spawn "systemctl suspend")
     , ((modm              , xK_q     ), kill)
-    , ((modm .|. shiftMask, xK_c     ), kill) -- allow me to kill shit on osx
     --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+    -- , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
     -- rofi launch
-    , ((modm,               xK_space ), spawn $ rofi "run")
+    , ((modm .|. shiftMask, xK_space ), spawn $ rofi "run")
+    , ((modm,               xK_space ), spawn $ rofi "drun")
     , ((modm,               xK_w     ), spawn $ rofi "window")
     , ((modm,               xK_p     ), spawn passSelect)
+    , ((modm .|. shiftMask .|. ctrlMask, xK_grave), spawn rotatePad)
     , ((0, xF86XK_Display            ), spawn switchMonitor)
     , ((0, xF86XK_Tools              ), spawn switchWifi)
     -- , ((mod4Mask,           xK_e     ), spawn $ rofi "run")

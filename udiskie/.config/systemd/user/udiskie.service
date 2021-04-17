@@ -1,0 +1,10 @@
+[Unit]
+Description=udiskie
+After=polybar.service
+PartOf=polybar.service
+
+[Service]
+ExecStart=/usr/bin/udiskie --tray
+
+[Install]
+WantedBy=default.target

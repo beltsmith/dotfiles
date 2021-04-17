@@ -1,0 +1,10 @@
+[Unit]
+Description=picom
+After=polybar.service
+PartOf=polybar.service
+
+[Service]
+ExecStart=/usr/bin/picom
+
+[Install]
+WantedBy=default.target

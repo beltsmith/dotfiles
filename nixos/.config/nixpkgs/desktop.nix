@@ -161,13 +161,15 @@
         "module/workspaces-xmonad" = {
           type = "custom/script";
           exec =
-            "/run/current-system/sw/bin/tail -F /tmp/.xmonad-workspace-log";
+            "/bin/tail -F /tmp/.xmonad-workspace-log";
+            # "/run/current-system/sw/bin/tail -F /tmp/.xmonad-workspace-log";
           tail = true;
         };
 
         "module/title-xmonad" = {
           type = "custom/script";
-          exec = "/run/current-system/sw/bin/tail -F /tmp/.xmonad-title-log";
+          exec = "/bin/tail -F /tmp/.xmonad-title-log";
+          # exec = "/run/current-system/sw/bin/tail -F /tmp/.xmonad-title-log";
           tail = true;
         };
         "module/cpu" = {

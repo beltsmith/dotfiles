@@ -1,0 +1,10 @@
+[Unit]
+Description=pasystray
+After=polybar.service
+PartOf=polybar.service
+
+[Service]
+ExecStart=/usr/bin/pasystray
+
+[Install]
+WantedBy=default.target

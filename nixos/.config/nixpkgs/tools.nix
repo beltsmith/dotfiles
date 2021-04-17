@@ -68,5 +68,7 @@
 
     nix-tree
     coreutils
+
+    grub2_full
   ];
 }

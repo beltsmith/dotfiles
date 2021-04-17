@@ -1,0 +1,11 @@
+[Unit]
+Description=Flameshot
+After=polybar.service
+PartOf=polybar.service
+
+[Service]
+ExecStart=/usr/bin/flameshot
+Restart=on-abort
+
+[Install]
+WantedBy=default.target

@@ -47,4 +47,4 @@ bindkey '^r' history-incremental-search-backward
 # zle -N zle-line-init
 # zle -N zle-keymap-select
 
-export KEYTIMEOUT=1
+export KEYTIMEOUT=10

@@ -26,7 +26,6 @@ append_path "$HOME/scripts"
 append_path "/usr/local/bin"
 append_path "$HOME/.local/bin"
 export _JAVA_AWT_WM_NONREPARENTING=1
-export GEMFURY_TOKEN=NApwspcoLsmxjFQsZtFu
 export EMAIL="me@alexgirlder.com"
 export WORK_EMAIL="alex.girdler@sonder.com"
 ###############################################
@@ -165,8 +164,8 @@ compinit
 ###############################################
 #################   Tools    ##################
 ###############################################
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+. /opt/asdf-vm/asdf.sh
+# . /opt/asdf-vm/completions/asdf.bash
 ###############################################
 #################    SSH     ##################
 ###############################################
@@ -217,15 +216,18 @@ setopt autopushd
 export ZPLUG=/usr/share/zsh/scripts/zplug
 source $ZPLUG/init.zsh
 zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions" # do-everything argument completions
 zplug 'zsh-users/zsh-syntax-highlighting', defer:3
 zplug "mafredri/zsh-async"
 zplug "sindresorhus/pure", use:pure.zsh, as:theme
 
+zplug "softmoth/zsh-vim-mode"
+
 zplug "b4b4r07/enhancd", use:init.sh
 zplug "junegunn/fzf", as:command, use:"bin/fzf-tmux"
 zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-zplug "plugins/heroku", from:oh-my-zsh
+# zplug "plugins/heroku", from:oh-my-zsh
 zplug "plugins/kubectl", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/sudo", from:oh-my-zsh
@@ -250,9 +252,13 @@ zplug load
 ###############################################
 #################    Evals   ##################
 ###############################################
-eval "$(hub alias -s)"
 
 eval "$(fasd --init auto)"
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 # eval "$(rbenv init -)"
+eval "$(direnv hook zsh)"
 test -r /home/beltsmith/.opam/opam-init/init.zsh && . /home/beltsmith/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+bindkey -v
+
+export KEYTIMEOUT=10

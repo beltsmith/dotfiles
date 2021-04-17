@@ -1,0 +1,10 @@
+[Unit]
+Description=Redshift
+After=polybar.service
+PartOf=polybar.service
+
+[Service]
+ExecStart=/usr/bin/redshift-gtk
+
+[Install]
+WantedBy=default.target

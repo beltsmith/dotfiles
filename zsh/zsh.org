@@ -34,10 +34,6 @@ Evals go after everything
   ###############################################
   <<ssh>>
   ###############################################
-  #################    Misc    ##################
-  ###############################################
-  <<misc>>
-  ###############################################
   #################   Plugins  ##################
   ###############################################
   <<plugins>>
@@ -45,7 +41,10 @@ Evals go after everything
   #################    Evals   ##################
   ###############################################
   <<evals>>
-  bindkey -v
+  ###############################################
+  #################    Misc    ##################
+  ###############################################
+  <<misc>>
 #+END_SRC
 ** Variables
 :PROPERTIES:
@@ -117,6 +116,7 @@ append_path "$HOME/bin"
 append_path "$HOME/scripts"
 append_path "/usr/local/bin"
 append_path "$HOME/.local/bin"
+append_path "$HOME/.emacs.d/bin"
 #+END_SRC
 **** Disabled
 :PROPERTIES:
@@ -166,10 +166,14 @@ export LPASS_AGENT_TIMEOUT=0
 #+END_SRC
 *** aws-vault
 #+BEGIN_SRC shell
-export AWS_VAULT_BACKEND=pass
+export AWS_VAULT_BACKEND=secret-service
 export AWS_REGION=us-east-1
 export AWS_SESSION_TOKEN_TTL=12h
 #+END_SRC
+*** terminal infos
+#+begin_src shell
+export TERM=xterm-256color
+#+end_src
 ** Evals
 :PROPERTIES:
 :header-args: :noweb-ref evals
@@ -593,31 +597,46 @@ zplug "plugin/name", option:value
 #+END_SRC
 
 **** Enabled plugins
+***** znap
+#+begin_src shell
+source ~/gits/zsh-snap/znap.zsh
+
+znap source marlonrichert/zsh-autocomplete
+znap source mafredri/zsh-async
+
+znap source b4b4r07/enhancd #, use:init.sh
+znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
+znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
+
+znap prompt sindresorhus/pure
+#+end_src
+
 ***** Github plugins
 Plugins loaded from github, since github is the default origin(`from' option) I do not include it.
 #+BEGIN_SRC shell
-  zplug "zsh-users/zsh-history-substring-search"
-  zplug "zsh-users/zsh-completions" # do-everything argument completions
-  zplug 'zsh-users/zsh-syntax-highlighting', defer:3
-  zplug "mafredri/zsh-async"
-  zplug "sindresorhus/pure", use:pure.zsh, as:theme
+  # zplug "zsh-users/zsh-history-substring-search"
+  # zplug "zsh-users/zsh-completions" # do-everything argument completions
+  # zplug "marlonrichert/zsh-autocomplete"
+  # zplug 'zsh-users/zsh-syntax-highlighting', defer:3
+  # zplug "mafredri/zsh-async"
+  # zplug "sindresorhus/pure", use:pure.zsh, as:theme
+  # zplug "dracula/zsh", as:theme
 
-  zplug "b4b4r07/enhancd", use:init.sh
-  zplug "junegunn/fzf", as:command, use:"bin/fzf-tmux"
-  zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
+  # zplug "b4b4r07/enhancd", use:init.sh
+  # zplug "junegunn/fzf", as:command, use:"bin/fzf-tmux"
+  # zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
 #+END_SRC
-
 ***** oh-my-zsh plugins
 These are loaded from the oh-my-zsh library
 #+BEGIN_SRC shell
-  zplug "plugins/heroku", from:oh-my-zsh
-  zplug "plugins/kubectl", from:oh-my-zsh
-  zplug "plugins/git", from:oh-my-zsh
-  zplug "plugins/sudo", from:oh-my-zsh
-  zplug "plugins/bundler", from:oh-my-zsh
+  # zplug "plugins/heroku", from:oh-my-zsh
+  # zplug "plugins/kubectl", from:oh-my-zsh
+  # zplug "plugins/git", from:oh-my-zsh
+  # zplug "plugins/sudo", from:oh-my-zsh
+  # zplug "plugins/bundler", from:oh-my-zsh
   # zplug "plugins/rake-fast", from:oh-my-zsh
   # zplug "plugins/rbenv", from:oh-my-zsh
-  zplug "plugins/colorize", from:oh-my-zsh # Plugin for highlighting file content
+  # zplug "plugins/colorize", from:oh-my-zsh # Plugin for highlighting file content
   # zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
 #+END_SRC
 
@@ -635,22 +654,22 @@ Reasons for disabling range from performance to being un-needed.
 **** zplug internals
 Have zplug manage itself
 #+BEGIN_SRC shell
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+# zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 #+END_SRC
 
 Install plugins if there are plugins that have not been installed
 #+BEGIN_SRC shell
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     fi
+# fi
 #+END_SRC
 
 Finally have zplug load everything
 #+BEGIN_SRC shell
-zplug load
+# zplug load
 #+END_SRC
 ** SSH setup
 :PROPERTIES:
@@ -699,16 +718,18 @@ fi
 *** Bindings
 These are hella dope
 #+BEGIN_SRC shell
-bindkey -e
+bindkey -v
 
 bindkey "\e." insert-last-word
 bindkey -M viins '\e.' insert-last-word
 
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
+# bindkey "^[[A" history-beginning-search-backward
+# bindkey "^[[B" history-beginning-search-forward
 
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
+bindkey '^e' end-of-line
+bindkey '^a' beginning-of-line
 
 bindkey "\e[3~" delete-char
 
@@ -717,7 +738,10 @@ bindkey '^r' history-incremental-search-backward
 *** setops
 Enable hella dope shit
 #+BEGIN_SRC shell
+SAVEHIST=1500
+HISTFILE=~/.zsh_history
 setopt autopushd
+setopt share_history
 #+END_SRC
 *** load FZF
 #+BEGIN_SRC shell

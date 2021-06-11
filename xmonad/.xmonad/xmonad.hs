@@ -149,11 +149,16 @@ myStartupHook :: X ()
 myStartupHook = do
   forM_ [".xmonad-workspace-log", ".xmonad-title-log"] $ \file -> safeSpawn "mkfifo" ["/tmp/" ++ file]
   setWMName "LG3D"
-  spawnOnce "~/graphic-session"
+  spawnOnce "/home/belt/dotfiles/scripts/graphic-session"
 
 
-polybarColor :: String -> String -> String
-polybarColor code = wrap left right
+polybarBackground :: String -> String -> String
+polybarBackground code = wrap left right
+  where left = wrap "%{B" "}" code
+        right = "%{B-}"
+
+polybarForeground :: String -> String -> String
+polybarForeground code = wrap left right
   where left = wrap "%{F" "}" code
         right = "%{F-}"
 
@@ -166,14 +171,14 @@ eventLogHook = do
   let visibleWs = map (W.tag . W.workspace) visible
   let wss = map W.tag $ W.workspaces winset
   let wsStr = unwords $ map (fmt currWs visibleWs) $ sort' wss
-  let titleStr = polybarColor coolBlue ">>=   " ++ (take 100 windowTitle)
+  let titleStr = polybarForeground coolBlue ">>=   " ++ (take 100 windowTitle)
 
   io $ appendFile "/tmp/.xmonad-title-log" (titleStr ++ "\n")
   io $ appendFile "/tmp/.xmonad-workspace-log" (wsStr ++ "\n")
 
   where fmt currWs visibleWs ws
-          | currWs == ws = polybarColor currWsFg $ wrap "[" "]" ws
-          | ws `elem` visibleWs = polybarColor visibleWsFg $ wrap "(" ")" ws
+          | currWs == ws = polybarBackground currWsFg $ wrap "[" "]" ws
+          | ws `elem` visibleWs = polybarForeground visibleWsFg $ wrap "(" ")" ws
           | otherwise    = ws
         sort' = sortOn wsOrder
         find' = M.findWithDefault (-1)

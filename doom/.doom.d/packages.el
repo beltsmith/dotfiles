@@ -32,3 +32,5 @@
 (package! rufo)
 
 (package! exec-path-from-shell)
+
+(package! direnv)

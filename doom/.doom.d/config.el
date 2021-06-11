@@ -357,6 +357,8 @@
 
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
+(after! direnv-mode
+  (direnv-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

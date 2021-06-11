@@ -1,10 +1,10 @@
 [Unit]
-Description=Bluetooth manager
+Description=Barrier
 After=polybar.service
 PartOf=polybar.service
 
 [Service]
-ExecStart=/usr/bin/blueman-applet
+ExecStart=/usr/bin/barrier
 
 [Install]
 WantedBy=default.target

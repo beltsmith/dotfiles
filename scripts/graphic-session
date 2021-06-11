@@ -9,40 +9,45 @@ PAD_ID=30
 STYLUS_ID=17
 
 setup-wacom() {
-    xsetwacom set $PAD_ID Button 1 $UNDO_KEY_COMBO
-    xsetwacom set $PAD_ID Button 2 $ERASE_KEY_COMBO
-    xsetwacom set $PAD_ID Button 3 $ROTATE_PAD_COMBO
+	xsetwacom set $PAD_ID Button 1 $UNDO_KEY_COMBO
+	xsetwacom set $PAD_ID Button 2 $ERASE_KEY_COMBO
+	xsetwacom set $PAD_ID Button 3 $ROTATE_PAD_COMBO
 
-    xsetwacom set $STYLUS_ID MapToOutput HEAD-0
-    xsetwacom set $STYLUS_ID Button 3 $GRAB_KEY_COMBO
-    xsetwacom set $STYLUS_ID button 2 $PEN_KEY_COMBO
+	xsetwacom set $STYLUS_ID MapToOutput HEAD-0
+	xsetwacom set $STYLUS_ID Button 3 $GRAB_KEY_COMBO
+	xsetwacom set $STYLUS_ID button 2 $PEN_KEY_COMBO
 }
 
 set-background() {
-    feh --bg-fill ~/Downloads/tea-girl-pink.png
+	# feh --bg-fill ~/Downloads/tea-girl-pink.png
+	feh --bg-fill ~/Downloads/dopesmoker.jpg
 }
 set-cursor() {
-    xsetroot -cursor_name left_ptr
+	xsetroot -cursor_name left_ptr
 }
 
 restart-desktop-services() {
-    systemctl --user restart \
-        polybar.service \
-        blueman.service \
-        flameshot.service \
-        pasystray.service \
-        udiskie.service \
-        redshift-gtk.service
+	systemctl --user restart \
+		polybar.service \
+		blueman.service \
+		flameshot.service \
+		pasystray.service \
+		udiskie.service \
+		redshift-gtk.service \
+		barrier.service
 }
 
 desktop() {
-    setup-wacom
-    set-cursor
-    set-background
+	setup-wacom
+	set-cursor
+	set-background
+	restart-desktop-services
 }
 
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    echo 'hey'
+	echo "sourced"
+elif [[ $# -gt 0 ]]; then
+	$@
 else
-    desktop
+	desktop
 fi

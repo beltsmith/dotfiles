@@ -58,6 +58,12 @@ treat directory separator as a delimeter
 #+BEGIN_SRC shell
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 #+END_SRC
+*** switch dev
+#+begin_src shell
+export DEVKITPRO=/opt/devkitpro
+export DEVKITARM=/opt/devkitpro/devkitARM
+export DEVKITPPC=/opt/devkitpro/devkitPPC
+#+end_src
 *** BSPWM
 B(est|inary) Space Partitioning Window Manager.
 :'(
@@ -107,13 +113,15 @@ Setup GOPATH and add bin folder to my PATH
 
 #+BEGIN_SRC shell
 export GOPATH="$HOME/go"
-append_path "$GOPATH/bin"
+prepend_path "$GOPATH/bin"
 #+END_SRC
 **** User binaries
 Add two user binary folders to PATH, append so folders don't override system bins
 #+BEGIN_SRC shell
 append_path "$HOME/bin"
 append_path "$HOME/scripts"
+append_path "$HOME/dotfiles/scripts"
+append_path "$HOME/dotfiles/scripts/scripts"
 append_path "/usr/local/bin"
 append_path "$HOME/.local/bin"
 append_path "$HOME/.emacs.d/bin"
@@ -588,6 +596,11 @@ installation directory.
 #+BEGIN_SRC shell
 source $ZPLUG/init.zsh
 #+END_SRC
+
+Personal package management
+#+begin_src shell
+source $HOME/dotfiles/packages.sh
+#+end_src
 
 *** Plugins
 The syntax zplug uses to manage a plugin is as follows:

@@ -30,7 +30,7 @@ import qualified Data.Map as        M
 
 -- Configuration variables
 myWorkspaces :: [String]
-myWorkspaces         = ["emacs","web","term","chat","games","music","logs","idea",""]
+myWorkspaces         = ["emacs","web","term","chat","games","music","logs","idea","video"]
 myTerminal :: String
 -- myTerminal           = "termite"
 -- myTerminal           = "alacritty"
@@ -51,9 +51,11 @@ myFocusedBorderColor :: String
 myFocusedBorderColor = vaporPink
 myBrowser :: String
 -- myBrowser            = "firefox"
-myBrowser            = "google-chrome-stable"
+myBrowser            = "firefox-nightly"
+-- myBrowser            = "google-chrome-stable"
 myEditor :: String
-myEditor             = "emacs"
+-- myEditor             = "emacs"
+myEditor             = "emacsclient -c"
 
 rotatePad :: String
 rotatePad = "/home/belt/scripts/rotate-pad.sh"
@@ -123,21 +125,16 @@ myManageHook = composeAll . concat $
     [ [ isFullscreen                                --> (doF W.focusDown <+> doFullFloat) ]
     , [ role =? "pop-up" <&&>
         fmap ("Developer Tools" `isPrefixOf`) title --> doFloat                        ]
+    , [ fmap ("Origin" `isPrefixOf`) title    --> doFloat                        ]
     , [ fmap ("Zoom Meeting" `isPrefixOf`) title    --> doFloat                        ]
-    , [ className =? c                              --> doFloat  | c <- myClassFloats  ]
-    , [ className =? c                              --> doIgnore | c <- myClassIgnores ]
 --    , [ className ~? c                              --> doIgnore | c <- myClassMasters ]
-    , [ resource =? r                               --> doIgnore | r <- myResourceIgnores ]
     , [ isDialog                                    --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ resource =? "Closing"                       --> (doF W.shiftMaster <+> doF W.swapDown)]
     , [ role =? "toolbox"                           --> doF W.swapDown]
     ]
     where
-        role           = stringProperty "WM_WINDOW_ROLE"
-        myClassFloats  = ["Pinentry"] -- for gpg passphrase entry
-        myClassIgnores = [".kazam-wrapped"] -- ["doomx64.exe", "DOOMx64"]
+        role = stringProperty "WM_WINDOW_ROLE"
         -- myClassMasters = ["*- Doom Emacs", "emacs@*", "twitchui.exe", "battle.net.exe"]
-        myResourceIgnores = myClassIgnores
 
 -- myEventHook :: Event -> X All
 myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
@@ -169,8 +166,8 @@ eventLogHook = do
   let currWs = W.currentTag winset
   let visible = W.visible winset
   let visibleWs = map (W.tag . W.workspace) visible
-  let wss = map W.tag $ W.workspaces winset
-  let wsStr = unwords $ map (fmt currWs visibleWs) $ sort' wss
+  let wss = sort' . map W.tag $ W.workspaces winset
+  let wsStr = unwords $ map (fmt currWs visibleWs) wss
   let titleStr = polybarForeground coolBlue ">>=   " ++ (take 100 windowTitle)
 
   io $ appendFile "/tmp/.xmonad-title-log" (titleStr ++ "\n")

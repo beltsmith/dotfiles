@@ -5,6 +5,9 @@
   ################# Variables  ##################
   ###############################################
   export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+  export DEVKITPRO=/opt/devkitpro
+  export DEVKITARM=/opt/devkitpro/devkitARM
+  export DEVKITPPC=/opt/devkitpro/devkitPPC
   if [[ -n $SSH_CONNECTION ]]; then
       export EDITOR='emacsclient -c'
   else # lol
@@ -20,9 +23,11 @@
   prepend_path "$HOME/.rbenv/bin"
   prepend_path "$HOME/.cargo/bin"
   export GOPATH="$HOME/go"
-  append_path "$GOPATH/bin"
+  prepend_path "$GOPATH/bin"
   append_path "$HOME/bin"
   append_path "$HOME/scripts"
+  append_path "$HOME/dotfiles/scripts"
+  append_path "$HOME/dotfiles/scripts/scripts"
   append_path "/usr/local/bin"
   append_path "$HOME/.local/bin"
   append_path "$HOME/.emacs.d/bin"
@@ -216,6 +221,7 @@
   ###############################################
   export ZPLUG=/usr/share/zsh/scripts/zplug
   source $ZPLUG/init.zsh
+  source $HOME/dotfiles/packages.sh
   source ~/gits/zsh-snap/znap.zsh
   
   znap source marlonrichert/zsh-autocomplete

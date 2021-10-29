@@ -5,49 +5,53 @@ PEN_KEY_COMBO="key +ctrl +shift p -shift -ctrl"
 ERASE_KEY_COMBO="key +ctrl +shift e -shift -ctrl"
 ROTATE_PAD_COMBO="key +ctrl +shift +meta \` -meta -shift -ctrl"
 GRAB_KEY_COMBO="key +ctrl +shift a -shift -ctrl"
-PAD_ID=30
-STYLUS_ID=17
+wacom_devices=$(xsetwacom --list devices)
+PAD_ID=$(echo $wacom_devices | grep)
+STYLUS_ID=27
 
-setup-wacom() {
-	xsetwacom set $PAD_ID Button 1 $UNDO_KEY_COMBO
-	xsetwacom set $PAD_ID Button 2 $ERASE_KEY_COMBO
-	xsetwacom set $PAD_ID Button 3 $ROTATE_PAD_COMBO
+setup_wacom() {
+  xsetwacom set $PAD_ID Button 1 $UNDO_KEY_COMBO
+  xsetwacom set $PAD_ID Button 2 $ERASE_KEY_COMBO
+  xsetwacom set $PAD_ID Button 3 $ROTATE_PAD_COMBO
 
-	xsetwacom set $STYLUS_ID MapToOutput HEAD-0
-	xsetwacom set $STYLUS_ID Button 3 $GRAB_KEY_COMBO
-	xsetwacom set $STYLUS_ID button 2 $PEN_KEY_COMBO
+  xsetwacom set $STYLUS_ID MapToOutput HEAD-0
+  xsetwacom set $STYLUS_ID Button 3 $GRAB_KEY_COMBO
+  xsetwacom set $STYLUS_ID button 2 $PEN_KEY_COMBO
 }
 
-set-background() {
-	# feh --bg-fill ~/Downloads/tea-girl-pink.png
-	feh --bg-fill ~/Downloads/dopesmoker.jpg
+set_background() {
+  # feh --bg-fill ~/Downloads/tea-girl-pink.png
+  feh --bg-fill ~/Downloads/dopesmoker.jpg ~/Pictures/dune_9x16_cover.jpg ~/Pictures/dune_shai_hulud.jpg
 }
-set-cursor() {
-	xsetroot -cursor_name left_ptr
+set_cursor() {
+  xsetroot -cursor_name left_ptr
 }
 
-restart-desktop-services() {
-	systemctl --user restart \
-		polybar.service \
-		blueman.service \
-		flameshot.service \
-		pasystray.service \
-		udiskie.service \
-		redshift-gtk.service \
-		barrier.service
+restart_desktop_services() {
+  systemctl --user restart \
+    polybar.service \
+    polybar-side.service \
+    blueman.service \
+    flameshot.service \
+    pasystray.service \
+    udiskie.service \
+    redshift-gtk.service \
+    dunst.service \
+    barrier.service
 }
 
 desktop() {
-	setup-wacom
-	set-cursor
-	set-background
-	restart-desktop-services
+  ~/.screenlayout/default.sh
+  setup_wacom
+  set_cursor
+  set_background
+  restart_desktop_services
 }
 
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-	echo "sourced"
+  echo "sourced"
 elif [[ $# -gt 0 ]]; then
-	$@
+  $("$@")
 else
-	desktop
+  desktop
 fi

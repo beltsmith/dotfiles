@@ -1,0 +1,8 @@
+[Unit]
+Description=Polybar
+
+[Service]
+ExecStart=/usr/bin/polybar side
+
+[Install]
+WantedBy=default.target

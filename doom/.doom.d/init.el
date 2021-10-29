@@ -23,13 +23,15 @@
 
 (doom! :completion
        company           ; the ultimate code completion backend
-       (ivy +prescient +icons)               ; a search engine for love and life
+       ;; (ivy +prescient +icons)               ; a search engine for love and life
+       (vertico +icons)
 
        :ui
        deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       (emoji +unicode)  ; 🙂
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
@@ -58,8 +60,8 @@
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        (format +onsave)  ; automated prettiness
-       ;;lispy             ; vim for lisp, for people who dont like vim
        ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who dont like vim
        multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
@@ -82,8 +84,9 @@
 
        :checkers
        syntax         ; tasing you for every semicolon you forget
-       spell          ; tasing you for misspelling mispelling
-       ;;grammar           ; tasing grammar mistake every you make
+       (spell +flyspell) ; tasing you for misspelling mispelling
+       grammar           ; tasing grammar mistake every you make
+       ; this is an test
 
        :tools
        ;;ansible
@@ -99,12 +102,13 @@
        (lsp +peek)
        ;;macos             ; MacOS-specific commands
        (magit +forge)             ; a git porcelain for Emacs
+       ;; magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;; prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
-       ;; taskrunner        ; taskrunner for all your projects
+       taskrunner        ; taskrunner for all your projects
        terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
@@ -115,7 +119,7 @@
        :lang
        ;;agda              ; types of types of types of types...
        cc                ; C/C++/Obj-C madness
-       ;; clojure           ; java with a lisp
+       (clojure +lsp)           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;; crystal           ; ruby at the speed of c
@@ -131,7 +135,7 @@
        ;;fsharp           ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       ;; (go +lsp)               ; the hipster dialect
+       (go +lsp)               ; the hipster dialect
        (haskell +dante) ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
@@ -150,6 +154,9 @@
        nix               ; I hereby declare "nix geht mehr!"
        ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
+        +brain
+        +noter
+        +pretty
         ;; +dragndrop       ; file drag & drop support
         ;; +ipython         ; ipython support for babel
         ;; +pandoc          ; pandoc integration into org's exporter
@@ -166,12 +173,12 @@
        (rust +lsp)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;; scala             ; java, but good
        ;; scheme            ; a fully conniving family of lisps
-       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
-       yaml
+       (yaml +lsp)
 
        :email
        ;; (mu4e +gmail)       ; WIP

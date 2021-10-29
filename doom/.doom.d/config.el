@@ -15,7 +15,8 @@
       display-line-numbers-type 'visual
       ;; doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14)
       doom-font (font-spec :family "FiraCode Nerd Font" :size 14)
-      doom-theme 'doom-dracula)
+      ;; doom-theme 'doom-dracula
+      doom-theme 'doom-molokai)
 
 (after! toggle-quotes
   (general-def :states 'normal
@@ -30,24 +31,12 @@
 
 (evil-define-key 'normal 'global
   [(control return)] 'evil-ex
-  ;; (kbd "C-;")        'counsel-M-x
-  ;; (kbd "C-SPC")      'counsel-projectile
-  ;; "zc"            'vimish-fold
-  ;; "zf"            'vimish-fold-toggle
-  ;; "zo"            'vimish-fold-unfold
-  ;; "zd"            'vimish-fold-delete
-  ;; "zD"            'vimish-fold-delete-all
-  ;; "zO"            'vimish-fold-unfold-all
-  ;; (kbd "H-i")        'evil-jump-forward
-  ;; (kbd "M-j")        'move-text-down
-  ;; (kbd "M-k")        'move-text-up
-      ;; [escape]           'spacemacs/evil-search-clear-highlight
-  ;; "gt"               'evil-jump-to-tag
-  ;; (kbd "C-e")        'end-of-line ;; make end-of-line work in insert
-  ;; (kbd "C-a")        'beginning-of-line ;; make beginning-of-line work in insert
-  ;; (kbd "C-c s p")    'ripgrep-regexp
+  (kbd "C-;")        'counsel-M-x
+  (kbd "C-SPC")      'counsel-projectile
+  "gt"               'evil-jump-to-tag
+  (kbd "C-e")        'end-of-line ;; make end-of-line work in insert
+  (kbd "C-a")        'beginning-of-line ;; make beginning-of-line work in insert
   "\/"               'swiper
-  ;; "J"                'evil-join-one-space
   " sap"             '+ivy/project-search
   " Cl"               'org-capture-goto-last-stored
   (kbd "M-y") 'counsel-yank-pop)
@@ -63,7 +52,6 @@
   ",er" 'eval-region
   [(control return)] 'evil-ex
   (kbd "RET")        'align-regexp
-  ;; "\/"               'spacemacs/swiper-region-or-symbol
   (kbd "C-g") 'evil-normal-stateq)
 
 (evil-define-key 'motion 'global
@@ -167,110 +155,10 @@
       lsp-enable-on-type-formatting t
       lsp-enable-indentation nil)
 
-;; exercism
-(defun exercism-cmd (cmd &rest args)
-  "Run exercism CMD with ARGS."
-  (shell-command (mapconcat 'identity (cons "exercism" (cons cmd args)) " ")))
-
-(defun exercism-submit ()
-  "Submit current file to exercism."
-  (interactive)
-  (exercism-cmd "submit" buffer-file-name))
-
-
-;; TODO: Setup table of tracks and exercises
-(defun exercism-download ()
-  "Download exercise for a track."
-  (interactive)
-  (exercism-cmd "download"
-                (concat "--exercise=" (read-string "Exercise: "))
-                (concat "--track=" (read-string "Track: "))))
-
-(defvar my--prodigy-rails-tags
-  '((:name 'thin    :ready-message "Listening on 0\\.0\\.0\\.0:[0-9]+, CTRL\\+C to stop")
-    (:name 'webrick :ready-message "WEBrick::HTTPServer#start: pid=[0-9]+ port=[0-9]+")
-    (:name 'mongrel :ready-message "Ctrl-C to shutdown server")
-    (:name 'unicorn :ready-message "master process ready")
-    (:name 'puma    :ready-message "Use Ctrl-C to stop")
-    (:name 'rails   :tags '(thin mongrel webrick unicorn puma)))
-  "Prodigy tags for rails servers.")
-
-(defvar my--prodigy-flask-tags
-  '((:name 'flask-prod :ready-message " * Running on ")
-    (:name 'flask-dev  :ready-message " * Debugger is active!")
-    (:name 'python     :stop-signal 'sigkill)
-    (:name 'flask      :tags '(flask-dev flask-prod python)))
-  "Prodigy tags for flask servers.")
-
-(defvar my--prodigy-version-managers
-  '((:name 'rbenv :init (lambda () (global-rbenv-mode) (rbenv-use-corresponding)))))
-
-(defvar my--prodigy-commands
-  '((:name bundled     :command "bundle")
-    (:name sprung      :command "spring")
-    (:name memcached   :command "memcached")
-    (:name redis       :command "redis-server" :ready-message "ready to accept connections")
-    (:name make        :command "make")
-    (:name runit       :command "./runit")
-    (:name bin-rails   :command "./bin/rails"  :tags (rails server))
-    (:name bin-rake    :command "./bin/rake")
-    (:name bin-bundle  :command "./bin/bundle")
-    (:name npm         :command "npm")
-    (:name yarn        :command "yarn" :ready-message "Compiled successfully" :stop-signal sigkill)
-    (:name webpack     :command "./bin/webpack" :ready-message "Compiled successfully" :stop-signal sigkill)
-    (:name mailcatcher :command "mailcatcher") :ready-message "==> http://127.0.0.1:1080" :stop-signal sigkill))
-
-(defvar my--prodigy-command-args
-  '((:name resque    :args ("exec" "environment" "resque:work")         :ready-message "app init time"       :tags (bundled))
-    (:name sidekiq   :args ("exec" "sidekiq" "-C" "config/sidekiq.yml") :ready-message "Starting processing" :tags (bundled))
-    (:name kafka-srv :args ("exec" "kafka" "server")                    :ready-message "Starting processing" :tags (bundled))
-    (:name server    :args ("server")))
-  "Prodigy tags for arguments to commands.")
-
-(defvar my--prodigy-full-commands
-  '((:name make-flask  :tags (make flask server))
-    (:name make-yarn   :tags (make yarn)   :args ("yarn"))
-    (:name runit-flask :tags (runit flask) :args ("backend"))
-    (:name runit-yarn  :tags (runit flask) :args ("frontend"))
-    (:name npm-server  :tags (npm)         :args ("run" "server"))
-    (:name npm-start   :tags (npm)         :args ("start"))))
-
-(defvar my--prodigy-projects
-  '((:name prevail  :cwd "~/dev/prevail"          :path ("~/dev/prevail")          :url "prevail.local"     :tags (rbenv))
-    (:name the-hand :cwd "~/dev/thecat/the-hand/" :path ("~/dev/thecat/the-hand/") :url "http://localhost:8000"))
-  "Prodigy tags to relate metadata to projects.")
-
-(defvar my--prodigy-services
-  '((:name "Prevail Rails server" :tags (prevail bin-rails server))
-    (:name "Prevail webpack"       :tags (prevail webpack))
-    (:name "Prevail mailcatcher"   :tags (prevail mailcatcher))
-    (:name "The Hand server"       :tags (the-hand npm-server))
-    (:name "The Hand bucklescript" :tags (the-hand npm-start))))
-
-(defvar my--prodigy-tags
-  (append my--prodigy-rails-tags
-          my--prodigy-flask-tags
-          my--prodigy-version-managers
-          my--prodigy-commands
-          my--prodigy-command-args
-          my--prodigy-full-commands
-          my--prodigy-projects))
-
-
-(after! prodigy
-  (setq prodigy-tags my--prodigy-tags
-        prodigy-services my--prodigy-services)
-  (add-hook 'prodigy-mode-hook (lambda () (evil-snipe-local-mode -1)))
-  (general-def prodigy-mode-map
-    "s" 'prodigy-start
-    "S" 'prodigy-stop
-    "R" 'prodigy-restart)
-
-  (general-def 'normal 'global
-    :prefix "SPC"
-    "a p" 'prodigy))
-
-
+;; (let ((conf-files '("prodigy" "exercism"))
+;;       (conf-dir "config"))
+;;   (dolist (file conf-files)
+;;     (require-relative (concat conf-dir "/" file ".el"))))
 
 (setq +popup-defaults '(:side left :height 0.50 :width 40 :quit t :select ignore :ttl 5))
 
@@ -285,7 +173,7 @@
 (defun buffer-first-line ()
   (interactive)
   (save-excursion
-    (goto-line 0)
+    (forward-line 0)
     (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
 
 (defun my/ruby-insert-frozen-string-magic-comment ()
@@ -296,7 +184,7 @@
     (pcase first-line
       ((pred (string= frozen-string-magic-comment)) nil)
       (_ (save-excursion
-           (goto-line 0)
+           (forward-line 0)
            (insert frozen-string-magic-comment "\n\n"))))))
 
 ;; (add-hook 'ruby-mode 'rufo-minor-mode)
@@ -346,19 +234,13 @@
   (interactive)
   (set-file-modes (buffer-file-name) "+x"))
 
-(require 'org-habit)
-(setq org-modules '(ol-notmuch ol-bibtext ol-eww ol-gnus habits)
-      org-habit-preceding-days 21
-      org-habit-following-days 7
-      org-habit-show-habits-only-for-today nil
-      org-habit-show-all-today t
-      org-habit-today-glyph ?‖
-      org-habit-completed-glyph ?✓)
+(require-relative "config/org.el")
 
-(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+;(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
-(after! direnv-mode
-  (direnv-mode))
+(after! direnv-mode (direnv-mode))
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

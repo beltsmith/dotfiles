@@ -23,7 +23,8 @@
 
 (doom! :completion
        company           ; the ultimate code completion backend
-       (ivy +prescient +icons)               ; a search engine for love and life
+       ;; (ivy +prescient +icons)               ; a search engine for love and life
+       (vertico +icons)           ; the search engine of the future
 
        :ui
        deft              ; notational velocity for Emacs
@@ -115,7 +116,7 @@
        :lang
        ;;agda              ; types of types of types of types...
        cc                ; C/C++/Obj-C madness
-       ;; clojure           ; java with a lisp
+       (clojure +lsp)           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;; crystal           ; ruby at the speed of c

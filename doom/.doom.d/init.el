@@ -157,6 +157,7 @@
         +brain
         +noter
         +pretty
+        +roam2
         ;; +dragndrop       ; file drag & drop support
         ;; +ipython         ; ipython support for babel
         ;; +pandoc          ; pandoc integration into org's exporter

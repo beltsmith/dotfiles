@@ -49,7 +49,7 @@ label-focused-foreground = #ff7faa
 [bar/side]
 wm-restack = bspwm
 bottom = false
-monitor = DP-0
+monitor = DisplayPort-2
 
 width = 100%
 height = 50
@@ -75,7 +75,7 @@ font-2 = ${fonts.special}
 [bar/main]
 wm-restack = bspwm
 bottom = false
-monitor = DP-2
+monitor = DisplayPort-1
 width = 100%
 height = 27
 fixed-center = false

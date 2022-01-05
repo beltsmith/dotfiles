@@ -14,6 +14,10 @@ Evals go after everything
   ###############################################
   <<variables>>
   ###############################################
+  ################  Directories ## ##############
+  ###############################################
+  <<directories>>
+  ###############################################
   #################  Aliases   ##################
   ###############################################
   <<aliases>>
@@ -181,6 +185,14 @@ export AWS_SESSION_TOKEN_TTL=12h
 *** terminal infos
 #+begin_src shell
 export TERM=xterm-256color
+#+end_src
+** Directories
+:PROPERTIES:
+:header-args: :noweb-ref directories
+:END:
+#+begin_src shell
+hash -d dev=/home/belt/dev
+hash -d steam=/home/belt/.steam/steam/steamapps/common
 #+end_src
 ** Evals
 :PROPERTIES:

@@ -41,6 +41,11 @@
   export AWS_SESSION_TOKEN_TTL=12h
   export TERM=xterm-256color
   ###############################################
+  ################  Directories ## ##############
+  ###############################################
+  hash -d dev=/home/belt/dev
+  hash -d steam=/home/belt/.steam/steam/steamapps/common
+  ###############################################
   #################  Aliases   ##################
   ###############################################
     alias l="exa -lgh --git"

@@ -120,6 +120,16 @@
 (evil-define-key 'normal enh-ruby-mode-map
   "gt" 'robe-jump)
 
+(evil-define-key 'normal scad-preview--image-mode-map
+  "n" 'scad-preview-dist+
+  "p" 'scad-preview-dist-
+  "k" 'scad-preview-rotx-
+  "j" 'scad-preview-rotx+
+  "h" 'scad-preview-rotz-
+  "l" 'scad-preview-rotz+
+  (kbd "<left>") 'scad-preview-trnsx-
+  (kbd "<right>") 'scad-preview-trnsx+)
+
 ;; org
 (defun my/blog-file-by-date ()
   "Create an Org file with current date as name."
@@ -235,6 +245,7 @@
   (set-file-modes (buffer-file-name) "+x"))
 
 (require-relative "config/org.el")
+(require-relative "config/prolog.el")
 
 ;(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 

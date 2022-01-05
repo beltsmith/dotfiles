@@ -9,3 +9,11 @@
       org-habit-show-all-today t
       org-habit-today-glyph ?‖
       org-habit-completed-glyph ?✓)
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox-nightly"
+      org-roam-graph-viewer "firefox-nightly")
+
+(require 'org-roam-protocol)
+
+(org-roam-db-autosync-mode)

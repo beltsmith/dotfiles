@@ -11,13 +11,9 @@ export BROWSER=/usr/bin/firefox-nightly
 
 autostart
 
-#bspc monitor -d I II III IV V VI VII VIII IX X
 for monitor in $(bspc query -M); do
     bspc monitor "$monitor" -d emacs web term chat games music logs idea video
 done
-# bspc monitor DP-2 -d emacs web term chat games music logs idea video
-# bspc monitor DP-0 -d emacs web term chat games music logs idea video
-# bspc monitor HDMI-0 -d emacs web term chat games music logs idea video
 
 bspc config border_width 3
 bspc config window_gap 6

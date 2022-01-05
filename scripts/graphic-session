@@ -21,7 +21,7 @@ setup_wacom() {
 
 set_background() {
   # feh --bg-fill ~/Downloads/tea-girl-pink.png
-  feh --bg-fill ~/Downloads/dopesmoker.jpg ~/Pictures/dune_9x16_cover.jpg ~/Pictures/dune_shai_hulud.jpg
+  feh --bg-fill ~/Pictures/dopesmoker.jpg ~/Pictures/dune_shai_hulud.jpg ~/Pictures/dune_9x16_cover.jpg
 }
 set_cursor() {
   xsetroot -cursor_name left_ptr

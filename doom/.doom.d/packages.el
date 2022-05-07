@@ -17,7 +17,9 @@
 ;; (package! hide-mode-line)
 (package! nginx-mode)
 
-(package! arduino-mode)
+(package! ox-hugo)
+
+;; (package! arduino-mode)
 
 ;; (package! dap-mode)
 

@@ -11,6 +11,26 @@ export BROWSER=/usr/bin/firefox-nightly
 
 autostart
 
+MONITOR="DisplayPort-1"
+
+extra-desktops() {
+    bspc query -D -m "$MONITOR"
+}
+
+extra-monitors() {
+    bspc query -M -m "$MONITOR"
+}
+
+single-monitor() {
+    for desktop in $(sed "/$(extra-desktops)/d" <(bspc query -D)); do
+        bspc desktop "$desktop" --to-monitor "$MONITOR"
+    done
+
+    for monitor in $(sed "/$(extra-monitors)/d" <(bspc query -M)); do
+        bspc monitor "$monitor" --remove
+    done
+}
+
 for monitor in $(bspc query -M); do
     bspc monitor "$monitor" -d emacs web term chat games music logs idea video
 done

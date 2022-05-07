@@ -16,7 +16,7 @@
     append_path() {
       export PATH="$PATH:$1"
     }
-  
+
     prepend_path() {
       export PATH="$1:$PATH"
     }
@@ -45,9 +45,11 @@
   ###############################################
   hash -d dev=/home/belt/dev
   hash -d steam=/home/belt/.steam/steam/steamapps/common
+  hash -d games=/mnt/games/steamapps/common
   ###############################################
   #################  Aliases   ##################
   ###############################################
+alias kbflash='qmk flash -kb handwired/dactyl_promicro -km beltsmith'
     alias l="exa -lgh --git"
     alias ls='exa' # for compatibility with fzf
     alias la='l -a'
@@ -70,10 +72,10 @@
     alias pacupd='paccmd -Syyu'
     alias pacdb='sudo pacman -Syy'
     alias sync-packages='arch-install.sh'
-  
+
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
-  
+
     alias xboxc='sudo xboxdrv --mimic-xpad --detach-kernel-driver --silent'
     alias steam_wine='WINEDEBUG=-all wine ~/.wine/drive_c/Program\ Files/Steam/Steam.exe -no-dwrite >/dev/null 2>&1 &'
     alias bt='bluetoothctl'
@@ -82,7 +84,7 @@
   alias ....="\cd ../../.."
   alias .....="\cd ../../../.."
   alias ......="\cd ../../../../.."
-  
+
     alias kc="kubectl"
   alias dcmp="docker-compose"
     # unalias rg # Fuck off rails generate, who the hell uses you
@@ -91,7 +93,7 @@
   alias cqlsh="docker run --rm -it --network host cassandra cqlsh"
   alias nassh="TERM=xterm-256color ssh root@tower"
   alias hosts="hosts --auto-sudo"
-  
+
   fpath=(~/.zsh/completion $fpath)
   ###############################################
   ################# Functions  ##################
@@ -102,12 +104,12 @@
   loadit() {
       [[ -a $1 ]] && source $1
   }
-  
+
     gi() {
         gem install $@
         rbenv rehash
     }
-  
+
   slowly() { trickle -u 1024 -d 1024 $@ }
   cdl () { cd "$@" && ls; }
   y2j() {
@@ -117,7 +119,7 @@
           ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))' < $1
       fi
   }
-  
+
   mackup() {
     local folder=$1
     local log=$(mktemp /tmp/transfer.log.XXXXX)
@@ -143,13 +145,13 @@
       local dest=$2
       mv "$src" "$dest"
   }
-  
+
   multi_rspec() {
       for i in $(seq $1) ;
         do bundle exec rspec spec ; [[ ! $? = 0 ]] && break ;
       done
   }
-  
+
   multi() {
       for i in $(seq $1) ;
         do ${*:2} ; [[ ! $? = 0 ]] && break ;
@@ -160,11 +162,11 @@
         do ${*:2} ;
       done
   }
-  
+
   multi_async() {
       for i in $(seq $1) ; do JOB=$i ${*:2} & ; done
   }
-  
+
   multi_curl() { for i in $(seq $1) ; do ${*:2} -h >> logs.out & ; done }
     function mount_build() {
       local build_number="$1"
@@ -172,9 +174,9 @@
   function hsql() {
       psql `heroku config -a $1 | grep 'MASTER_DATA' | cut -f 2-100 -d ':'`
   }
-  
+
   function _hsql() {
-  
+
   }
   function _herokuapps() {
       local cache_file = /tmp/heroku_apps
@@ -200,7 +202,7 @@
   #################    SSH     ##################
   ###############################################
   export SSH_ENV="$HOME/.ssh/environment"
-  
+
   start_agent() {
       echo "Initialising new SSH agent..."
       /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
@@ -209,9 +211,9 @@
       . "${SSH_ENV}" > /dev/null
       /usr/bin/ssh-add;
   }
-  
+
   # Source SSH settings, if applicable
-  
+
   if [ -f "${SSH_ENV}" ]; then
       . "${SSH_ENV}" > /dev/null
       #ps ${SSH_AGENT_PID} doesn't work under cywgin
@@ -228,14 +230,14 @@
   source $ZPLUG/init.zsh
   source $HOME/dotfiles/packages.sh
   source ~/gits/zsh-snap/znap.zsh
-  
+
   znap source marlonrichert/zsh-autocomplete
   znap source mafredri/zsh-async
-  
+
   znap source b4b4r07/enhancd #, use:init.sh
   znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
   znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
-  
+
   znap prompt sindresorhus/pure
     # zplug "zsh-users/zsh-history-substring-search"
     # zplug "zsh-users/zsh-completions" # do-everything argument completions
@@ -244,7 +246,7 @@
     # zplug "mafredri/zsh-async"
     # zplug "sindresorhus/pure", use:pure.zsh, as:theme
     # zplug "dracula/zsh", as:theme
-  
+
     # zplug "b4b4r07/enhancd", use:init.sh
     # zplug "junegunn/fzf", as:command, use:"bin/fzf-tmux"
     # zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
@@ -258,9 +260,9 @@
     # zplug "plugins/colorize", from:oh-my-zsh # Plugin for highlighting file content
     # zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
     # zplug "hchbaw/auto-fu.zsh"
-  
+
     # zplug "plugins/rails", from:oh-my-zsh
-  
+
     # zplug "lib/completion", from:oh-my-zsh
   # zplug 'zplug/zplug', hook-build:'zplug --self-manage'
   # if ! zplug check --verbose; then
@@ -274,7 +276,7 @@
   #################    Evals   ##################
   ###############################################
   # eval "$(hub alias -s)"
-  
+
   eval "$(fasd --init auto)"
   # eval "$(pyenv init -)"
   eval "$(direnv hook zsh)"
@@ -288,23 +290,24 @@
       __vte_osc7
   fi
   bindkey -v
-  
+
   bindkey "\e." insert-last-word
   bindkey -M viins '\e.' insert-last-word
-  
+
   # bindkey "^[[A" history-beginning-search-backward
   # bindkey "^[[B" history-beginning-search-forward
-  
+
   bindkey "^[[1;3C" forward-word
   bindkey "^[[1;3D" backward-word
   bindkey '^e' end-of-line
   bindkey '^a' beginning-of-line
-  
+
   bindkey "\e[3~" delete-char
-  
-  bindkey '^r' history-incremental-search-backward
-  SAVEHIST=1500
-  HISTFILE=~/.zsh_history
-  setopt autopushd
-  setopt share_history
+
+export HISTSIZE=1000000000
+export SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
+HISTFILE=~/.zsh_history
+setopt autopushd
+setopt share_history
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

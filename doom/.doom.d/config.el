@@ -9,6 +9,7 @@
 ;; (add-hook 'prog-mode-hook #'my-prog-mode-hook)
 
 (setq js-indent-level 2)
+(setq-default c-basic-offset 4)
 (remove-hook 'window-size-change-functions #'+doom-dashboard-resize-h)
 
 (setq org-log-into-drawer nil
@@ -245,9 +246,16 @@
   (set-file-modes (buffer-file-name) "+x"))
 
 (require-relative "config/org.el")
-(require-relative "config/prolog.el")
+;; (require-relative "config/prolog.el")
 
 ;(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+
+(defun kill-to-file ()
+  (interactive)
+  (let ((file (read-file-name "File:"))
+        (region (funcall region-extract-function nil)))
+    (f-write-text region 'utf-8 file)
+    (evil-delete (region-beginning) (region-end))))
 
 (after! direnv-mode (direnv-mode))
 
@@ -258,7 +266,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(platformio-mode arduino-mode)))
+ '(package-selected-packages '(platformio-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

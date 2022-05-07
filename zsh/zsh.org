@@ -193,6 +193,7 @@ export TERM=xterm-256color
 #+begin_src shell
 hash -d dev=/home/belt/dev
 hash -d steam=/home/belt/.steam/steam/steamapps/common
+hash -d games=/mnt/games/steamapps/common
 #+end_src
 ** Evals
 :PROPERTIES:
@@ -235,7 +236,10 @@ autoload -Uz compinit && compinit -i
 :header-args: :noweb-ref aliases
 :END:
 I'm super bad at both typing and spelling so this helps me suck less.
-
+*** qmk
+#+begin_src shell
+alias kbflash='qmk flash -kb handwired/dactyl_promicro -km beltsmith'
+#+end_src
 *** LS
 I like pretty colours, pretty girls like trap music.
 #+BEGIN_SRC shell
@@ -249,7 +253,7 @@ I like pretty colours, pretty girls like trap music.
 #alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
 alias nsw="sudo netctl switch-to"
 #alias ncl="netctl list"
-#+END_SRC
+#+END_SR
 *** Editors
 Honestly these are just silly now that I use emacs
 #+BEGIN_SRC shell
@@ -763,7 +767,9 @@ bindkey '^r' history-incremental-search-backward
 *** setops
 Enable hella dope shit
 #+BEGIN_SRC shell
-SAVEHIST=1500
+export HISTSIZE=1000000000
+export SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
 HISTFILE=~/.zsh_history
 setopt autopushd
 setopt share_history

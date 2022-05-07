@@ -6,7 +6,7 @@
  '(ansi-color-names-vector
    ["#1c1e1f" "#e74c3c" "#b6e63e" "#e2c770" "#268bd2" "#fb2874" "#66d9ef" "#d6d6d4"])
  '(custom-safe-themes
-   '("27a1dd6378f3782a593cc83e108a35c2b93e5ecc3bd9057313e1d88462701fcd" default))
+   '("234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "27a1dd6378f3782a593cc83e108a35c2b93e5ecc3bd9057313e1d88462701fcd" default))
  '(exwm-floating-border-color "#323435")
  '(fci-rule-color "#555556")
  '(highlight-tail-colors
@@ -19,7 +19,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#525254"))
  '(objed-cursor-color "#e74c3c")
  '(package-selected-packages
-   '(calfw-ical vimrc-mode scad-preview scad-mode elein gherkin-mode counsel-dash moe-theme platformio-mode arduino-mode))
+   '(link-hint lsp-rescript ox-hugo lsp-tailwindcss calfw-ical vimrc-mode scad-preview scad-mode elein gherkin-mode counsel-dash moe-theme platformio-mode arduino-mode))
  '(pdf-view-midnight-colors (cons "#d6d6d4" "#1c1e1f"))
  '(rustic-ansi-faces
    ["#1c1e1f" "#e74c3c" "#b6e63e" "#e2c770" "#268bd2" "#fb2874" "#66d9ef" "#d6d6d4"])
@@ -44,7 +44,8 @@
     (cons 320 "#77504e")
     (cons 340 "#555556")
     (cons 360 "#555556")))
- '(vc-annotate-very-old-color nil))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types '((emacs-startup-hook))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

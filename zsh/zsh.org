@@ -473,7 +473,7 @@ multi_rspec() {
     done
 }
 
-multi() {
+do_multi() {
     for i in $(seq $1) ;
       do ${*:2} ; [[ ! $? = 0 ]] && break ;
     done
@@ -633,9 +633,9 @@ source ~/gits/zsh-snap/znap.zsh
 znap source marlonrichert/zsh-autocomplete
 znap source mafredri/zsh-async
 
-znap source b4b4r07/enhancd #, use:init.sh
-znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
-znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
+znap source b4b4r07/enhancd
+# znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
+# znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
 
 znap prompt sindresorhus/pure
 #+end_src

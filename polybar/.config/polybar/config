@@ -189,6 +189,7 @@ type = internal/fs
 interval = 25
 
 mount-0 = /
+mount-1 = /mnt/games
 
 label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
 label-unmounted = %mountpoint%

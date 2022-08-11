@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+key=/home/belt/.ssh/kasa_ed25519
+
+ssh -i $key $@

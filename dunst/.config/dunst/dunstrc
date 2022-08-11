@@ -20,6 +20,8 @@ timeout=0
 
 [global]
 
+width=(600,1400)
+# height=0
 monitor=0
 
 # The format of the message.  Possible variables:
@@ -29,12 +31,7 @@ monitor=0
 #   %i  iconname (including its path)
 #   %I  iconname (without its path)
 #   %p  progress value if set ([  0%] to [100%]) or nothing
-format="
-%a
-<b>%s</b>
-%b
-%p
-"
+format="%a\n<b>%s</b>\n%b\n%p\n"
 
 # The geometry of the window. Format: [{width}]x{height}[+/-{x}+/-{y}]
 # The height=number of notifications, all other variables are px
@@ -42,9 +39,8 @@ format="
 # If width is 0, window will fit to longest message
 # Positive x value is measured from the left of the screen, negative x is measured from the right
 # Positive y value is measured from the top of the screen
-geometry="700-125+75"
 
-font="FiraCode Nerd Font 6"
+font="FiraCode Nerd Font 16"
 # font="Adobe Source Code Pro 10"
 allow_markup=true
 plain_text=false

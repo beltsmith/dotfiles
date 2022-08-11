@@ -23,6 +23,18 @@
   (general-def :states 'normal
     (kbd "C-'") 'toggle-quotes))
 
+(setq company-minimum-prefix-length 1)
+
+;; (setq scheme-program-name "guile")
+
+(evil-define-key 'insert company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)
+
+
+(setq emms-source-file-default-directory (expand-file-name "~/music/")
+      emms-player-mpd-server-name "localhost"
+      emms-player-mpd-server-port "6600"
+      emms-player-mpd-music-directory "~/music")
+
 (defun org-insert-today ()
   (interactive)
   (org-insert-time-stamp (current-time)))
@@ -246,6 +258,7 @@
   (set-file-modes (buffer-file-name) "+x"))
 
 (require-relative "config/org.el")
+;;(require-relative "config/sql.el")
 ;; (require-relative "config/prolog.el")
 
 ;(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
@@ -260,6 +273,16 @@
 (after! direnv-mode (direnv-mode))
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
+; java
+
+(setq lsp-java-vmargs
+      '("-noverify"
+        "-Xmx1G"
+        "-XX:+UseG1GC"
+        "-XX:+UseStringDeduplication"
+        "-javaagent:/home/belt/Downloads/lombok.jar"
+        "-Xbootclasspath/a:/home/belt/Downloads/lombok.jar"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

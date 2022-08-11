@@ -1,3 +1,4 @@
+source ~/gits/zsh-snap/znap.zsh
 #!/usr/bin/env zsh
   # This is my zshrc
   export MY_ZSH=$HOME/.zsh
@@ -226,17 +227,16 @@ alias kbflash='qmk flash -kb handwired/dactyl_promicro -km beltsmith'
   ###############################################
   #################   Plugins  ##################
   ###############################################
-  export ZPLUG=/usr/share/zsh/scripts/zplug
-  source $ZPLUG/init.zsh
+  # export ZPLUG=/usr/share/zsh/scripts/zplug
+  # source $ZPLUG/init.zsh
   source $HOME/dotfiles/packages.sh
-  source ~/gits/zsh-snap/znap.zsh
 
   znap source marlonrichert/zsh-autocomplete
   znap source mafredri/zsh-async
 
   znap source b4b4r07/enhancd #, use:init.sh
-  znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
-  znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
+  # znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
+  # znap source junegunn/fzf-bin #, from:gh-r, as:command, rename-to:fzf
 
   znap prompt sindresorhus/pure
     # zplug "zsh-users/zsh-history-substring-search"

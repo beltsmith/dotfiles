@@ -1,4 +1,4 @@
-source ~/gits/zsh-snap/znap.zsh
+source ~/dev/zsh-snap/znap.zsh
 #!/usr/bin/env zsh
   # This is my zshrc
   export MY_ZSH=$HOME/.zsh

@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(fsharp-mode gdscript-mode leetcode link-hint arduino-mode))
+   '(ox-hugo fsharp-mode gdscript-mode leetcode link-hint arduino-mode))
  '(sql-connection-alist
    '(("clevertech-maria"
       (sql-product 'mysql)

@@ -4,10 +4,6 @@
 ;;   "Relative number lines for program modes"
 ;;   (setq display-line-numbers 'relative))
 
-;; (setq-default display-line-numbers 'relative)
-
-;; (add-hook 'prog-mode-hook #'my-prog-mode-hook)
-
 (setq js-indent-level 2)
 (setq-default c-basic-offset 4)
 (remove-hook 'window-size-change-functions #'+doom-dashboard-resize-h)
@@ -16,14 +12,30 @@
       display-line-numbers-type 'visual
       ;; doom-font (font-spec :family "FuraMono Nerd Font Mono" :size 14)
       doom-font (font-spec :family "FiraCode Nerd Font" :size 14)
-      ;; doom-theme 'doom-dracula
       doom-theme 'doom-molokai)
+
+(setq browse-url-generic-program "firefox")
 
 (after! toggle-quotes
   (general-def :states 'normal
     (kbd "C-'") 'toggle-quotes))
 
-(setq company-minimum-prefix-length 1)
+(setq company-minimum-prefix-length 2)
+(setq max-lisp-eval-depth 10000)
+
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '(typescript-tsx-mode . ("npx" "typescript-language-server" "--stdio"))))
+
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '(typescript-mode . ("npx" "typescript-language-server" "--stdio"))))
+
+(after! eglot
+  (add-to-list 'eglot-server-programs
+               '((js-mode typescript-mode typescript-tsx-mode) . ("npx" "typescript-language-server" "--stdio"))))
+
+;;(add-to-list 'browse-at-remote-type-regexps '("^.*\\.github\\.com$" . "github"))
 
 ;; (setq scheme-program-name "guile")
 
@@ -38,6 +50,10 @@
 (defun org-insert-today ()
   (interactive)
   (org-insert-time-stamp (current-time)))
+
+(evil-define-key 'normal visual-line-mode-map
+  "j" 'evil-next-visual-line
+  "k" 'evil-previous-visual-line)
 
 (evil-define-key '(normal insert) org-mode-map
   (kbd "C-c t") 'org-insert-today)
@@ -166,17 +182,17 @@
 ;; SQL
 (set-popup-rule! "*SQL*" :ignore t)
 
-;; rust
-(setq rustic-lsp-server 'rust-analyzer
-      lsp-rust-analyzer-cargo-watch-command "clippy"
-      rustic-format-on-save t)
+;; ;; rust
+;; (setq rustic-lsp-server 'rust-analyzer
+;;       lsp-rust-analyzer-cargo-watch-command "clippy"
+;;       rustic-format-on-save t)
 
 (set-popup-rule! "*cargo-test*" :side 'bottom :height 30 :vslot 9)
 
 ;; lsp
-(setq lsp-ui-doc-enable t
-      lsp-enable-on-type-formatting t
-      lsp-enable-indentation nil)
+;; (setq lsp-ui-doc-enable t
+;;       lsp-enable-on-type-formatting t
+;;       lsp-enable-indentation nil)
 
 ;; (let ((conf-files '("prodigy" "exercism"))
 ;;       (conf-dir "config"))
@@ -212,41 +228,8 @@
 
 ;; (add-hook 'ruby-mode 'rufo-minor-mode)
 (setq rufo-minor-mode-use-bundler t)
-(setq-hook! 'ruby-mode-hook +format-with-lsp nil)
-(setq-hook! 'ruby-mode-hook +format-with 'rufo)
-
-;; dap-mode
-(after! dap-mode
-  (add-hook 'dap-stopped-hook
-            (lambda (arg) (call-interactively #'dap-hydra)))
-
-  (setq dap-auto-configure-features '(sessions locals breakpoints expressions tooltips))
-  (dap-auto-configure-mode 1)
-
-  ;; enables mouse hover support
-  ;; (dap-tooltip-mode 1)
-  (require 'dap-ruby)
-  (setq dap-ruby-debug-program `("/home/belt/.asdf/shims/node"
-                                    ,(f-join dap-ruby-debug-path "extension/dist/debugger/main.js")))
-
-  (defun my-dap-ruby--populate-start-file-args (conf)
-    "Populate CONF with the required arguments."
-    (-> conf
-        (plist-put :dap-server-path dap-ruby-debug-program)
-        (dap--put-if-absent :cwd (lsp-workspace-root))
-        (dap--put-if-absent :program (concat (lsp-workspace-root) "/bin/rails"))
-        (dap--put-if-absent :type "Rails")
-        (dap--put-if-absent :name "Rails")))
-  (dap-register-debug-provider "Rails" 'my-dap-ruby--populate-start-file-args)
-
-  (dap-register-debug-template
-   "Prevail::Rails::Server"
-   (list :type "Rails"
-         :request "launch"
-         :args "s"
-         :cwd "/home/belt/dev/prevail"
-         :program "/home/belt/dev/prevail/bin/rails"
-         :name "Rails Server Debug")))
+;; (setq-hook! 'ruby-mode-hook +format-with-lsp nil)
+;; (setq-hook! 'ruby-mode-hook +format-with 'rufo)
 
 (defun chmod-this-file ()
   (interactive)
@@ -257,32 +240,22 @@
   (interactive)
   (set-file-modes (buffer-file-name) "+x"))
 
-(require-relative "config/org.el")
-;;(require-relative "config/sql.el")
-;; (require-relative "config/prolog.el")
+(require-relative "config/org-config.el")
+;;(require-relative "config/keymap-mode.el")
+;;(require-relative "int-fix-file-and-revert)))
 
-;(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
-(defun kill-to-file ()
-  (interactive)
-  (let ((file (read-file-name "File:"))
-        (region (funcall region-extract-function nil)))
-    (f-write-text region 'utf-8 file)
-    (evil-delete (region-beginning) (region-end))))
 
-(after! direnv-mode (direnv-mode))
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
 ; java
 
-(setq lsp-java-vmargs
-      '("-noverify"
-        "-Xmx1G"
-        "-XX:+UseG1GC"
-        "-XX:+UseStringDeduplication"
-        "-javaagent:/home/belt/Downloads/lombok.jar"
-        "-Xbootclasspath/a:/home/belt/Downloads/lombok.jar"))
+;; (setq lsp-java-vmargs
+;;       '("-noverify"
+;;         "-Xmx1G"
+;;         "-XX:+UseG1GC"
+;;         "-XX:+UseStringDeduplication"
+;;         "-javaagent:/home/belt/Downloads/lombok.jar"
+;;         "-Xbootclasspath/a:/home/belt/Downloads/lombok.jar"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

@@ -21,18 +21,24 @@
 
 ;; (package! arduino-mode)
 
-;; (package! dap-mode)
-
 (package! graphviz-dot-mode)
 
-(package! prodigy)
+;; (package! prodigy)
 
 (package! toggle-quotes)
 
 (package! counsel-dash)
 
-(package! rufo)
+;; (package! rufo)
 
 (package! exec-path-from-shell)
 
 (package! direnv)
+(package! nvm)
+
+(package! kubernetes)
+(package! kubernetes-evil)
+(package! k8s-mode)
+
+;; (package! terraform-mode)
+;; (disable-packages! lsp-mode)

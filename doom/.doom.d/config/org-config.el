@@ -1,4 +1,4 @@
-;;; ../dotfiles/doom/.doom.d/config/org.el -*- lexical-binding: t; -*-
+;;; ../dotfiles/doom/.doom.d/config/org-config.el -*- lexical-binding: t; -*-
 
 
 (require 'org-habit)
@@ -11,7 +11,8 @@
       org-habit-completed-glyph ?✓)
 
 (setq org-log-into-drawer t
-      org-log-done t)
+      org-log-done t
+      org-agenda-files '("~/org" "~/org/roam"))
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox-nightly"
@@ -47,3 +48,5 @@ See `org-capture-templates' for more information."
                  ;; symlink pointing to the actual location of all-posts.org!
                  (file+olp "Blog.org" "Posts")
                  (function org-hugo-new-subtree-post-capture-template)))
+
+(provide 'org-config)

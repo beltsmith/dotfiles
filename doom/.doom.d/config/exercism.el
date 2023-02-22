@@ -2,7 +2,7 @@
 
 (defun exercism-cmd (cmd &rest args)
   "Run exercism CMD with ARGS."
-  (shell-command (mapconcat 'identity (cons "exercism" (cons cmd args)) " ")))
+  (shell-command-to-string (mapconcat 'identity (cons "exercism" (cons cmd args)) " ")))
 
 (defun exercism-submit ()
   "Submit current file to exercism."
@@ -17,3 +17,9 @@
   (exercism-cmd "download"
                 (concat "--exercise=" (read-string "Exercise: "))
                 (concat "--track=" (read-string "Track: "))))
+
+(defun exercism-start ()
+  (interactive)
+  (let* ((output (split-string (shell-command-to-string (read-string "cmd: ")) "\n"))
+        (dir (last (butlast output))))
+    (dired dir)))

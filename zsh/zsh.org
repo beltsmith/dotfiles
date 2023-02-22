@@ -107,6 +107,15 @@ Make sure we have access to rbenv's bin stubs, also yes better than rvm.
 #+BEGIN_SRC shell :tangle no
 prepend_path "$HOME/.rbenv/bin"
 #+END_SRC
+**** gcloud
+#+begin_src shell
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/belt/dev/wellsaid/gcloud/google-cloud-sdk/path.zsh.inc' ]; then . '/home/belt/dev/wellsaid/gcloud/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/belt/dev/wellsaid/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/belt/dev/wellsaid/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
+#+end_src
 **** Rust
 Check cargo for binaries
 #+BEGIN_SRC shell
@@ -179,7 +188,6 @@ export LPASS_AGENT_TIMEOUT=0
 *** aws-vault
 #+BEGIN_SRC shell
 export AWS_VAULT_BACKEND=secret-service
-export AWS_REGION=us-east-1
 export AWS_SESSION_TOKEN_TTL=12h
 #+END_SRC
 *** terminal infos
@@ -214,9 +222,9 @@ test -r /home/belt/.opam/opam-init/init.zsh && . /home/belt/.opam/opam-init/init
 :header-args: :noweb-ref completion
 :END:
 #+begin_src shell
-autoload -Uz compinit
-compinit
-autoload -Uz compinit && compinit -i
+# autoload -Uz compinit
+# compinit
+# autoload -Uz compinit && compinit -i
 #+end_src
 
 #+RESULTS:
@@ -231,6 +239,11 @@ autoload -Uz compinit && compinit -i
   # . $HOME/.asdf/asdf.sh
   # . $HOME/.asdf/completions/asdf.bash
 #+END_SRC
+*** nvm
+#+begin_src shell
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+#+end_src
 ** Aliases
 :PROPERTIES:
 :header-args: :noweb-ref aliases
@@ -239,6 +252,10 @@ I'm super bad at both typing and spelling so this helps me suck less.
 *** qmk
 #+begin_src shell
 alias kbflash='qmk flash -kb handwired/dactyl_promicro -km beltsmith'
+#+end_src
+*** gcloud
+#+begin_src shell
+alias gcproject="gcloud config set project"
 #+end_src
 *** LS
 I like pretty colours, pretty girls like trap music.
@@ -250,10 +267,8 @@ I like pretty colours, pretty girls like trap music.
 #+END_SRC
 *** netctl
 #+BEGIN_SRC shell
-#alias ncs="netctl status $(ncl | grep '*' | cut -f 2 -d ' ')"
 alias nsw="sudo netctl switch-to"
-#alias ncl="netctl list"
-#+END_SR
+#+END_SRC
 *** Editors
 Honestly these are just silly now that I use emacs
 #+BEGIN_SRC shell
@@ -300,9 +315,10 @@ alias .....="\cd ../../../.."
 alias ......="\cd ../../../../.."
 
 #+END_SRC
-*** KC
+*** k8s
 #+BEGIN_SRC shell
-  alias kc="kubectl"
+alias kc="kubectl"
+alias tf="terraform"
 #+END_SRC
 *** docker
 #+BEGIN_SRC shell
@@ -448,6 +464,17 @@ fzmv() {
 }
 
 #+END_SRC
+*** kasa
+**** kasa-git-set
+#+begin_src shell
+kasa-git-set() {
+    git config --local user.name alex-kasa
+    git config --local user.email alex.girdler@kasa.com
+    git config --local github.user alex-kasa
+    repo=$(git remote -v | awk '{print $2}' | head -n 1 | awk -F '/' '{print $NF}' | cut -f 1 -d '.')
+    git remote set-url origin "git@kasa.github.com:kasadev/$repo"
+}
+#+end_src
 *** Wine
 wine helper functions, I'm not using wine anymore so I don't tangle this block
 #+BEGIN_SRC shell :noweb-ref no
@@ -604,13 +631,13 @@ I currently use zplug to manage my zsh plugins
 *** Initialization
 I set the `ZPLUG' shell variable to the location where zplug is installed
 #+BEGIN_SRC shell
-export ZPLUG=/usr/share/zsh/scripts/zplug
+# export ZPLUG=/usr/share/zsh/scripts/zplug
 #+END_SRC
 
 In order to load zplug you need to source the `init.zsh' file in the
 installation directory.
 #+BEGIN_SRC shell
-source $ZPLUG/init.zsh
+# source $ZPLUG/init.zsh
 #+END_SRC
 
 Personal package management
@@ -628,10 +655,15 @@ zplug "plugin/name", option:value
 **** Enabled plugins
 ***** znap
 #+begin_src shell
+[[ -f ~/gits/zsh-snap/znap.zsh ]] ||
+    git clone --depth 1 -- \
+        https://github.com/marlonrichert/zsh-snap.git ~/gits/zsh-snap
 source ~/gits/zsh-snap/znap.zsh
 
 znap source marlonrichert/zsh-autocomplete
-znap source mafredri/zsh-async
+znap source zsh-users/zsh-autosuggestions
+znap source zsh-users/zsh-syntax-highlighting
+znap source marlonrichert/zcolors
 
 znap source b4b4r07/enhancd
 # znap source junegunn/fzf #, as:command, use:"bin/fzf-tmux"
@@ -659,8 +691,9 @@ Plugins loaded from github, since github is the default origin(`from' option) I 
 These are loaded from the oh-my-zsh library
 #+BEGIN_SRC shell
   # zplug "plugins/heroku", from:oh-my-zsh
-  # zplug "plugins/kubectl", from:oh-my-zsh
-  # zplug "plugins/git", from:oh-my-zsh
+# zplug "plugins/kubectl", from:oh-my-zsh
+# zplug "plugins/gcloud", from:oh-my-zsh
+# zplug "plugins/git", from:oh-my-zsh
   # zplug "plugins/sudo", from:oh-my-zsh
   # zplug "plugins/bundler", from:oh-my-zsh
   # zplug "plugins/rake-fast", from:oh-my-zsh
@@ -679,26 +712,6 @@ Reasons for disabling range from performance to being un-needed.
   # zplug "plugins/rails", from:oh-my-zsh
 
   # zplug "lib/completion", from:oh-my-zsh
-#+END_SRC
-**** zplug internals
-Have zplug manage itself
-#+BEGIN_SRC shell
-# zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-#+END_SRC
-
-Install plugins if there are plugins that have not been installed
-#+BEGIN_SRC shell
-# if ! zplug check --verbose; then
-#     printf "Install? [y/N]: "
-#     if read -q; then
-#         echo; zplug install
-#     fi
-# fi
-#+END_SRC
-
-Finally have zplug load everything
-#+BEGIN_SRC shell
-# zplug load
 #+END_SRC
 ** SSH setup
 :PROPERTIES:
@@ -778,7 +791,6 @@ setopt share_history
 #+BEGIN_SRC shell
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #+END_SRC
-** Compde
 ** Secrets
 shoosh
 #+begin_src shell

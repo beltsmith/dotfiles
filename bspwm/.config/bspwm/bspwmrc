@@ -61,3 +61,6 @@ bspc config presel_feedback_color "$barbg"
 bspc rule -a Dunst layer='above'
 bspc rule -a Emacs state=tiled
 bspc rule -a Steam state=tiled
+bspc rule -a firefoxnightly state=tiled
+bspc rule -a battle.net.exe state=floating
+bspc rule -a ArenaTracker state=floating layer='above'

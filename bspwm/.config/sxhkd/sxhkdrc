@@ -25,7 +25,7 @@ super + e
     emacsclient -c
 
 super + b
-    firefox-nightly
+    firefox
 
 #
 # bspwm hotkeys
@@ -51,6 +51,17 @@ super + y
 super + g
 	bspc node -s biggest.window
 
+super + shift + b
+	bspc wm -h off; \
+    bspc node -f @parent; \
+    bspc node -B; \
+	bspc node newer -f; \
+	bspc wm -h on
+
+super + alt + ctrl + a
+    sleep 5; while xinput query-state 20 | grep "key\[64\]=down"; do xdotool click 4 sleep $((RANDOM % 0.4)); done
+# super + shift + w
+#     bspc
 #
 # state/flags
 #
@@ -72,16 +83,12 @@ super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
 # focus the node for the given path jump
-super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
+super + {p,b,comma}
+	bspc node -f @{parent,brother,first}
 
 # focus the next/previous window in the current desktop
 super + {_,shift + }c
 	bspc node -f {next,prev}.local.!hidden.window
-
-# focus the next/previous desktop in the current monitor
-super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
 super + {grave,Tab}
@@ -100,6 +107,7 @@ super + {_,shift + }{1-9,0}
 super + r
     bspc node -R 90
 
+
 #
 # preselect
 #
@@ -113,7 +121,7 @@ super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
 
 # cancel the preselection for the focused node
-super + ctrl + space
+super + ctrl + {space,c}
 	bspc node -p cancel
 
 # cancel the preselection for the focused desktop
@@ -132,6 +140,10 @@ super + alt + {h,j,k,l}
 super + alt + shift + {h,j,k,l}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
-# move a floating window
+# move mouse
 super + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
+	xdotool mousemove_relative -- {-20 0,0 20,0 -20,20 0}
+
+# click
+super + period
+	xdotool click 1

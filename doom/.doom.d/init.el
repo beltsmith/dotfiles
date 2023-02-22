@@ -37,6 +37,7 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides     ; highlighted indent columns
+       (ligatures)
        modeline          ; snazzy, Atom-inspired modeline, plus API
        ;; minimap           ; show a map of the code on the side
        nav-flash         ; blink the current line after jumping
@@ -45,12 +46,11 @@
        (popup            ; tame sudden yet inevitable temporary windows
         ;; +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-       (ligatures)
        ;; (pretty-code +hasklig)       ; replace bits of code with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
-       vc-gutter         ; vcs diff in the fringe
+       (vc-gutter +pretty)         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
@@ -84,13 +84,14 @@
        ;;vterm             ; another terminals in Emacs
 
        :checkers
-       syntax         ; tasing you for every semicolon you forget
+       ;; syntax         ; tasing you for every semicolon you forget
        (spell +flyspell) ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
        ; this is an test
 
        :tools
        ;;ansible
+       ;;biblio            ; Writes a PhD for you (citation needed)
        (debugger +lsp)          ; FIXME stepping through code, to help you add bugs
        direnv
        (docker +lsp)
@@ -101,8 +102,7 @@
        (lookup           ; helps you navigate your code and documentation
         +dictionary
         +docsets)        ; ...or in Dash docsets locally
-       (lsp +peek)
-       ;;macos             ; MacOS-specific commands
+       (lsp +eglot)
        (magit +forge)             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        pass              ; password manager for nerds
@@ -120,6 +120,7 @@
 
        :lang
        ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
        (cc +lsp)                ; C/C++/Obj-C madness
        (clojure +lsp)           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
@@ -128,29 +129,33 @@
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        ;;(dart +flutter)   ; paint ui and not much else
+       ;;dhall
        elixir            ; erlang done right
        (elm +lsp)               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;; erlang            ; an elegant language for a more civilized age
        (ess +lsp)               ; emacs speaks statistics
+       ;;factor
        ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
        (fsharp +lsp)           ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        (gdscript +lsp)          ; the language you waited for
        (go +lsp)               ; the hipster dialect
-       (haskell +lsp) ; a language that's lazier than I am
+       ;;(graphql +lsp)    ; Give queries a REST
+       ;(haskell +lsp) ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        (json +lsp)
        (java +lsp) ; the poster child for carpal tunnel syndrome
-       (javascript +lsp)        ; all(hope(abandon(ye(who(enter(here))))))
+       (javascript +lsp +tree-sitter)        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        (latex +lsp)             ; writing papers in Emacs has never been so fun
        ;;lean
        ;;factor
        ;;ledger            ; an accounting system in Emacs
-       ;; lua               ; one-based indices? one-based indices
+       (lua +lsp)               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        nix               ; I hereby declare "nix geht mehr!"
@@ -164,24 +169,26 @@
         ;; +ipython         ; ipython support for babel
         ;; +pandoc          ; pandoc integration into org's exporter
         +present)        ; using Emacs for presentations
-       ;; raku              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python +pyright)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        racket            ; a DSL for DSLs
-       rest              ; Emacs as a REST client
+       ;; raku              ; write code no one else can comprehend
+       (rest +jq)              ; Emacs as a REST client
        (ruby +lsp +rails); 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;; scala             ; java, but good
-       (scheme +guile +racket)            ; a fully conniving family of lisps
+       ;;(scheme +guile +racket)            ; a fully conniving family of lisps
        (sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
-       (web +lsp)               ; the tubes
+       (web +lsp +tree-sitter)               ; the tubes
        (yaml +lsp)
+       ;;zig               ; C, but simpler
 
        :email
        ;; (mu4e +gmail)       ; WIP
